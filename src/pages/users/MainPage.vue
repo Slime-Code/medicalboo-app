@@ -14,10 +14,12 @@
             :name="category"
             :label="category"
             />
-            <q-spinner v-if="loadingCategory"
-              color="primary"
-              size="3em"
-            />
+            <div class=" flex flex-center ">
+              <q-spinner v-if="loadingCategory"
+                color="primary"
+                size="3em"
+              />
+            </div>
           </q-tabs>
         </div>
 
@@ -33,8 +35,17 @@
             >
 
               <q-tab-panel v-for="(category, index) in categorys" :key="index" :name="category">
-                <div class="text-h4 q-mb-md">{{ category }}</div>
+
+                <div class="text-h4 q-mb-md">
+                  {{ category }}
+                </div>
                   <div class="row">
+                    <q-spinner-cube
+                    class="absolute-center"
+                      v-if="loadingTopic"
+                      size="xl"
+                      color="primary"
+                    />
                     <div class="col-6" v-for="(topic, index) in topics" :key="index">
                       <a href="/approach"
                       class="q-link rounded-borders q-pa-md q-ma-md
