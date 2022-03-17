@@ -1,0 +1,15 @@
+<template>
+  <q-layout view="lHh Lpr lFf">
+      <q-page-container style="padding-top: 60px; background-color: white;">
+        <router-view />
+      </q-page-container>
+  </q-layout>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'RegisterLayout',
+});
+</script>
