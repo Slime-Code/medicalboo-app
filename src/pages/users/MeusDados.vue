@@ -4,7 +4,7 @@
         <div class="col item">
           <br>
           <br>
-          <q-btn to="/register" style="color: #1378B3; margin: 2px #004A9D;"
+          <q-btn @click="showAdPerfil=true" style="color: #1378B3; margin: 2px #004A9D;"
             label="Editar Informações" icon="edit"/> <br> <br>
           <hr>
         </div>
@@ -57,6 +57,98 @@
           </div>
         </div>
       </div>
+
+      <q-dialog v-model="showAdPerfil" persistent>
+         <q-card class="q-pa-md" style="min-width: 350px">
+    <q-card-section>
+      <div class="text-h6">Novo Perfil</div>
+    </q-card-section>
+
+    <form @submit.prevent="updatePerfile">
+      <q-card-section class="q-pt-none">
+        <div class="q-mb-md">
+          <q-input
+            label="Nome"
+            dense
+            v-model="formData.name"
+            autofocus
+            @keyup.enter="prompt = false"
+            lazy-rules
+            :rules="titleRules"
+            ref="title"
+          />
+        </div>
+
+        <div class="q-mb-md">
+          <q-input
+            dense
+            v-model="formData.birthday"
+            type="date"
+            label="Data de nascimento"
+            @keyup.enter="prompt = false"
+            lazy-rules
+            :rules="[
+              val => val !== null && val !== '' || 'Campo não pode estar vazio'
+            ]"
+          />
+        </div>
+
+        <div class="q-mb-md">
+          <q-input
+            label="E-mail"
+            dense
+            v-model="formData.email"
+            autofocus
+            @keyup.enter="prompt = false"
+            lazy-rules
+            :rules="diagnosisRules"
+            ref="diagnosis"
+          />
+        </div>
+
+        <div class="q-mb-md">
+          <q-input
+            label="Telefone"
+            dense
+            v-model="formData.phone"
+            autofocus
+            @keyup.enter="prompt = false"
+            lazy-rules
+            :rules="complentary_examsRules"
+            ref="complentary_exams"
+          />
+        </div>
+
+        <div class="q-mb-md">
+          <q-input
+            label="CPF"
+            dense
+            v-model="formData.cpf"
+            autofocus
+            @keyup.enter="prompt = false"
+            lazy-rules
+            :rules="complentary_examsRules"
+            ref="complentary_exams"
+          />
+        </div>
+
+        <div class="q-mb-md">
+          <q-option-group
+            v-model="formData.profile_type_id"
+            :options="type"
+            color="primary"
+            inline
+          />
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right" class="text-primary">
+        <q-btn flat label="Cancelar" v-close-popup />
+        <q-btn type="submit" flat label="Adicionar" v-close-popup />
+      </q-card-actions>
+    </form>
+  </q-card>
+      </q-dialog>
     </q-page>
 </template>
 
@@ -65,14 +157,30 @@
 import { Notify } from 'quasar';
 import { defineComponent, ref, onMounted } from 'vue';
 import useAuthUser from 'src/composebles/useAuthUser';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from 'src/functions/functionShowNotifications';
 import useApi from '../../composebles/useApi';
 
 export default defineComponent({
   name: 'MeusDados',
+
   setup() {
     const loading = ref(true);
 
+    const formData = ref({
+      phone: '',
+      profile_type_id: '',
+      birthday: '',
+      name: '',
+      cpf: '',
+      email: '',
+    });
+
     const { getById } = useApi();
+
+    const { update } = useApi();
 
     const { user } = useAuthUser();
 
@@ -82,10 +190,20 @@ export default defineComponent({
     const { name, cpf, birthday } = aux.value.user_metadata;
     const profile_type = ref('');
 
+    const type = ref([
+      {
+        label: 'Estudante',
+        value: 1,
+      },
+      {
+        label: 'Profissional',
+        value: 2,
+      },
+    ]);
+
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        // alert(JSON.stringify(user.value));
         const aux1 = await getById('profile_type', profile_type_id);
         profile_type.value = aux1.map((elem) => elem.name);
         loading.value = false;
@@ -93,10 +211,23 @@ export default defineComponent({
         Notify(error);
       }
     };
+    const updatePerfile = async () => {
+      try {
+        loading.value = true;
+        await update('profile', formData);
+        loading.value = false;
+        showSuccessNotification('Atualizado com sucesso!!');
+      } catch (error) {
+        showErrorNotification(`A Atualização Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`);
+      }
+    };
     onMounted(() => {
       listTopicsAproachs();
     });
     return {
+      type,
+      updatePerfile,
+      formData,
       phone,
       profile_type,
       birthday,
@@ -104,6 +235,19 @@ export default defineComponent({
       cpf,
       email,
       slide: ref('style'),
+      showAdPerfil: ref(false),
+      titleRules: [
+        (val) => (val && val.length > 0) || 'Por favor digite alguma coisa',
+      ],
+      definitionRules: [
+        (val) => (val && val.length > 0) || 'Por favor digite alguma coisa',
+      ],
+      diagnosisRules: [
+        (val) => (val && val.length > 0) || 'Por favor digite alguma coisa',
+      ],
+      complentary_examsRules: [
+        (val) => (val && val.length > 0) || 'Por favor digite alguma coisa',
+      ],
     };
   },
 });

@@ -25,7 +25,13 @@
           :key="index"
           color="green"
           icon="time"/>
-        </div>
+        </div><br><br>
+        <q-spinner
+          v-if="loading"
+          class="absolute-center"
+          size="xl"
+          color="primary"
+        />
       </div>
     </q-page>
 </template>
@@ -46,15 +52,20 @@ export default defineComponent({
 
     const topics = ref([]);
 
+    const loading = ref(true);
+
     const listTopics = async () => {
       try {
+        loading.value = true;
         const aux = await list('approach');
         topics.value = aux.map((elem) => elem.title);
+        loading.value = false;
       } catch (error) {
         Notify(error);
       }
     };
     return {
+      loading,
       listTopics,
       text: ref(''),
       topics,

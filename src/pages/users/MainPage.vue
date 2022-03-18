@@ -1,102 +1,119 @@
 <template>
-    <q-page class="flex flex-center ">
-      <div class="column">
-        <div class="col">
-          <q-tabs
-            v-model="tab"
-            inline-label
-            dense
-            mobile-arrows
-            class="category"
-          >
-            <q-tab
-            v-for="(category, index) in categorys" :key="index"
-            :name="category"
-            :label="category"
+  <q-page class="flex flex-center col-md-4 col-sm-6 col-xs-10 q-gutter-y-lg">
+    <div class="column">
+      <div class="col">
+        <q-tabs
+          v-model="tab"
+          inline-label
+          dense
+          mobile-arrows
+          class="category"
+        >
+          <q-tab
+          v-for="(category, index) in categorys" :key="index"
+          :name="category"
+          :label="category"
+          />
+          <div class=" flex flex-center ">
+            <q-spinner v-if="loadingCategory"
+              color="primary"
+              size="3em"
             />
-            <div class=" flex flex-center ">
-              <q-spinner v-if="loadingCategory"
-                color="primary"
-                size="3em"
-              />
-            </div>
-          </q-tabs>
-        </div>
+          </div>
+        </q-tabs>
+      </div>
 
-        <div class="col column col-md-4 col-sm-6 col-xs-10 q-gutter-y-lg">
-          <q-scroll-area style="height: 45vh; margin-top: 40px">
-            <q-tab-panels
-              v-model="tab"
-              animated
-              swipeable
-              vertical
-              transition-prev="jump-up"
-              transition-next="jump-up"
-            >
+      <div class="col column col-md-4 col-sm-6 col-xs-10 q-gutter-y-lg">
+        <q-scroll-area style="height: 45vh; margin-top: 40px">
+          <q-tab-panels
+            v-model="tab"
+            animated
+            swipeable
+            vertical
+            transition-prev="jump-up"
+            transition-next="jump-up"
+          >
 
-              <q-tab-panel v-for="(category, index) in categorys" :key="index" :name="category">
+            <q-tab-panel v-for="(category, index) in categorys" :key="index" :name="category">
 
-                <div class="text-h4 q-mb-md">
-                  {{ category }}
-                </div>
-                  <div class="row">
-                    <q-spinner-cube
-                    class="absolute-center"
-                      v-if="loadingTopic"
-                      size="xl"
-                      color="primary"
-                    />
-                    <div class="col-6" v-for="(topic, index) in topics" :key="index">
-                      <a href="/approach"
-                      class="q-link rounded-borders q-pa-md q-ma-md
-                      cursor-pointer column justify-center bg-grey-1">
-                        <div class="row no-wrap items-center">
-                          <q-avatar
-                            :color="color_icon"
-                            text-color="white"
-                            :icon="icon" />
-                            <div class="col q-pl-lg">
-                              <div class="text-uppercase">{{ topic }}</div>
-                            <div class="text-weight-bold">{{ caption }}</div>
-                          </div>
+              <div class="text-h4 q-mb-md">
+                {{ category }}
+              </div>
+                <div class="row">
+                  <q-spinner
+                  class="absolute-center"
+                    v-if="loadingTopic"
+                    size="xl"
+                    color="primary"
+                  />
+                  <div class="col-6" v-for="(topic, index) in topics" :key="index">
+                    <a href="/approach"
+                    class="q-link rounded-borders q-pa-md q-ma-md
+                    cursor-pointer column justify-center bg-grey-1">
+                      <div class="row no-wrap items-center">
+                        <q-avatar
+                          :color="color_icon"
+                          text-color="white"
+                          :icon="icon" />
+                          <div class="col q-pl-lg">
+                            <div class="text-uppercase">{{ topic }}</div>
+                          <div class="text-weight-bold">{{ caption }}</div>
                         </div>
-                      </a>
-                    </div>
+                      </div>
+                    </a>
                   </div>
-              </q-tab-panel>
-            </q-tab-panels>
-          </q-scroll-area>
+                </div>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-scroll-area>
+      </div>
+      <div class=" row items-start">
+        <div class="q-pa-md q-gutter-sm">
+          <q-banner rounded class="col">
+            <template v-slot:avatar>
+              <q-btn flat :to="{name: 'prime'}">
+                <img
+                  src="img/banner-premium.png"
+                  style="width: 330px; height: 180px"
+                >
+              </q-btn>
+            </template>
+
+            <template v-slot:action>
+            </template>
+          </q-banner>
+        </div>
+        <div class="q-pa-md q-gutter-sm row items-start">
+          <q-banner class="col" rounded >
+            <template v-slot:avatar>
+              <q-btn flat :to="{name: 'acesso-capitulo'}">
+                <img
+                  src="img/Grátis@2x.png"
+                  style="width: 100%; height: 100px"
+                >
+              </q-btn>
+            </template>
+
+            <template v-slot:action>
+            </template>
+          </q-banner>
+          <q-banner class="col" rounded >
+            <template v-slot:avatar>
+              <q-btn flat :to="{name: 'acesso-capitulo'}">
+                <img
+                  src="img/Grátis-2.png"
+                  style="width: 100%; height: 100px"
+                >
+              </q-btn>
+            </template>
+
+            <template v-slot:action>
+            </template>
+          </q-banner>
         </div>
       </div>
-    <div class="q-pa-md">
-    <div class="q-col-gutter-md row items-start">
-      <div class="col-50">
-        <q-img src="img/banner-premium.png">
-          <div class="absolute-bottom text-subtitle1 text-center">
-            Caption
-          </div>
-        </q-img>
-      </div>
-
-      <div class="col-6">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-top text-center">
-            Caption
-          </div>
-        </q-img>
-      </div>
-
-      <div class="col-6">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-bottom-right text-subtitle2">
-            Caption
-          </div>
-        </q-img>
-      </div>
-
     </div>
-  </div>
-    </q-page>
+  </q-page>
 </template>
 
 <script>
@@ -116,6 +133,8 @@ export default defineComponent({
 
     const categorys = ref([]);
 
+    const tab = ref('');
+
     const loadingCategory = ref(true);
 
     const loadingTopic = ref(true);
@@ -127,6 +146,8 @@ export default defineComponent({
         const aux1 = await list('categoria');
         categorys.value = aux1.map((elem) => elem.name);
         loadingCategory.value = false;
+        // eslint-disable-next-line prefer-destructuring
+        tab.value = categorys.value[0];
 
         loadingTopic.value = true;
         const aux = await list('topic');
@@ -140,11 +161,9 @@ export default defineComponent({
       loadingTopic,
       loadingCategory,
       listTopics,
-      tab: ref('Geral'),
+      tab,
       topics,
       categorys,
-      slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
 
       caption: ref(''),
 

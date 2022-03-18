@@ -21,7 +21,13 @@
         <hr>
         <br>
           <ApproachButtom v-for="(t, index) in topic" :title="t" :key="index"/>
-        </div>
+        </div><br><br>
+        <q-spinner
+            v-if="loading"
+            class="absolute-center"
+            size="xl"
+            color="primary"
+          />
       </div>
     </q-page>
 </template>
@@ -42,6 +48,8 @@ export default defineComponent({
   setup() {
     const { user } = useAuthUser();
 
+    const loading = ref(true);
+
     const aux1 = ref(user);
 
     const { id } = aux1.value;
@@ -56,9 +64,11 @@ export default defineComponent({
 
     const listTopics = async () => {
       try {
+        loading.value = true;
         const aux = await list('favorite_approach_user');
         text.value = aux.map((elem) => elem.user_id);
         topic.value = aux.map((elem) => elem.approach_id);
+        loading.value = false;
         for (let index = 0; index < topic.value.length; index++) {
           if (id !== text[index].value) {
             topic[index] = '';
@@ -67,7 +77,6 @@ export default defineComponent({
         for (let index = 0; index < topic.value.length; index++) {
           // eslint-disable-next-line no-await-in-loop
           top.value = await getById('approach', topic[index]);
-          alert(top.value);
         }
         topics.value = top.value.map((elem) => elem.title);
       } catch (error) {
@@ -76,6 +85,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       listTopics,
       text: ref(''),
       topic,

@@ -6,7 +6,7 @@
           {{ title }}
         </div>
         <div class="col-grow-1 q-pa-xs">
-          <q-icon name="favorite" />
+          <q-icon v-if="accessCap" name="favorite" />
         </div>
         <div class="col-grow-1">
           <div class="q-approach-bar"></div>
@@ -34,12 +34,16 @@ export default defineComponent({
 
     color: {
       type: String,
-      default: 'red',
+      default: '',
     },
 
     link: {
       type: String,
       default: 'http://localhost:8082/approach-detail/',
+    },
+    accessCap: {
+      type: Boolean,
+      default: true,
     },
   },
 });

@@ -16,14 +16,15 @@ const routes = [
     path: '/',
     component: () => import('src/layouts/SecondaryLayout.vue'),
     children: [
-      { path: 'profile', component: () => import('pages/users/ProfilePage.vue') },
+      { path: 'profile', name: 'profile', component: () => import('pages/users/ProfilePage.vue') },
       { path: 'editar-senha', name: 'editar-senha', component: () => import('pages/users/EditarSenha.vue') },
       { path: 'meus-dados', name: 'meus-dados', component: () => import('pages/users/MeusDados.vue') },
-      { path: 'explore', component: () => import('pages/users/ExplorePage.vue') },
-      { path: 'favorite', component: () => import('pages/users/FavoritePage.vue') },
-      { path: 'approach', component: () => import('pages/users/ApproachPage.vue') },
+      { path: 'explore', name: 'explore', component: () => import('pages/users/ExplorePage.vue') },
+      { path: 'favorite', name: 'favorite', component: () => import('pages/users/FavoritePage.vue') },
+      { path: 'approach', name: 'approach', component: () => import('pages/users/ApproachPage.vue') },
       { path: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
       { path: 'note', component: () => import('pages/users/NotePage.vue') },
+      { path: 'acesso-capitulo', name: 'acesso-capitulo', component: () => import('pages/users/AccessoPorCapituloPage.vue') },
     ],
     meta: {
       requaresAuth: true,
@@ -44,6 +45,18 @@ const routes = [
       requaresAuth: true,
     },
   },
+
+  {
+    path: '/',
+    component: () => import('src/layouts/PrimeLayout.vue'),
+    children: [
+      { path: '', name: 'prime', component: () => import('src/pages/users/PrimePage.vue') },
+    ],
+    meta: {
+      requaresAuth: true,
+    },
+  },
+
   {
     path: '/admin',
     component: () => import('src/layouts/AdminLayout.vue'),
