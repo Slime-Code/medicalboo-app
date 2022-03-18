@@ -37,7 +37,23 @@
     </q-page-sticky>
 
     <q-dialog v-model="showAddApproach" persistent>
-      <add-approach />
+      <q-card style="min-width: 650px">
+        <q-card-section>
+          <div class="text-h6">Nova topic</div>
+        </q-card-section>
+        <q-form @submit="">
+          <q-card-section class="q-pt-none">
+          <q-input dense v-model.trim="formData.title"  autofocus />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+        </q-card-actions>
+        </q-form>
+
+        
+      </q-card>
     </q-dialog>
   </div>
 </template>
@@ -75,7 +91,8 @@ export default defineComponent({
     }
     return {
       newDialog,
-      showAddApproach
+      showAddApproach,
+      formData
     }
   }
 })

@@ -27,6 +27,7 @@
             </div>
             <div class="col">
               <q-btn
+                :to="{name: 'prime'}"
                 no-caps
                 no-wrap
                 unelevated

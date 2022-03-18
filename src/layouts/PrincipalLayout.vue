@@ -1,7 +1,7 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar class="q-pa-lg">
+  <q-layout view="lHh lpr lFf">
+    <q-header elevated class="bg-primary text-white" height-hint="98">
+      <q-toolbar >
           <div class="col">
             <q-btn
               to="/profile"
@@ -32,7 +32,7 @@
           </div>
       </q-toolbar>
         <div class="col q-mx-lg q-px-lg">
-          Olá Henriques, tudo bem
+          Olá {{name}}, tudo bem
         </div>
     </q-header>
 
@@ -120,17 +120,20 @@ export default defineComponent({
 
     const { user } = useAuthUser();
 
+    const aux2 = ref(user);
+    const { name } = aux2.value.user_metadata;
+
     const { list } = useApi();
 
     const { getById } = useApi();
 
-    const topics = ref(['covid-19']);
+    const topics = ref([]);
 
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
         const aux = await list('access_topic_user');
-        const aux1 = ['covid-19'];
+        const aux1 = [];
         // eslint-disable-next-line no-plusplus
         for (let index = 0; index < aux.length; index++) {
           if (aux.user_id === user.id) {
@@ -151,6 +154,7 @@ export default defineComponent({
       icon: ref(false),
       tab: ref('inicio'),
       topics,
+      name,
     };
   },
 });

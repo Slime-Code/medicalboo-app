@@ -50,6 +50,11 @@
             color="green"
             icon="add"
             class="flax absolute-down"
+        /> <br>
+        <q-spinner
+          v-if="loading"
+          size="xl"
+          color="primary"
         />
       </div>
     </q-page>
@@ -70,6 +75,8 @@ export default defineComponent({
     const ano = data.getFullYear();
     const dataAtual = `${dia}/${mes}/${ano}`;
 
+    const loading = ref(true);
+
     const cont = ref(1);
 
     const { user } = useAuthUser();
@@ -85,9 +92,10 @@ export default defineComponent({
     const { list } = useApi();
     const addDataBase = async () => {
       try {
+        loading.value = true;
         const aux = await list('notas');
         notas.value = aux.map((elem) => elem);
-        alert(JSON.stringify(notas.value));
+        loading.value = false;
       } catch (error) {
         alert(error);
       }
@@ -106,6 +114,7 @@ export default defineComponent({
       addDataBase();
     });
     return {
+      loading,
       text: ref(''),
       cont,
       add,

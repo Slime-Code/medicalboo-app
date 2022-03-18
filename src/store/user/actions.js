@@ -2,7 +2,7 @@ import { Loading, LocalStorage } from 'quasar';
 import {
   showErrorNotification,
   showSuccessNotification,
-} from 'src/functions/function-show-notifications';
+} from 'src/functions/functionShowNotifications';
 import axios from 'axios';
 import { api } from 'boot/axios';
 
@@ -61,16 +61,15 @@ function getState({ commit }) {
   commit('setDetails', details);
 }
 
-function register(){
-
+function register() {
+  // .........
 }
 
-function setDataForm({commit}, payload){
-  if (payload.name)
-    commit('setFormOne', payload)
-  else if (payload.email)
-    commit('setFormSecond', payload)
-  else if (payload.graduation_year)
-    commit('setFormThird', payload)
+function setDataForm({ commit }, payload) {
+  if (payload.name) { commit('setFormOne', payload); }
+  if (payload.email) { commit('setFormSecond', payload); }
+  if (payload.graduation_year) { commit('setFormThird', payload); }
 }
-export { login, getState, setDataForm };
+export {
+  login, getState, setDataForm, register,
+};

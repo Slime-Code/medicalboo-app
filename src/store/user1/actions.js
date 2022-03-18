@@ -2,7 +2,7 @@ import { Loading, LocalStorage } from 'quasar';
 import {
   showErrorNotification,
   showSuccessNotification,
-} from 'src/functions/function-show-notifications';
+} from 'src/functions/functionShowNotifications';
 import axios from 'axios';
 import { api } from 'boot/axios';
 
