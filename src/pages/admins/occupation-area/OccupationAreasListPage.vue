@@ -1,49 +1,59 @@
 <template>
-  <div class="flex q-pt-xl flex-center">
+<div class="flex q-pt-xl flex-center">
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
-      <div class="row">
+      <div class="row q-gutter-sm">
         <h5 class="col-12 title" style="margin: 20px 0;">Áreas de oucupação</h5>
         <div class="col-12" style="margin: auto 0;">
-          <q-btn size="12px">Adicionar</q-btn>
+          <q-btn 
+          @click="
+           newDialog()
+          " 
+          icon="add"
+          color="primary"
+          >
+          </q-btn>
+          <q-btn 
+          @click="
+           listAll()
+          " 
+          icon="update"
+          color="primary"
+          >
+          </q-btn>
         </div>
       </div>
     </div>
     <div class="col q-mt-md">
-      <q-list bordered class="rounded-borders"
+      <q-list v-if="!loading" bordered class="rounded-borders"
         style="min-width: 160px; width:100%;">
           <q-item-label header><strong>Lista de áreas de oucupação</strong></q-item-label>
 
             <q-separator/>
 
-          <q-item>
+          <q-item v-for="(category, index) in categories" :key="index">
             <q-item-section>
-              <q-item-label class="q-mt-sm">Geral</q-item-label>
+              <q-item-label class="q-mt-sm">{{ category.occupation_area }}</q-item-label>
             </q-item-section>
 
             <q-item-section top side class="medium-screen-only">
               <div class="text-grey-8 q-gutter-xs">
-                <q-btn class="gt-xs" size="12px" flat dense round icon="visibility" />
-                <q-btn size="12px" flat dense round icon="edit" />
+                <q-btn size="12px" flat dense round icon="edit" @click="varDialogPassword = true" />
                 <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
               </div>
             </q-item-section>
+
             <q-item-section top side class="non-medium-screen-only">
               <q-btn-dropdown flat round dense icon="more_vert">
-                <q-list>
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>Ver</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable v-close-popup @click="onItemClick">
+                <q-list separator>
+               
+                   <q-item clickable dense v-close-popup @click="newDialog(category)">
                     <q-item-section>
                       <q-item-label>Editar</q-item-label>
                     </q-item-section>
                   </q-item>
 
-                  <q-item clickable v-close-popup @click="onItemClick">
+                  <q-item clickable dense v-close-popup @click="confirmDelete(category.id)">
                     <q-item-section>
                       <q-item-label>Eliminar</q-item-label>
                     </q-item-section>
@@ -54,63 +64,186 @@
           </q-item>
 
           <q-separator/>
-
-          <q-item>
-            <q-item-section>
-              <q-item-label class="q-mt-sm">Geral</q-item-label>
-            </q-item-section>
-
-            <q-item-section top side class="medium-screen-only">
-              <div class="text-grey-8 q-gutter-xs">
-                <q-btn class="gt-xs" size="12px" flat dense round icon="visibility" />
-                <q-btn size="12px" flat dense round icon="edit" />
-                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
-              </div>
-            </q-item-section>
-            <q-item-section top side class="non-medium-screen-only">
-              <q-btn-dropdown flat round dense icon="more_vert">
-                <q-list>
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>Ver</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>Editar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>Eliminar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
-            </q-item-section>
-          </q-item>
         </q-list>
       </div>
     </div>
+     <q-dialog v-model="dialogCategory" persistent>
+       <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Nova topic</div>
+        </q-card-section>
+        <q-form @submit="saveItem">
+          <q-card-section class="q-pt-none">
+          <q-input dense v-model.trim="formData.occupation_area"  autofocus />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+        </q-card-actions>
+        </q-form>
+
+        
+      </q-card>
+
+          </q-dialog>
+
+              <q-inner-loading
+        :showing="loading"
+        label="Atualizando..."
+        label-class="text-primary"
+        color="primary"
+        label-style="font-size: 1.1em"
+      />
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: 'Dessert (100g serving)',
+    align: 'left',
+    field: (row) => row.name,
+    format: (val) => `${val}`,
+    sortable: true,
+  },
+  {
+    name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true,
+  },
+];
+
+const rows = [
+  {
+    name: 'Frozen Yogurt',
+    calories: 159,
+    fat: 6.0,
+    carbs: 24,
+    protein: 4.0,
+    sodium: 87,
+    calcium: '14%',
+    iron: '1%',
+  },
+];
+
+import { useQuasar } from 'quasar'
+import { defineComponent, ref, onMounted, reactive } from 'vue';
+import useApi from '../../../composebles/useApi';
 
 export default defineComponent({
-  name: 'OccupationAreasListPage',
+  name: 'OccupationAreaListPage',
+
+  components: {
+  },
 
   setup() {
+    const loading = ref(true);
+    const $q = useQuasar()
+
+
+    const { list, post, update, remove } = useApi();
+
+    const topics = ref([]);
+    const categories = ref([]);
+
+    const formData = reactive({
+      occupation_area: "",
+      id: null
+    })
+
+    const listAll = async () => {
+      try {
+        loading.value = true;
+        categories.value = await list('occupation_area');
+        loading.value = false;
+      } catch (error) {
+        alert(JSON.stringify(error));
+      }
+    };
+     const deleteItem = async (id) => {
+      try {
+        loading.value = true;
+            await remove('occupation_area', id);
+          listAll()
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+       const saveItem = async () => {
+      try {
+        loading.value = true;
+          if(!formData.id) {
+            delete formData.id
+
+             await post('occupation_area', formData);
+          }else{
+
+            await update('occupation_area', formData);
+          }
+          listAll()
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    onMounted(() => {
+      listAll();
+    });
+
     const onItemClick = async () => {
 
     };
+
+    const dialogCategory = ref(false)
+    const newDialog = (data) => {
+      if(data) {
+        Object.keys(data).forEach(key => {
+          formData[key]= data[key]
+        })
+
+      } else {
+        formData.occupation_area=""
+      }
+      dialogCategory.value=true
+    }
+
+    function confirmDelete (id) {
+      $q.dialog({
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
+      }).onOk(() => {
+        deleteItem(id)
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
+    
     return {
+      confirmDelete,
+      newDialog,
+      formData,
+      loading,
+      deleteItem,
+      dialogCategory,
+      categories,
+      saveItem,
       onItemClick,
+      columns,
+      rows,
+      listAll,
+      topics,
+      varDialogPassword: ref(false),
     };
   },
+  //  <q-btn class="gt-xs" size="12px" flat dense round icon="visibility" />
 });
 </script>
 

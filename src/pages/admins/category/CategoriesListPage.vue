@@ -2,23 +2,38 @@
 <div class="flex q-pt-xl flex-center">
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
-      <div class="row">
+      <div class="row q-gutter-sm">
         <h5 class="col-12 title" style="margin: 20px 0;">Categorias</h5>
         <div class="col-12" style="margin: auto 0;">
-          <q-btn size="12px">Adicionar</q-btn>
+          <q-btn 
+          @click="
+           newDialog()
+          " 
+          icon="add"
+          color="primary"
+          >
+          </q-btn>
+          <q-btn 
+          @click="
+           listAll()
+          " 
+          icon="update"
+          color="primary"
+          >
+          </q-btn>
         </div>
       </div>
     </div>
     <div class="col q-mt-md">
-      <q-list bordered class="rounded-borders"
+      <q-list v-if="!loading" bordered class="rounded-borders"
         style="min-width: 160px; width:100%;">
           <q-item-label header><strong>Lista de categorias</strong></q-item-label>
 
             <q-separator/>
 
-          <q-item v-for="(topic, index) in topics" :key="index">
+          <q-item v-for="(category, index) in categories" :key="index">
             <q-item-section>
-              <q-item-label class="q-mt-sm">{{ topic }}</q-item-label>
+              <q-item-label class="q-mt-sm">{{ category.name }}</q-item-label>
             </q-item-section>
 
             <q-item-section top side class="medium-screen-only">
@@ -30,21 +45,15 @@
 
             <q-item-section top side class="non-medium-screen-only">
               <q-btn-dropdown flat round dense icon="more_vert">
-                <q-list>
-                  <q-item clickable v-close-popup @click="onItemClick">
+                <q-list separator>
+               
+                   <q-item clickable dense v-close-popup @click="newDialog(category)">
                     <q-item-section>
-                      <q-item-label>Ver</q-item-label>
+                      <q-item-label>Editar</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-btn >
-                    <q-item clickable v-close-popup >
-                      <q-item-section>
-                        <q-item-label>Editar</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-btn>
 
-                  <q-item clickable v-close-popup @click="onItemClick">
+                  <q-item clickable dense v-close-popup @click="confirmDelete(category.id)">
                     <q-item-section>
                       <q-item-label>Eliminar</q-item-label>
                     </q-item-section>
@@ -58,14 +67,34 @@
         </q-list>
       </div>
     </div>
-    <q-dialog v-model="varDialogPassword" persistent>
-      <q-card style="width: 500px; max-width: 70vw; height: 500px; max-height: 70vh;">
-          <q-card-section class="absolute-center"
-            style="width: 450px; max-width: 70vw; height: auto; max-height: auto;">
-            <EditarCategoria :title="topics" :aux='aux'/>
-          </q-card-section>
-        </q-card>
-      </q-dialog>
+     <q-dialog v-model="dialogCategory" persistent>
+       <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Nova categoria</div>
+        </q-card-section>
+        <q-form @submit="saveItem">
+          <q-card-section class="q-pt-none">
+          <q-input dense v-model.trim="formData.name"  autofocus />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+        </q-card-actions>
+        </q-form>
+
+        
+      </q-card>
+
+          </q-dialog>
+
+              <q-inner-loading
+        :showing="loading"
+        label="Atualizando..."
+        label-class="text-primary"
+        color="primary"
+        label-style="font-size: 1.1em"
+      />
   </div>
 </template>
 
@@ -98,8 +127,8 @@ const rows = [
   },
 ];
 
-import { Notify } from 'quasar';
-import { defineComponent, ref, onMounted } from 'vue';
+import { useQuasar } from 'quasar'
+import { defineComponent, ref, onMounted, reactive } from 'vue';
 import useApi from '../../../composebles/useApi';
 import EditarCategoria from './EditarCategoria.vue';
 
@@ -112,34 +141,106 @@ export default defineComponent({
 
   setup() {
     const loading = ref(true);
+    const $q = useQuasar()
 
-    const { list } = useApi();
+
+    const { list, post, update, remove } = useApi();
 
     const topics = ref([]);
-    const aux = ref([]);
+    const categories = ref([]);
 
-    const listTopicsAproachs = async () => {
+    const formData = reactive({
+      name: "",
+      id: null
+    })
+
+    const listAll = async () => {
       try {
         loading.value = true;
-        aux.value = await list('categoria');
-        topics.value = aux.value.map((elem) => elem.name);
+        categories.value = await list('categoria');
         loading.value = false;
       } catch (error) {
-        Notify(error);
+        alert(error);
       }
     };
+     const deleteItem = async (id) => {
+      try {
+        loading.value = true;
+            await remove('categoria', id);
+          listAll()
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+       const saveItem = async () => {
+      try {
+        loading.value = true;
+          if(!formData.id) {
+            delete formData.id
+
+             await post('categoria', formData);
+          }else{
+
+            await update('categoria', formData);
+          }
+          listAll()
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     onMounted(() => {
-      listTopicsAproachs();
+      listAll();
     });
 
     const onItemClick = async () => {
 
     };
+
+    const dialogCategory = ref(false)
+    const newDialog = (data) => {
+      if(data) {
+        Object.keys(data).forEach(key => {
+          formData[key]= data[key]
+        })
+
+      } else {
+        formData.name=""
+      }
+      dialogCategory.value=true
+    }
+
+    function confirmDelete (id) {
+      $q.dialog({
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
+      }).onOk(() => {
+        deleteItem(id)
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
+    
     return {
-      aux,
+      confirmDelete,
+      newDialog,
+      formData,
+      loading,
+      deleteItem,
+      dialogCategory,
+      categories,
+      saveItem,
       onItemClick,
       columns,
       rows,
+      listAll,
       topics,
       varDialogPassword: ref(false),
     };

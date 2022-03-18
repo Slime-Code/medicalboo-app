@@ -53,7 +53,7 @@ const routes = [
       { path: '/admin/categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
       { path: '/admin/users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
-      { path: '/admin/profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
+      // { path: '/admin/profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
       { path: '/admin/occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
     ],
   },
