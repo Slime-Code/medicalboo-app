@@ -44,7 +44,7 @@
           <div class="column q-ma-md">
             <div class="col">
               <q-btn
-                to="/editar-senha"
+                @click="dialogPassword=true"
                 align="left"
                 flat
                 no-caps
@@ -53,6 +53,7 @@
                 icon-right="eva-arrow-ios-forward-outline"
                 class="btn-opcao"/>
               <q-btn
+                @click="dialogAvaliarApp=true"
                 align="left"
                 flat
                 no-caps
@@ -104,13 +105,75 @@
           </div>
         </div>
       </div>
+      <q-dialog v-model="dialogPassword" persistent>
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">Alterar Senha</div>
+          </q-card-section>
+          <q-form>
+            <q-card-section class="q-pt-none">
+              <q-input label="Antiga Senha"
+                dense v-model.trim="formData.antigo"  autofocus />
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input label="Nova Senha"
+                dense v-model.trim="formData.password"  autofocus />
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input label="Confirme a Nova Senha" dense
+                v-model.trim="formData.password1"  autofocus />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+            <q-btn  label="Salvar" color="primary"
+             @click="updatPassword" v-ripple no-caps v-close-popup />
+          </q-card-actions>
+          </q-form>
+
+        </q-card>
+      </q-dialog>
+
+       <q-dialog v-model="dialogAvaliarApp" persistent>
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">Avalie o App</div>
+          </q-card-section>
+          <q-form>
+            <q-card-section class="q-pt-none">
+              <q-option-group
+                v-model="cont"
+                checked-icon="thumb_up" unchecked-icon="thumb_down"
+                :options="type"
+                color="primary"
+                inline
+              />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+            <q-btn  label="Salvar" color="primary"
+             @click="updatClassification" v-ripple no-caps v-close-popup />
+          </q-card-actions>
+          </q-form>
+
+        </q-card>
+      </q-dialog>
     </q-page>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+/* eslint-disable no-unused-expressions */
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from 'src/functions/functionShowNotifications';
+import { defineComponent, ref, onMounted } from 'vue';
 import useAuthUser from 'src/composebles/useAuthUser';
-import { useRouter } from 'vue-router';
+import useApi from 'src/composebles/useApi';
+import { useRouter, useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
@@ -120,21 +183,141 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const { logout } = useAuthUser();
+    const { update, list } = useApi();
+
+    const { resetPassword } = useAuthUser();
+
+    const route = useRoute();
+
+    const { token } = route.query;
+
+    const { logout, user } = useAuthUser();
+
+    const dialogPassword = ref(false);
+
+    const dialogAvaliarApp = ref(false);
+
+    const loading = ref(true);
+
+    const cont = ref(0);
+
+    const formData = ref({
+      password: '',
+      password1: '',
+      antigo: '',
+    });
+
+    const table = ref({
+      id: 1,
+      like: 0,
+      dislike: 0,
+      people: 0,
+    });
+    const type = ref([
+      {
+        label: 'Gosto',
+        value: 1,
+      },
+      {
+        label: 'Não Gosto',
+        value: 2,
+      },
+    ]);
+
+    const updatClassification = async () => {
+      if (cont.value === 0) {
+        try {
+          if (cont.value === 1) {
+            table.value.like += 1;
+          } else if (cont.value === 2) {
+            table.value.dislike += 1;
+          }
+          table.value.people += 1;
+          loading.value = true;
+          await update('classification', table.value);
+          loading.value = false;
+          showSuccessNotification('Classificado com sucesso!!');
+        } catch (error) {
+          showErrorNotification(`Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+        }
+      } else {
+        showErrorNotification('Já Fizeste a Classificação do App!!!');
+      }
+    };
+
+    const updatPassword = async () => {
+      // eslint-disable-next-line max-len
+      if (formData.value.password !== formData.value.password1) {
+        // alert(JSON.stringify(user.value));
+        $q.dialog({
+          title: 'Falhou!',
+          message: 'Senha Errada... Pretendes Repetir ?',
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          dialogPassword.value = true;
+        });
+      } else {
+        $q.dialog({
+          title: 'Alterar Senha:',
+          message: 'Tens a certeza que queres alterar a Senha ?',
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          try {
+            loading.value = true;
+            user.value.password = formData.value.password1;
+
+            await resetPassword(token, formData.value.password);
+            loading.value = false;
+            showSuccessNotification(`Alteração Feita Com sucesso : ${formData.value.password1}`);
+          } catch (error) {
+            showErrorNotification(`Alteração Não Foi Bem Sucedido Pelo Seguinte Erro: ${error}`);
+          }
+        });
+      }
+    };
 
     const handleLogout = async () => {
       $q.dialog({
         title: 'Logout',
-        message: 'Do you really want to leave ?',
+        message: 'Tens a certeza que queres Sair ?',
         cancel: true,
         persistent: true,
       }).onOk(async () => {
-        await logout();
-        router.replace({ name: 'login' });
+        try {
+          loading.value = true;
+          await logout();
+          loading.value = false;
+          router.replace({ name: 'login' });
+        } catch (error) {
+          showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${error}`);
+        }
       });
     };
+    const listTable = async () => {
+      loading.value = true;
+      const tabela = await list('classification');
+      table.value.like = tabela.value.like;
+      table.value.dislike = tabela.value.dislike;
+      table.value.people = tabela.value.people;
+      loading.value = false;
+    };
+    onMounted(() => {
+      listTable();
+    });
+
     return {
+      cont,
+      table,
+      type,
+      dialogAvaliarApp,
+      formData,
+      loading,
+      dialogPassword,
+      updatPassword,
       handleLogout,
+      updatClassification,
       slide: ref('style'),
     };
   },

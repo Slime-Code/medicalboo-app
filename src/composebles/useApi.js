@@ -41,7 +41,7 @@ export default function useApi() {
     const { data, error } = await supabase
       .from(table)
       .update([
-        {...form},
+        { ...form },
       ])
       .match({ id: form.id });
     if (error) throw error;

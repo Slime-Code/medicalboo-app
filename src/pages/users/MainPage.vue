@@ -41,7 +41,7 @@
               </div>
                 <div class="row">
                   <q-spinner
-                  class="absolute-center"
+                    class="absolute-center"
                     v-if="loadingTopic"
                     size="xl"
                     color="primary"

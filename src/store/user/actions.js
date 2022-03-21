@@ -18,7 +18,7 @@ function login({ commit }, payload) {
         })
         .then((response1) => {
           commit('setLoggedIn', true);
-          console.log(response1.data.user);
+          // console.log(response1.data.user);
           const userType = response1.data.user.type;
 
           api.defaults.headers.common.Authorization = `Bearer ${response1.data.token}`;
@@ -61,15 +61,19 @@ function getState({ commit }) {
   commit('setDetails', details);
 }
 
+/*
 function register() {
-  // .........
+  // -----------
 }
+*/
 
 function setDataForm({ commit }, payload) {
-  if (payload.name) { commit('setFormOne', payload); }
-  if (payload.email) { commit('setFormSecond', payload); }
-  if (payload.graduation_year) { commit('setFormThird', payload); }
+  if (payload.name) {
+    commit('setFormOne', payload);
+  } else if (payload.email) {
+    commit('setFormSecond', payload);
+  } else if (payload.graduation_year) {
+    commit('setFormThird', payload);
+  }
 }
-export {
-  login, getState, setDataForm, register,
-};
+export { login, getState, setDataForm };

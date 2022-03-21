@@ -17,12 +17,14 @@
                 dense
                 rounded
                 outlined
+                :loading='loading'
                 v-model="formData.occupation_area"
                 :options="options"
                 label="Área de actuação"
                 class="q-mb-md"
               />
               <q-select
+                :loading='loading'
                 dense
                 rounded
                 outlined
@@ -47,11 +49,22 @@
           </q-form>
         </div>
     </q-page>
+    <div class="flex flex-top">
+    <q-spinner
+      class="absolute-center"
+      v-if="loading1"
+      size="xl"
+      color="primary"
+    />
+  </div>
   </div>
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import {
+  showErrorNotification,
+  // showSuccessNotification,
+} from 'src/functions/functionShowNotifications';
 import {
   defineComponent, reactive, ref, computed, onMounted,
 } from 'vue';
@@ -69,6 +82,8 @@ export default defineComponent({
     const { register } = useAuthUser();
 
     const loading = ref(true);
+
+    const loading1 = ref(false);
 
     const { list } = useApi();
 
@@ -97,7 +112,7 @@ export default defineComponent({
         options1.value = aux.map((elem) => elem.graduation_year);
         loading.value = false;
       } catch (error) {
-        Notify(error);
+        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`);
       }
     };
     onMounted(() => {
@@ -106,6 +121,7 @@ export default defineComponent({
 
     const nextStep = async () => {
       try {
+        loading1.value = true;
         store.commit('user/setFormThird', formData);
         const form = { ...store.state.user.formData };
         const user = await register(form);
@@ -114,12 +130,16 @@ export default defineComponent({
         form.user_id = user.id;
         await post('perfil', form);
         router.replace({ name: 'concluido' });
+        loading1.value = false;
       } catch (error) {
-        alert(error.message);
+        loading1.value = false;
+        showErrorNotification(`houve uma falha ao carregar os dados para o banco: ${JSON.stringify(error)}`);
       }
     };
 
     return {
+      loading,
+      loading1,
       formData,
       options,
       options1,

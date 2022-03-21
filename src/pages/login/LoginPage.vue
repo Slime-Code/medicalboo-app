@@ -48,6 +48,13 @@
               <PrimaryButtom label="acessar" type="submit" />
               <SecondaryButtom label="criar conta gratuita" link="/register"/>
             </div>
+            <br>
+            <q-spinner
+              class="absolute-center"
+              v-if="loading"
+              size="xl"
+              color="primary"
+            />
           </q-form>
         </div>
       </div>
@@ -72,13 +79,17 @@ export default defineComponent({
   setup() {
     const form = ref({ email: '', password: '' });
 
+    const loading = ref(false);
+
     const router = useRouter();
 
     const { login } = useAuthUser();
 
     const handleLogin = async () => {
       try {
+        loading.value = true;
         await login(form.value);
+        loading.value = false;
         router.replace({ name: 'home' });
       } catch (error) {
         // eslint-disable-next-line no-alert
@@ -88,6 +99,7 @@ export default defineComponent({
     return {
       handleLogin,
       form,
+      loading,
     };
   },
   /* methods: {

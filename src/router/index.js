@@ -34,11 +34,11 @@ export default route((/* { store, ssrContext } */) => {
     const { isLoggedin } = useAuthUser();
     if (
       to.hash.includes('type=recovery')
-      && to.name !== 'reset-password'
+      && to.name !== 'profile'
     ) {
       const accessToken = to.hash.split('&')[0];
       const token = accessToken.replace('#acess_token=', '');
-      return { name: 'reset-password', query: { token } };
+      return { name: 'profile', query: { token } };
     }
 
     if (
