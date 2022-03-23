@@ -18,7 +18,6 @@
                 v-model="filter"
                 label="Pesquise aqui um tópico"
                 dense>
-
                 <template v-slot:append>
                   <q-icon v-if="filter !== ''" name="close"
                   @click="filter = ''" class="cursor-pointer" />
