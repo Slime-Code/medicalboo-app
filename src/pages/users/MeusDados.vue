@@ -190,9 +190,7 @@ export default defineComponent({
       email: '',
     });
 
-    const { getById, list } = useApi();
-
-    const { update } = useApi();
+    const { getById, list, update } = useApi();
 
     const { user } = useAuthUser();
 
@@ -242,7 +240,6 @@ export default defineComponent({
             aux.value.user_metadata.profile_type_id = formData.value.profile_type_id;
             aux.value.user_metadata.cpf = formData.value.cpf;
             user.value = aux.value;
-            alert(JSON.stringify(user));
           }
         });
 

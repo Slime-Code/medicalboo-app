@@ -31,7 +31,7 @@ export default route((/* { store, ssrContext } */) => {
 
   // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
-    const { isLoggedin } = useAuthUser();
+    const { user } = useAuthUser();
     if (
       to.hash.includes('type=recovery')
       && to.name !== 'profile'
@@ -42,7 +42,8 @@ export default route((/* { store, ssrContext } */) => {
     }
 
     if (
-      !isLoggedin()
+      !user.value
+      // !isLoggedin()
       && to.meta.requaresAuth
       && !Object.keys(to.query).includes('fromEmail')
     ) {

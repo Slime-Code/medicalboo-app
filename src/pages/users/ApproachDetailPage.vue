@@ -8,9 +8,47 @@
 
       <div class="column explore">
         <div class="col">
-          <q-select outlined :options="topics" label="Definição" style="margin-top: -90px" />
-          <q-select outlined :options="topics" label="Diagnóstico" style="margin-top: 10px" />
-     <q-select outlined :options="topics" label="Exames Complementares" style="margin-top: 10px" />
+          <q-expansion-item
+            dense
+            dense-toggle
+            expand-separator
+            icon="settings"
+            label="Definição"
+          >
+            <q-card>
+              <q-card-section>
+                eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            dense
+            dense-toggle
+            expand-separator
+            icon="diagnostics"
+            label="Diagnóstico"
+          >
+            <q-card>
+              <q-card-section>
+                eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            dense
+            dense-toggle
+            expand-separator
+            icon="perm_identity"
+            label="Exames Complementares"
+          >
+            <q-card>
+              <q-card-section>
+                eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
         </div>
       </div>
     </q-page>

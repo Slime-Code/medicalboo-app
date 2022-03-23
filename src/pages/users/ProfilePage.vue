@@ -9,7 +9,7 @@
             </q-btn>
         </div>
         <div class="col item">
-          <h6 style="margin:0">Henrique Silva</h6>
+          <h6 style="margin:0"> {{user.user_metadata.name}} </h6>
           <span>Assinatura Gratis</span>
         </div>
         <div class="col item q-ma-md">
@@ -40,6 +40,14 @@
             </div>
           </div>
         </div>
+
+        <q-spinner
+          class="absolute-center"
+          v-if="loading"
+          size="xl"
+          color="primary"
+        />
+
         <div class="col item">
           <div class="column q-ma-md">
             <div class="col">
@@ -197,7 +205,7 @@ export default defineComponent({
 
     const dialogAvaliarApp = ref(false);
 
-    const loading = ref(true);
+    const loading = ref(false);
 
     const cont = ref(0);
 
@@ -238,6 +246,7 @@ export default defineComponent({
           loading.value = false;
           showSuccessNotification('Classificado com sucesso!!');
         } catch (error) {
+          loading.value = false;
           showErrorNotification(`Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
         }
       } else {
@@ -272,7 +281,8 @@ export default defineComponent({
             loading.value = false;
             showSuccessNotification(`Alteração Feita Com sucesso : ${formData.value.password1}`);
           } catch (error) {
-            showErrorNotification(`Alteração Não Foi Bem Sucedido Pelo Seguinte Erro: ${error}`);
+            loading.value = false;
+            showErrorNotification(`Alteração Não Foi Bem Sucedido Pelo Seguinte Erro: ${JSON.stringify(error)}`);
           }
         });
       }
@@ -291,23 +301,25 @@ export default defineComponent({
           loading.value = false;
           router.replace({ name: 'login' });
         } catch (error) {
-          showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${error}`);
+          loading.value = false;
+          showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
         }
       });
     };
     const listTable = async () => {
-      loading.value = true;
+      // loading.value = true;
       const tabela = await list('classification');
       table.value.like = tabela.value.like;
       table.value.dislike = tabela.value.dislike;
       table.value.people = tabela.value.people;
-      loading.value = false;
+      /// loading.value = false;
     };
     onMounted(() => {
       listTable();
     });
 
     return {
+      user,
       cont,
       table,
       type,

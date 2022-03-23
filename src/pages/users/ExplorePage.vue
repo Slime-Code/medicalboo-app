@@ -1,4 +1,4 @@
-<template>
+  <template>
     <q-page class="flex flex-center">
       <div class="column explore">
         <div class="col">
@@ -37,7 +37,9 @@
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import {
+  showErrorNotification,
+} from 'src/functions/functionShowNotifications';
 import { defineComponent, ref } from 'vue';
 import ApproachButtom from '../../components/ApproachButtom.vue';
 import useApi from '../../composebles/useApi';
@@ -59,9 +61,10 @@ export default defineComponent({
         loading.value = true;
         const aux = await list('approach');
         topics.value = aux.map((elem) => elem.title);
+        topics.value.sort();
         loading.value = false;
       } catch (error) {
-        Notify(error);
+        showErrorNotification(error);
       }
     };
     return {
@@ -70,7 +73,6 @@ export default defineComponent({
       text: ref(''),
       topics,
       slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
     };
   },
   mounted() {

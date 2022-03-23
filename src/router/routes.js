@@ -22,13 +22,25 @@ const routes = [
       { path: 'explore', name: 'explore', component: () => import('pages/users/ExplorePage.vue') },
       { path: 'favorite', name: 'favorite', component: () => import('pages/users/FavoritePage.vue') },
       { path: 'approach', name: 'approach', component: () => import('pages/users/ApproachPage.vue') },
-      { path: 'approach-detail', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
       { path: 'note', name: 'note', component: () => import('pages/users/NotePage.vue') },
+      { path: 'accesso-por-capitulo', name: 'accesso-por-capitulo', component: () => import('pages/users/AccessoPorCapituloPage.vue') },
     ],
     meta: {
       requaresAuth: true,
     },
   },
+
+  {
+    path: '/',
+    component: () => import('src/layouts/ApproachDetalhesLayout.vue'),
+    children: [
+      { path: 'approach-detail', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
+    ],
+    meta: {
+      requaresAuth: true,
+    },
+  },
+
   {
     path: '/register',
     component: () => import('src/layouts/RegisterLayout.vue'),
@@ -40,9 +52,6 @@ const routes = [
       { path: '/email-confirmation', name: 'email-confirmation', component: () => import('src/pages/register/EmailConfirmation.vue') },
       { path: '/registerPage', name: 'registerPage', component: () => import('src/pages/register/RegisterPage.vue') },
     ],
-    meta: {
-      requaresAuth: true,
-    },
   },
 
   {
@@ -68,6 +77,9 @@ const routes = [
       { path: '/admin/profile-types', name: 'profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
     ],
+    meta: {
+      requaresAuth: true,
+    },
   },
 
   // Always leave this as last one,

@@ -12,7 +12,7 @@
           <q-tab
           v-for="(category, index) in categorys" :key="index"
           :name="category"
-          :label="category"
+          :label="category.name"
           />
           <div class=" flex flex-center ">
             <q-spinner v-if="loadingCategory"
@@ -37,7 +37,7 @@
             <q-tab-panel v-for="(category, index) in categorys" :key="index" :name="category">
 
               <div class="text-h4 q-mb-md">
-                {{ category }}
+                {{ category.name }}
               </div>
                 <div class="row">
                   <q-spinner
@@ -47,16 +47,17 @@
                     color="primary"
                   />
                   <div class="col-6" v-for="(topic, index) in topics" :key="index">
-                    <a href="/approach"
-                    class="q-link rounded-borders q-pa-md q-ma-md
-                    cursor-pointer column justify-center bg-grey-1">
+                    <a v-if="topic.categoria_id === category.id" href="/approach"
+                      @click="foi"
+                      class="q-link rounded-borders q-pa-md q-ma-md
+                      cursor-pointer column justify-center bg-grey-1">
                       <div class="row no-wrap items-center">
                         <q-avatar
                           :color="color_icon"
                           text-color="white"
                           :icon="icon" />
                           <div class="col q-pl-lg">
-                            <div class="text-uppercase">{{ topic }}</div>
+                            <div class="text-uppercase">{{ topic.name }}</div>
                           <div class="text-weight-bold">{{ caption }}</div>
                         </div>
                       </div>
@@ -86,7 +87,7 @@
         <div class="q-pa-md q-gutter-sm row items-start">
           <q-banner class="col" rounded >
             <template v-slot:avatar>
-              <q-btn flat :to="{name: 'acesso-capitulo'}">
+              <q-btn flat :to="{name: 'acesso-por-capitulo'}">
                 <img
                   src="img/Grátis@2x.png"
                   style="width: 100%; height: 100px"
@@ -99,7 +100,7 @@
           </q-banner>
           <q-banner class="col" rounded >
             <template v-slot:avatar>
-              <q-btn flat :to="{name: 'acesso-capitulo'}">
+              <q-btn flat :to="{name: 'acesso-por-capitulo'}">
                 <img
                   src="img/Grátis-2.png"
                   style="width: 100%; height: 100px"
@@ -117,7 +118,9 @@
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import {
+  showErrorNotification,
+} from 'src/functions/functionShowNotifications';
 import { defineComponent, ref } from 'vue';
 // import { mapActions } from 'vuex';
 // import TopicButtom from '../../components/TopicButtom.vue';
@@ -133,36 +136,59 @@ export default defineComponent({
 
     const categorys = ref([]);
 
+    const topicos = ref([]);
+
     const tab = ref('');
 
     const loadingCategory = ref(true);
 
     const loadingTopic = ref(true);
 
+    const todos = ref([[]]);
+
     const listTopics = async () => {
       try {
+        const aux2 = await list('approach');
+
+        categorys.value = aux2.map((elem) => elem.name);
         // alert(JSON.stringify(topics));
         loadingCategory.value = true;
-        const aux1 = await list('categoria');
-        categorys.value = aux1.map((elem) => elem.name);
+        categorys.value = await list('categoria');
+        // categorys.value = aux1.map((elem) => elem.name);
+        categorys.value.sort();
         loadingCategory.value = false;
         // eslint-disable-next-line prefer-destructuring
         tab.value = categorys.value[0];
 
         loadingTopic.value = true;
-        const aux = await list('topic');
-        topics.value = aux.map((elem) => elem.name);
+        topics.value = await list('topic');
+        topicos.value = topics.value.map((elem) => elem.name);
+        topicos.value.sort();
+        alert(JSON.stringify(topics.value));
+        // topics.value = aux.map((elem) => elem.name);
         loadingTopic.value = false;
       } catch (error) {
-        Notify(error);
+        showErrorNotification(`A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
       }
     };
+
+    const topicAcessado = ref({
+      chave: null,
+      valo: null,
+    });
+    const foi = async () => {
+      console.log(topicAcessado.value);
+    };
     return {
+      todos,
+      foi,
+      topicAcessado,
       loadingTopic,
       loadingCategory,
       listTopics,
       tab,
       topics,
+      topicos,
       categorys,
 
       caption: ref(''),

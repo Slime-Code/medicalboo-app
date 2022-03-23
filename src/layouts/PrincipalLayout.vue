@@ -32,7 +32,7 @@
           </div>
       </q-toolbar>
         <div class="col q-mx-lg q-px-lg">
-          Olá {{name}}, tudo bem
+          Olá {{ user.user_metadata.name }}, tudo bem
         </div>
     </q-header>
 
@@ -104,7 +104,9 @@
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import {
+  showErrorNotification,
+} from 'src/functions/functionShowNotifications';
 import { defineComponent, ref, onMounted } from 'vue';
 import TopicButtom from '../components/TopicButtom.vue';
 import useApi from '../composebles/useApi';
@@ -120,15 +122,11 @@ export default defineComponent({
 
     const { user } = useAuthUser();
 
-    const aux2 = ref(user);
-    const { name } = aux2.value.user_metadata;
-
-    const { list } = useApi();
-
-    const { getById } = useApi();
+    const { list, getById } = useApi();
 
     const topics = ref([]);
 
+    // Para Listar Os Tópicos Mais Accessados....................
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
@@ -136,15 +134,17 @@ export default defineComponent({
         const aux1 = [];
         // eslint-disable-next-line no-plusplus
         for (let index = 0; index < aux.length; index++) {
-          if (aux.user_id === user.id) {
-            aux1[index] = getById('topic', aux.id);
+          if (aux[index].user_id === user.value.id) {
+            // eslint-disable-next-line no-await-in-loop
+            aux1.push(await getById('topic', aux[index].topic_id));
           }
         }
         topics.value = aux1.map((elem) => elem.name);
 
         loading.value = false;
       } catch (error) {
-        Notify(error);
+        loading.value = false;
+        showErrorNotification(`A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`);
       }
     };
     onMounted(() => {
@@ -154,7 +154,7 @@ export default defineComponent({
       icon: ref(false),
       tab: ref('inicio'),
       topics,
-      name,
+      user,
     };
   },
 });
