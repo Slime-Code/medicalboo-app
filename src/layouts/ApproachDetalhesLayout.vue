@@ -3,7 +3,7 @@
     <q-layout >
     <q-header bordered class="bg-white" >
       <q-toolbar>
-        <q-btn :to="{name: 'approach'}"  icon="arrow_back" color="grey" />
+        <q-btn :to="{name: rota}"  icon="arrow_back" color="grey" />
         <q-space />
           <div class="q-gutter-x-md">
             <q-icon color="grey" name="edit"/>
@@ -20,6 +20,7 @@
       style="margin: 0 auto; padding: 3px 10px ;
         margin-left: 20px; border-left: 5px solid #013b68;">
           {{ topics[0] }}
+          {{ approach }}
         <q-icon name="favorite" style="color: #ccc; font-size: 1.2em; margin-top-left: 10px" />
       </div><br>
 
@@ -85,7 +86,19 @@ import { defineComponent, ref, onMounted } from 'vue';
 import useApi from '../composebles/useApi';
 
 export default defineComponent({
-  name: 'SecondaryLayout',
+  name: 'ApproachDetalhesLayout',
+
+  props: {
+    approach: {
+      type: Object,
+      required: '',
+    },
+
+    rota: {
+      type: String,
+    },
+  },
+
   setup() {
     const loading = ref(true);
 

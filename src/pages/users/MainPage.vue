@@ -164,7 +164,7 @@ export default defineComponent({
         topics.value = await list('topic');
         topicos.value = topics.value.map((elem) => elem.name);
         topicos.value.sort();
-        alert(JSON.stringify(topics.value));
+        // alert(JSON.stringify(topics.value));
         // topics.value = aux.map((elem) => elem.name);
         loadingTopic.value = false;
       } catch (error) {

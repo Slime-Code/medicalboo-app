@@ -22,13 +22,13 @@
         <div class="col">
           <br>
           <strong style="color: blue;">Abordagem Geral</strong><hr>
-            <q-spinner
-              class="flex flex-center"
-              v-if="loading"
-              size="xl"
-              color="primary"
-            />
-          <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index"/>
+          <q-spinner
+            class="flex flex-center"
+            v-if="loading"
+            size="xl"
+            color="primary"
+          />
+         <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index" :rota='rota'/>
           <br>
           <strong style="color: blue;">Abordagem Terapeutica</strong><hr>
             <q-spinner
@@ -48,11 +48,13 @@ import { Notify } from 'quasar';
 import { defineComponent, ref, onMounted } from 'vue';
 import ApproachButtom from '../../components/ApproachButtom.vue';
 import useApi from '../../composebles/useApi';
+// import ApproachDetalhesLayout from './ApproachDetailPage.vue';
 
 export default defineComponent({
   name: 'ProfilePage',
   components: {
     ApproachButtom,
+    // ApproachDetalhesLayout,
   },
   setup() {
     const loading = ref(true);
@@ -90,7 +92,7 @@ export default defineComponent({
       types,
       // topics: ['Covid-19', 'Malaria', 'Paludismo', 'Diabetes'],
       slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
+      rota: 'approach',
     };
   },
 });

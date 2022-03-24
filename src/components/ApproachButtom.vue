@@ -18,9 +18,15 @@
 
 <script>
 import { defineComponent } from 'vue';
+import ApproachDetalhesLayout from '../layouts/ApproachDetalhesLayout.vue';
 
 export default defineComponent({
   name: 'ApproachButtom',
+
+  components: {
+    ApproachDetalhesLayout,
+  },
+
   props: {
     title: {
       type: String,
