@@ -9,7 +9,7 @@ const routes = [
       { path: 'home', name: 'home', component: () => import('src/pages/users/MainPage.vue') },
     ],
     meta: {
-      requaresAuth: true,
+      requiresAuth: true,
     },
   },
   {
@@ -27,7 +27,7 @@ const routes = [
       { path: 'acesso-capitulo', name: 'acesso-capitulo', component: () => import('pages/users/AccessoPorCapituloPage.vue') },
     ],
     meta: {
-      requaresAuth: true,
+      requiresAuth: true,
     },
   },
   {
@@ -41,9 +41,6 @@ const routes = [
       { path: '/email-confirmation', name: 'email-confirmation', component: () => import('src/pages/register/EmailConfirmation.vue') },
       { path: '/registerPage', name: 'registerPage', component: () => import('src/pages/register/RegisterPage.vue') },
     ],
-    meta: {
-      requaresAuth: true,
-    },
   },
 
   {
@@ -53,7 +50,7 @@ const routes = [
       { path: '', name: 'prime', component: () => import('src/pages/users/PrimePage.vue') },
     ],
     meta: {
-      requaresAuth: true,
+      requiresAuth: true,
     },
   },
 
@@ -65,10 +62,14 @@ const routes = [
       { path: '/admin/approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
-      { path: '/admin/users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
+      // { path: '/admin/users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
       // { path: '/admin/profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
       { path: '/admin/occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
     ],
+    meta: {
+      requiresAuth: true,
+    },
+
   },
 
   // Always leave this as last one,
