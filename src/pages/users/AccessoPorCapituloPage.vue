@@ -58,8 +58,8 @@ export default defineComponent({
     const listTopics = async () => {
       try {
         loading.value = true;
-        const aux = await list('approach');
-        topics.value = aux.map((elem) => elem.title);
+        topics.value = await list('approach');
+        // topics.value = aux.map((elem) => elem.title);
         loading.value = false;
       } catch (error) {
         Notify(error);
@@ -71,7 +71,6 @@ export default defineComponent({
       text: ref(''),
       topics,
       slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
     };
   },
   mounted() {

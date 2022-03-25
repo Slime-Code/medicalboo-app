@@ -87,7 +87,7 @@
         <div class="q-pa-md q-gutter-sm row items-start">
           <q-banner class="col" rounded >
             <template v-slot:avatar>
-              <q-btn flat :to="{name: 'acesso-por-capitulo'}">
+              <q-btn flat :to="{name: 'accesso-por-capitulo'}">
                 <img
                   src="img/Grátis@2x.png"
                   style="width: 100%; height: 100px"
@@ -100,7 +100,7 @@
           </q-banner>
           <q-banner class="col" rounded >
             <template v-slot:avatar>
-              <q-btn flat :to="{name: 'acesso-por-capitulo'}">
+              <q-btn flat :to="{name: 'accesso-por-capitulo'}">
                 <img
                   src="img/Grátis-2.png"
                   style="width: 100%; height: 100px"
