@@ -1,9 +1,9 @@
 <template>
-  <a :href="link" class="q-link cursor-pointer q-ma-xs">
+  <a @click="go" class="q-link cursor-pointer q-ma-xs">
     <q-banner rounded class="bg-white text-grey-6 q-approach">
       <div class="row">
         <div class="col q-py-xs">
-          {{ title }}
+          {{ title.title }}
         </div>
         <div class="col-grow-1 q-pa-xs">
           <q-icon v-if="accessCap" name="favorite" />
@@ -18,18 +18,14 @@
 
 <script>
 import { defineComponent } from 'vue';
-import ApproachDetalhesLayout from '../layouts/ApproachDetalhesLayout.vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ApproachButtom',
 
-  components: {
-    ApproachDetalhesLayout,
-  },
-
   props: {
     title: {
-      type: String,
+      type: Object,
       required: 'Sem titulo',
     },
 
@@ -43,14 +39,21 @@ export default defineComponent({
       default: '',
     },
 
-    link: {
-      type: String,
-      default: 'http://localhost:8082/approach-detail/',
-    },
     accessCap: {
       type: Boolean,
       default: true,
     },
+  },
+
+  setup(props) {
+    const router = useRouter();
+
+    const go = async (evt, index) => {
+      router.push(`approach-detail/${props.title.id}`);
+    };
+    return {
+      go,
+    };
   },
 });
 </script>

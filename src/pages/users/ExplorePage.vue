@@ -7,6 +7,7 @@
         :rows="rows"
         :filter="filter"
         visible-columns="['title']"
+        color="blue"
       >
         <template v-slot:top-right>
           <div class="column explore">
@@ -32,7 +33,9 @@
             <q-tr :props="props">
               <q-td :props="rows">
                 <approach-detalhes-layout :rota='explore' :approach='this.rows' />
-                {{ props }}
+                <div class="tex-black-10" style="color: #1E1E1E">
+                  {{ props }}
+                </div>
               </q-td>
             </q-tr>
           </q-btn>
@@ -73,8 +76,8 @@ export default {
 
     const loading = ref(true);
 
-    const go = async () => {
-      router.push({ name: 'approach-detail' });
+    const go = async (evt, row, index) => {
+      router.push(`approach-detail/${row.id}`);
     };
 
     const listTopics = async () => {

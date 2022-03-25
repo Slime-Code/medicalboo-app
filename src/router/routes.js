@@ -31,10 +31,10 @@ const routes = [
   },
 
   {
-    path: '/',
+    path: '/:id',
     component: () => import('src/layouts/ApproachDetalhesLayout.vue'),
     children: [
-      { path: 'approach-detail', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
+      { path: '/approach-detail', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
     ],
     meta: {
       requaresAuth: true,

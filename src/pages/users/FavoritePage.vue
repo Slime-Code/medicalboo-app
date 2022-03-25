@@ -20,7 +20,7 @@
         <div class="col">
         <hr>
         <br>
-          <ApproachButtom v-for="(option, index) in top" :title="option.title" :key="index"/>
+          <ApproachButtom v-for="(option, index) in top" :title="option" :key="index"/>
         </div><br><br>
         <q-spinner
             v-if="loading"

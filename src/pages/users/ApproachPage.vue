@@ -28,7 +28,7 @@
             size="xl"
             color="primary"
           />
-         <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index" :rota='rota'/>
+         <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index"/>
           <br>
           <strong style="color: blue;">Abordagem Terapeutica</strong><hr>
             <q-spinner
@@ -65,17 +65,17 @@ export default defineComponent({
 
     const topics = ref([]);
 
-    const types = ref([]);
+    // const types = ref([]);
 
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
         loading1.value = true;
-        const aux = await list('approach');
+        topics.value = await list('approach');
         // const aux1 = await list('type_approach');
-        topics.value = aux.map((elem) => elem.title);
+        // topics.value = aux.map((elem) => elem.title);
         loading.value = false;
-        types.value = aux.map((elem) => elem.name);
+        // types.value = aux.map((elem) => elem.name);
         loading1.value = false;
       } catch (error) {
         Notify(error);
@@ -89,7 +89,7 @@ export default defineComponent({
       loading1,
       text: ref(''),
       topics,
-      types,
+      // types,
       // topics: ['Covid-19', 'Malaria', 'Paludismo', 'Diabetes'],
       slide: ref('style'),
       rota: 'approach',

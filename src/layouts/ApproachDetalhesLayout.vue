@@ -3,7 +3,7 @@
     <q-layout >
     <q-header bordered class="bg-white" >
       <q-toolbar>
-        <q-btn :to="{name: rota}"  icon="arrow_back" color="grey" />
+        <q-btn :to="{name: 'home'}" flat text-color="grey" icon="arrow_back" />
         <q-space />
           <div class="q-gutter-x-md">
             <q-icon color="grey" name="edit"/>
@@ -16,15 +16,14 @@
     <br><br><br>
 
     <div class="justify-center q-gutter-y-md"><br>
-      <div class=" explore q-row q-gutter-x-lg"
+      <div class="q-row q-gutter-x-md"
       style="margin: 0 auto; padding: 3px 10px ;
-        margin-left: 20px; border-left: 5px solid #013b68;">
-          {{ topics[0] }}
-          {{ approach }}
+        margin-left: 20px; border-left: 5px solid #1F60A9;">
+          {{ approach.title }}
         <q-icon name="favorite" style="color: #ccc; font-size: 1.2em; margin-top-left: 10px" />
       </div><br>
 
-      <div class="flex-center col q-gutter-y-md">
+      <div class="flex-center col q-gutter-y-md text-blue-9">
         <q-expansion-item
           dense
           dense-toggle
@@ -32,11 +31,13 @@
           icon="settings"
           label="Definição"
         >
-          <q-card>
-            <q-card-section>
-              {{definicao}}
-            </q-card-section>
-          </q-card>
+          <div class="tex-black-10" style="color: #1E1E1E">
+            <q-card>
+              <q-card-section>
+                {{approach.definition}}
+              </q-card-section>
+            </q-card>
+          </div>
         </q-expansion-item>
 
         <q-expansion-item
@@ -46,11 +47,13 @@
           icon="addchart"
           label="Diagnóstico"
         >
-          <q-card>
-            <q-card-section>
-              {{diagnostico}}
-            </q-card-section>
-          </q-card>
+          <div class="tex-black-10" style="color: #1E1E1E">
+            <q-card>
+              <q-card-section>
+                {{approach.diagnosis}}
+              </q-card-section>
+            </q-card>
+          </div>
         </q-expansion-item>
 
         <q-expansion-item
@@ -60,11 +63,13 @@
           icon="vaccines"
           label="Exames Complementares"
         >
-          <q-card>
-            <q-card-section>
-              {{exComplementar}}
-            </q-card-section>
-          </q-card>
+          <div class="tex-black-10" style="color: #1E1E1E">
+            <q-card>
+              <q-card-section>
+                {{approach.complentary}}
+              </q-card-section>
+            </q-card>
+          </div>
         </q-expansion-item>
         <q-spinner
         class="absolute-center"
@@ -83,54 +88,34 @@ import {
   showErrorNotification,
 } from 'src/functions/functionShowNotifications';
 import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import useApi from '../composebles/useApi';
 
 export default defineComponent({
   name: 'ApproachDetalhesLayout',
 
-  props: {
-    approach: {
-      type: Object,
-      required: '',
-    },
-
-    rota: {
-      type: String,
-    },
-  },
-
   setup() {
     const loading = ref(true);
+    const { getById } = useApi();
+    const route = useRoute();
+    const approach = ref({});
 
-    const { list } = useApi();
-
-    const topics = ref([]);
-    const definicao = ref([]);
-    const diagnostico = ref([]);
-    const exComplementar = ref([]);
-
-    const listTopicsAproachs = async () => {
+    const getApproachById = async () => {
       try {
         loading.value = true;
-        const aux = await list('approach');
-        topics.value = aux.map((elem) => elem.title);
-        definicao.value = aux.map((elem) => elem.definition);
-        diagnostico.value = aux.map((elem) => elem.diagnosis);
-        exComplementar.value = aux.map((elem) => elem.complentary);
+        approach.value = await getById('approach', route.params.id);
         loading.value = false;
       } catch (error) {
-        loading.value = false;
         showErrorNotification(error);
       }
     };
+
     onMounted(() => {
-      listTopicsAproachs();
+      getApproachById();
     });
+
     return {
-      exComplementar,
-      diagnostico,
-      definicao,
-      topics,
+      approach,
       loading,
     };
   },
