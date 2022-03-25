@@ -9,7 +9,6 @@
             v-model="text"
             label="Pesquise aqui um tópico"
             dense>
-
             <template v-slot:append>
               <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
               <q-icon name="search" />
