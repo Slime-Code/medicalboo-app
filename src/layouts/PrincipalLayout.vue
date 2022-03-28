@@ -1,8 +1,7 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header elevated class="bg-primary text-white" height-hint="98">
-      <q-toolbar >
-          <div class="col">
+     <q-header reveal elevated>
+        <q-toolbar class="q-pa-md">
             <q-btn
               to="/profile"
               style="background: #FFFFFF; color: #1A4B9A"
@@ -12,9 +11,10 @@
                 <q-icon dense name="eva-camera-outline" color="white"/>
               </q-badge>
             </q-btn>
-          </div>
-          <div class="col-grow-1">
-            <q-btn
+
+          <q-toolbar-title>{{ user.user_metadata.name }}</q-toolbar-title>
+          <q-space/>
+           <q-btn
               no-caps
               unelevated
               rounded
@@ -24,31 +24,30 @@
                 <div class="col-2">
                   <q-icon left name="widgets" />
                 </div>
-                <div class="col-10">
+                <div class="col-10 large-screen-only">
                   <div>Mais acessados</div>
                 </div>
                </div>
             </q-btn>
-          </div>
-      </q-toolbar>
-        <div class="col q-mx-lg q-px-lg">
-          Olá {{ user.user_metadata.name }}, tudo bem
-        </div>
-    </q-header>
+        </q-toolbar>
+      </q-header>
 
-      <q-page-container style="padding-top: 25px; background-color: white">
+      <q-page-container>
         <router-view />
       </q-page-container>
 
       <q-footer
         style="background-color: #F6F6F6"
         bordered
+
+      
       >
           <q-tabs
             v-model="tab"
             indicator-color="transparent"
             dense
             align="justify"
+            class="constrain-2"
           >
           <q-route-tab
             to="/explore"
@@ -182,14 +181,7 @@ export default defineComponent({
     background: url('../../public/img/BG-1.png') 0% 5% no-repeat padding-box
     background-color: #0053ab
     opacity: 1
-  .q-page-container
-    position: absolute /**Por enquanto */
-    width: 100%
-    height: auto
-    top: 152px
-    border-radius: 20px 0 0 0
-    z-index: 100
-    overflow: hidden
+ 
   .pic
     position: absolute
     top: 35px

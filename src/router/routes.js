@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: '/',
-    component: () => import('src/layouts/SecondaryLayout.vue'),
+    component: () => import('src/layouts/PrincipalLayout.vue'),
     children: [
       { path: 'profile', component: () => import('pages/users/ProfilePage.vue') },
       { path: 'editar-senha', name: 'editar-senha', component: () => import('pages/users/EditarSenha.vue') },
