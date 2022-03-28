@@ -1,8 +1,7 @@
 <template>
-    <q-page :loading='loading' class="flex flex-center">
-      <div class="column explore">
+    <q-page :loading='loading' class="constrain">
+      <div class="column">
         <div class="col">
-          <br>
           <br>
           <q-input
             outlined
@@ -10,7 +9,11 @@
             bottom-slots
             v-model="text"
             label="Pesquise o seu tópico favorito"
-            dense>
+            dense
+
+            class="constrain-2"
+            
+            >
 
             <template v-slot:append>
               <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
@@ -19,7 +22,7 @@
 
           </q-input>
         </div>
-        <div class="col">
+        <div class="col constrain">
           <br>
           <strong style="color: blue;">Abordagem Geral</strong><hr>
           <q-spinner
