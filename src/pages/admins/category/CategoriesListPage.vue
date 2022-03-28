@@ -38,8 +38,8 @@
 
             <q-item-section top side class="medium-screen-only">
               <div class="text-grey-8 q-gutter-xs">
-                <q-btn size="12px" flat dense round icon="edit" @click="varDialogPassword = true" />
-                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
+                <q-btn size="12px" flat dense round icon="edit" @click="newDialog(category)" />
+                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click="confirmDelete(category.id)"/>
               </div>
             </q-item-section>
 
@@ -217,6 +217,8 @@ export default defineComponent({
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
+        persistent: true,
+        cancel: "Cancelar"
       }).onOk(() => {
         deleteItem(id)
       }).onOk(() => {

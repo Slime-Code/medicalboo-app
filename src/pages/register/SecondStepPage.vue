@@ -28,6 +28,7 @@
               />
               <q-input
                 dense
+                class="q-mb-sm"
                 v-model="formData.confirm_email"
                 rounded
                 outlined
@@ -35,8 +36,9 @@
                 label="Confirme o email"
                 lazy-rules
                 :rules="[
-                  val => val !== null && val !== '' || 'Campo não pode estar vazio'
-                ]"
+                  val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                  val => val.trim() === formData.email.trim() || 'Email não correspondente'
+                 ]"
               />
               <q-input
                 dense
@@ -59,7 +61,8 @@
                 label="Confirme a senha"
                 lazy-rules
                 :rules="[
-                  val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                  val => val.trim() === formData.password.trim() || 'Senha não correspondente'
                 ]"
               />
             <div class="login-btn-area">

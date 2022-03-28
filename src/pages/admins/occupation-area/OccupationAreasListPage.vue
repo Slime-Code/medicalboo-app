@@ -2,9 +2,9 @@
 <div class="flex q-pt-xl flex-center">
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
-      <div class="row q-gutter-sm">
-        <h5 class="col-12 title" style="margin: 20px 0;">Áreas de oucupação</h5>
-        <div class="col-12" style="margin: auto 0;">
+      <div>
+        <h5>Áreas de oucupação</h5>
+        <div class="row q-gutter-sm">
           <q-btn 
           @click="
            newDialog()
@@ -25,62 +25,46 @@
       </div>
     </div>
     <div class="col q-mt-md">
-      <q-list v-if="!loading" bordered class="rounded-borders"
-        style="min-width: 160px; width:100%;">
-          <q-item-label header><strong>Lista de áreas de oucupação</strong></q-item-label>
-
-            <q-separator/>
-
-          <q-item v-for="(category, index) in categories" :key="index">
-            <q-item-section>
-              <q-item-label class="q-mt-sm">{{ category.occupation_area }}</q-item-label>
-            </q-item-section>
-
-            <q-item-section top side class="medium-screen-only">
-              <div class="text-grey-8 q-gutter-xs">
-                <q-btn size="12px" flat dense round icon="edit" @click="varDialogPassword = true" />
-                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
-              </div>
-            </q-item-section>
-
-            <q-item-section top side class="non-medium-screen-only">
-              <q-btn-dropdown flat round dense icon="more_vert">
-                <q-list separator>
-               
-                   <q-item clickable dense v-close-popup @click="newDialog(category)">
-                    <q-item-section>
-                      <q-item-label>Editar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable dense v-close-popup @click="confirmDelete(category.id)">
-                    <q-item-section>
-                      <q-item-label>Eliminar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
-            </q-item-section>
-          </q-item>
-
-          <q-separator/>
-        </q-list>
+      <q-table
+        flat
+        square
+        bordered
+        title="Lista de ocupações"
+        :rows="categories"
+        :columns="columns"
+        :visible-columns="['title', 'definition']"
+        row-key="title"
+      >
+        <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="name" :props="props">
+                {{ props.row.occupation_area }}
+              </q-td>
+              <q-td key="actions" :props="props">
+                  <div class="row q-gutter-sm">
+                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" class="q-ml-sm" dense/>
+                  </div>
+              </q-td>
+            </q-tr>
+          </template>
+      </q-table>
       </div>
     </div>
      <q-dialog v-model="dialogCategory" persistent>
        <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Nova topic</div>
+          <div class="text-h6">Nova area de ocupação</div>
         </q-card-section>
         <q-form @submit="saveItem">
           <q-card-section class="q-pt-none">
-          <q-input dense v-model.trim="formData.occupation_area"  autofocus />
-        </q-card-section>
+            <q-input dense v-model.trim="formData.occupation_area"  autofocus />
+          </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
-        </q-card-actions>
+          <q-card-actions align="right" class="text-primary">
+            <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+            <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+          </q-card-actions>
         </q-form>
 
         
@@ -89,12 +73,12 @@
           </q-dialog>
 
               <q-inner-loading
-        :showing="loading"
-        label="Atualizando..."
-        label-class="text-primary"
-        color="primary"
-        label-style="font-size: 1.1em"
-      />
+                :showing="loading"
+                label="Atualizando..."
+                label-class="text-primary"
+                color="primary"
+                label-style="font-size: 1.1em"
+              />
   </div>
 </template>
 
@@ -103,15 +87,22 @@ const columns = [
   {
     name: 'name',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: 'Titulo',
     align: 'left',
     field: (row) => row.name,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true,
+    name: 'actions',
+    required: true,
+    label: 'Acoes',
+    align: 'left',
+    field: (row) => row.name,
+    format: (val) => `${val}`,
+    sortable: false,
   },
+
 ];
 
 const rows = [
@@ -177,10 +168,8 @@ export default defineComponent({
         loading.value = true;
           if(!formData.id) {
             delete formData.id
-
-             await post('occupation_area', formData);
+            await post('occupation_area', formData);
           }else{
-
             await update('occupation_area', formData);
           }
           listAll()
@@ -215,6 +204,8 @@ export default defineComponent({
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
+         persistent: true,
+        cancel: "Cancelar"
       }).onOk(() => {
         deleteItem(id)
       }).onOk(() => {
