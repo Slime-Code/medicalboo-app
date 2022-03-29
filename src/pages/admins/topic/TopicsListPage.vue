@@ -2,15 +2,16 @@
 <div class="flex q-pt-xl flex-center">
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
-      <div class="row q-gutter-sm">
-        <h5 class="col-12 title" style="margin: 20px 0;">Tópicos</h5>
-        <div class="col-12" style="margin: auto 0;">
+      <div>
+        <h5>Tópicos</h5>
+        <div class="row q-gutter-sm" style="width:100px;">
           <q-btn 
           @click="
            newDialog()
           " 
           icon="add"
           color="primary"
+          class="col"
           >
           </q-btn>
           <q-btn 
@@ -19,6 +20,7 @@
           " 
           icon="update"
           color="primary"
+          class="col"
           >
           </q-btn>
         </div>
@@ -38,8 +40,8 @@
 
             <q-item-section top side class="medium-screen-only">
               <div class="text-grey-8 q-gutter-xs">
-                <q-btn size="12px" flat dense round icon="edit" @click="varDialogPassword = true" />
-                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
+                <q-btn size="12px" flat dense round icon="edit" @click="newDialog(category)" />
+                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click="confirmDelete(category.id)" />
               </div>
             </q-item-section>
 
@@ -74,13 +76,13 @@
         </q-card-section>
         <q-form @submit="saveItem">
           <q-card-section class="q-pt-none">
-          <q-input dense v-model.trim="formData.name"  autofocus />
-        </q-card-section>
+            <q-input dense v-model.trim="formData.name"  autofocus />
+          </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
-        </q-card-actions>
+          <q-card-actions align="right" class="text-primary">
+            <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+            <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+          </q-card-actions>
         </q-form>
 
         
@@ -215,6 +217,8 @@ export default defineComponent({
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
+         persistent: true,
+        cancel: "Cancelar"
       }).onOk(() => {
         deleteItem(id)
       }).onOk(() => {
