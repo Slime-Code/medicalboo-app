@@ -32,6 +32,7 @@ export default route((/* { store, ssrContext } */) => {
   // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
     const { user } = useAuthUser();
+<<<<<<< HEAD
     if (
       to.hash.includes('type=recovery')
       && to.name !== 'profile'
@@ -46,6 +47,22 @@ export default route((/* { store, ssrContext } */) => {
     if (
       !isLoggedIn
       && to.meta.requaresAuth
+=======
+       if (
+         to.hash.includes('type=recovery')
+         && to.name !== 'reset-password'
+       ) {
+         const accessToken = to.hash.split('&')[0];
+         const token = accessToken.replace('#acess_token=', '');
+         return { name: 'reset-password', query: { token } };
+       }
+
+    const isLoggedIn = !!user.value
+
+    if (
+     !isLoggedIn
+      && to.meta.requiresAuth
+>>>>>>> 4e649f28a28b85ba588b150d2f7731d655e95b48
       && !Object.keys(to.query).includes('fromEmail')
     ) {
       return { name: 'login' };

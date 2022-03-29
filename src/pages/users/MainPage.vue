@@ -71,8 +71,13 @@
         Outras versões Medicalbook
 
       </q-toolbar-title>
+<<<<<<< HEAD
     <q-card flat bordered v-if="!loadingTopic" class="col q-mb-md row justify-center items-start">
 
+=======
+    <q-card flat bordered v-if="!loadingTopic" class=" q-mb-md row justify-center items-start">
+     
+>>>>>>> 4e649f28a28b85ba588b150d2f7731d655e95b48
         <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
           <template v-slot:avatar>
             <q-btn flat :to="{ name: 'prime' }">
