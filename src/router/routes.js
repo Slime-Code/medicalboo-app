@@ -1,5 +1,4 @@
 const routes = [
-  { path: '/comecar', name: 'comecar', component: () => import('pages/login/ComeçarPage.vue') },
   { path: '', name: 'Init', component: () => import('pages/login/InitPage.vue') },
   { path: '/login', name: 'login', component: () => import('pages/login/LoginPage.vue') },
   {
