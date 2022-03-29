@@ -1,82 +1,68 @@
 <template>
-    <div class="q-pa-md">
-      <q-table
-        @row-click="go"
-        class="col full-width"
-        :grid="$q.screen.xs"
-        :rows="rows"
-        :filter="filter"
-        visible-columns="['title']"
-        color="blue"
-      >
-        <template v-slot:top-right>
-          <div class="column explore">
-              <q-input
-                placeholder="Search"
-                outlined
-                rounded
-                bottom-slots
-                v-model="filter"
-                label="Pesquise aqui um tópico"
-                dense
-              >
-                <template v-slot:append>
-                  <q-icon v-if="filter !== ''" name="close"
-                  class="cursor-pointer" />
-                  <q-icon name="search" />
-                </template>
-              </q-input>
-          </div>
-        </template>
-        <template v-slot:body="props" class="col full-width">
-          <q-btn>
-            <q-tr :props="props">
-              <q-td :props="rows">
-                <approach-detalhes-layout :rota='explore' :approach='this.rows' />
-                <div class="tex-black-10" style="color: #1E1E1E">
-                  {{ props }}
-                </div>
-              </q-td>
-            </q-tr>
-          </q-btn>
-        </template>
-      </q-table>
-      <q-spinner
-          v-if="loading"
-          class="absolute-center"
-          size="xl"
-          color="primary"
-      />
+  <div class="q-pa-xs">
+    <q-table
+      :rows="rows"
+      :columns="columns"
+      :filter="filter"
+      no-data-label="Nenhuma abordagem encontrada"
+      no-results-label="Nenhuma Resultado encontrada"
+      color="blue"
+      row-key="title"
+      hide-header
+      @row-click="go"
+      class="col-md full-width"
+    >
+      <template v-slot:top-right>
+        <div class="column explore">
+            <q-input
+              placeholder="Search"
+              outlined
+              rounded
+              bottom-slots
+              v-model="filter"
+              label="Pesquise aqui um tópico"
+              dense
+            >
+              <template v-slot:append>
+                <q-icon v-if="filter !== ''" name="close"
+                class="cursor-pointer" />
+                <q-icon name="search" />
+              </template>
+            </q-input>
+        </div>
+      </template>
+
+      <template v-slot:no-data="{ icon, message, filter }">
+        <div class="full-width row flex-center text-accent q-gutter-sm">
+          <q-icon size="2em" name="sentiment_dissatisfied" />
+          <span>
+            ... {{ message }}
+          </span>
+          <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
+        </div>
+      </template>
+    </q-table>
   </div>
 </template>
 
 <script>
-/* eslint-disable no-plusplus */
+import { ref } from 'vue';
 import {
   showErrorNotification,
 } from 'src/functions/functionShowNotifications';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import useApi from '../../composebles/useApi';
-import ApproachDetalhesLayout from './ApproachDetailPage.vue';
 
 export default {
-  name: 'ExplorePage',
-
-  components: {
-    ApproachDetalhesLayout,
-  },
-
   setup() {
     const rows = ref([]);
-
     const { list } = useApi();
 
     const router = useRouter();
 
     const loading = ref(true);
 
-    const go = async (evt, row, index) => {
+    const go = async (evt, row) => {
       router.push(`approach-detail/${row.id}`);
     };
 
@@ -98,6 +84,17 @@ export default {
       loading,
       go,
       explore: 'explore',
+
+      columns: [
+        {
+          name: 'title',
+          required: true,
+          align: 'left',
+          field: (row) => row.title,
+          format: (val) => `${val}`,
+          sortable: true,
+        },
+      ],
     };
   },
   mounted() {

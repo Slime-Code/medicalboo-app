@@ -229,7 +229,7 @@ export default defineComponent({
         loading.value = true;
 
         const perfil = await list('perfil');
-        perfil.forEach((element) => {
+        perfil.forEach(async (element) => {
           if (element.user_id === id) {
             formData.value.id = element.id;
             aux.value.phone = formData.value.phone;
@@ -242,7 +242,7 @@ export default defineComponent({
             user.value = aux.value;
           }
         });
-
+        // await updated(user.value);
         delete formData.value.email;
         await update('perfil', formData.value);
         loading.value = false;
@@ -250,10 +250,12 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         showErrorNotification(`A Atualização Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`);
+        alert(JSON.stringify(error));
       }
     };
     onMounted(() => {
       getProfils();
+      // alert(JSON.stringify(user.value));
     });
     return {
       aux,

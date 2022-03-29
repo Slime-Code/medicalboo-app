@@ -32,7 +32,6 @@ export default route((/* { store, ssrContext } */) => {
   // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
     const { user } = useAuthUser();
-<<<<<<< HEAD
     if (
       to.hash.includes('type=recovery')
       && to.name !== 'profile'
@@ -42,26 +41,11 @@ export default route((/* { store, ssrContext } */) => {
       return { name: 'profile', query: { token } };
     }
 
+    const isLoggedIn = !!user.value;
+
     if (
-      !user.value
-      // !isLoggedin()
+      !isLoggedIn
       && to.meta.requaresAuth
-=======
-       if (
-         to.hash.includes('type=recovery')
-         && to.name !== 'reset-password'
-       ) {
-         const accessToken = to.hash.split('&')[0];
-         const token = accessToken.replace('#acess_token=', '');
-         return { name: 'reset-password', query: { token } };
-       }
-
-    const isLoggedIn = !!user.value
-
-    if (
-     !isLoggedIn
-      && to.meta.requiresAuth
->>>>>>> 0ab40f9c9d32931c79d5ed4d8996a5e25724af16
       && !Object.keys(to.query).includes('fromEmail')
     ) {
       return { name: 'login' };

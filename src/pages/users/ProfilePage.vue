@@ -78,6 +78,7 @@
                 icon-right="eva-arrow-ios-forward-outline"
                 class="btn-opcao"/>
               <q-btn
+                to="/codigo-acesso"
                 align="left"
                 flat
                 no-caps
@@ -144,29 +145,43 @@
         </q-card>
       </q-dialog>
 
-       <q-dialog v-model="dialogAvaliarApp" persistent>
+       <q-dialog v-model="dialogAvaliarApp">
         <q-card style="min-width: 350px">
           <q-card-section>
             <div class="text-h6">Avalie o App</div>
           </q-card-section>
-          <q-form>
-            <q-card-section class="q-pt-none">
-              <q-option-group
-                v-model="cont"
-                checked-icon="thumb_up" unchecked-icon="thumb_down"
-                :options="type"
-                color="primary"
-                inline
-              />
-            </q-card-section>
+            <div class="q-pa-md">
+              <q-form @submit="onSubmit" class="q-gutter-md">
+                <q-rating
+                  name="Qualidade"
+                  v-model="quality"
+                  max="5"
+                  size="3.5em"
+                  color="yellow"
+                  icon="star_border"
+                  icon-selected="star"
+                  no-dimming
+                />
 
-            <q-card-actions align="right" class="text-primary">
-              <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-            <q-btn  label="Salvar" color="primary"
-             @click="updatClassification" v-ripple no-caps v-close-popup />
-          </q-card-actions>
-          </q-form>
+                <div>
+                  <q-btn label="Classificar" type="submit" color="primary"/>
+                </div>
+              </q-form>
 
+              <q-card v-if="submitResult.length > 0" flat bordered class="q-mt-md bg-grey-2">
+                <q-card-section>Obrigado pela sua classificação, ajudar-nos-a a melhorar o App:
+                </q-card-section>
+                <q-separator />
+                <q-card-section class="row q-gutter-sm items-center">
+                  <div
+                    v-for="(item, index) in submitResult"
+                    :key="index"
+                    class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders
+                     text-center text-no-wrap"
+                  >{{ item.name }} = {{ item.value * 20}}{{porcento}}</div>
+                </q-card-section>
+              </q-card>
+            </div>
         </q-card>
       </q-dialog>
     </q-page>
@@ -174,6 +189,7 @@
 
 <script>
 /* eslint-disable no-unused-expressions */
+/* eslint-disable no-restricted-syntax */
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -191,15 +207,13 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const { update, list } = useApi();
-
-    const { resetPassword } = useAuthUser();
+    const { post, getByField, update } = useApi();
 
     const route = useRoute();
 
     const { token } = route.query;
 
-    const { logout, user } = useAuthUser();
+    const { logout, user, resetPassword } = useAuthUser();
 
     const dialogPassword = ref(false);
 
@@ -207,7 +221,9 @@ export default defineComponent({
 
     const loading = ref(false);
 
-    const cont = ref(0);
+    const quality = ref(0);
+
+    const submitResult = ref([]);
 
     const formData = ref({
       password: '',
@@ -215,44 +231,37 @@ export default defineComponent({
       antigo: '',
     });
 
+    // ---- Classificação do APP -----------------
     const table = ref({
-      id: 1,
-      like: 0,
-      dislike: 0,
-      people: 0,
+      id: null,
+      valor: 0,
+      user_id: '',
     });
-    const type = ref([
-      {
-        label: 'Gosto',
-        value: 1,
-      },
-      {
-        label: 'Não Gosto',
-        value: 2,
-      },
-    ]);
 
     const updatClassification = async () => {
-      if (cont.value === 0) {
-        try {
-          if (cont.value === 1) {
-            table.value.like += 1;
-          } else if (cont.value === 2) {
-            table.value.dislike += 1;
-          }
-          table.value.people += 1;
+      try {
+        if (table.value.id === null) {
+          const tabela = table.value;
+          delete tabela.id;
+          table.value.user_id = user.value.id;
+          loading.value = true;
+          await post('classification', tabela);
+          loading.value = false;
+        } else {
+          table.value.user_id = user.value.id;
+          table.value.valor = quality.value;
           loading.value = true;
           await update('classification', table.value);
           loading.value = false;
-          showSuccessNotification('Classificado com sucesso!!');
-        } catch (error) {
-          loading.value = false;
-          showErrorNotification(`Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
         }
-      } else {
-        showErrorNotification('Já Fizeste a Classificação do App!!!');
+      } catch (error) {
+        loading.value = false;
+        showErrorNotification(`Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
       }
     };
+    // ---- Fim Classificação do APP -----------------
+
+    // ---- Alterar a PASSword -----------------------
 
     const updatPassword = async () => {
       // eslint-disable-next-line max-len
@@ -287,6 +296,9 @@ export default defineComponent({
         });
       }
     };
+    // ---- Fim Alterar a PASSword --------------------------
+
+    // ---- Terminar sessão ----------------------------------
 
     const handleLogout = async () => {
       $q.dialog({
@@ -306,23 +318,35 @@ export default defineComponent({
         }
       });
     };
+    // ---- Fim Terminar sessão -----------------------
+
+    // ---- Será Alterado...... -----------------------
     const listTable = async () => {
       // loading.value = true;
-      const tabela = await list('classification');
-      table.value.like = tabela.value.like;
-      table.value.dislike = tabela.value.dislike;
-      table.value.people = tabela.value.people;
+      try {
+        const valor = 0;
+        const aux = await getByField('classification', table.value.user_id, valor);
+        if (aux.length > 0) {
+          const qualquer = aux.map((e) => e.id);
+          // eslint-disable-next-line prefer-destructuring
+          table.value.id = qualquer[0];
+          quality.value = aux.map((e) => e.valor);
+        } else {
+          quality.value = 0;
+        }
+      } catch (error) {
+        showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+      }
       /// loading.value = false;
     };
-    onMounted(() => {
+    onMounted(async () => {
       listTable();
     });
 
     return {
+      porcento: '%',
       user,
-      cont,
       table,
-      type,
       dialogAvaliarApp,
       formData,
       loading,
@@ -331,6 +355,25 @@ export default defineComponent({
       handleLogout,
       updatClassification,
       slide: ref('style'),
+
+      quality,
+      submitResult,
+
+      onSubmit(evt) {
+        const form = new FormData(evt.target);
+        const data = [];
+
+        for (const [name, value] of form.entries()) {
+          data.push({
+            name,
+            value,
+          });
+          table.value.valor = value;
+        }
+
+        submitResult.value = data;
+        updatClassification();
+      },
     };
   },
 });

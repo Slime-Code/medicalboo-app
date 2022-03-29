@@ -28,6 +28,7 @@
                   <div>Mais acessados</div>
                 </div>
                </div>
+               <q-tooltip>Notifications</q-tooltip>
             </q-btn>
         </q-toolbar>
       </q-header>
@@ -112,7 +113,7 @@ import useApi from '../composebles/useApi';
 import useAuthUser from '../composebles/useAuthUser';
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: 'PrincipalLayout',
   components: {
     TopicButtom,
   },

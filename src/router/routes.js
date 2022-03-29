@@ -16,12 +16,12 @@ const routes = [
     path: '/',
     component: () => import('src/layouts/PrincipalLayout.vue'),
     children: [
-      { path: 'profile', component: () => import('pages/users/ProfilePage.vue') },
+      { path: 'profile', name: 'profile', component: () => import('pages/users/ProfilePage.vue') },
       { path: 'editar-senha', name: 'editar-senha', component: () => import('pages/users/EditarSenha.vue') },
       { path: 'meus-dados', name: 'meus-dados', component: () => import('pages/users/MeusDados.vue') },
       { path: 'explore', name: 'explore', component: () => import('pages/users/ExplorePage.vue') },
       { path: 'favorite', name: 'favorite', component: () => import('pages/users/FavoritePage.vue') },
-      { path: 'approach', name: 'approach', component: () => import('pages/users/ApproachPage.vue') },
+      { path: '/approach/:id', name: 'approach', component: () => import('pages/users/ApproachPage.vue') },
       { path: 'note', name: 'note', component: () => import('pages/users/NotePage.vue') },
       { path: 'accesso-por-capitulo', name: 'accesso-por-capitulo', component: () => import('pages/users/AccessoPorCapituloPage.vue') },
     ],
@@ -31,11 +31,20 @@ const routes = [
   },
 
   {
-    path: '/:id',
+    path: '/',
     component: () => import('src/layouts/ApproachDetalhesLayout.vue'),
     children: [
-      { path: '/approach-detail', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
+      { path: '/approach-detail/:id', name: 'approach-detail', component: () => import('pages/users/ApproachDetailPage.vue') },
     ],
+    meta: {
+      requaresAuth: true,
+    },
+  },
+
+  {
+    path: '/codigo-acesso',
+    name: 'codigo-acesso',
+    component: () => import('src/layouts/CodigoDeAcessoLayout.vue'),
     meta: {
       requaresAuth: true,
     },
@@ -70,7 +79,6 @@ const routes = [
     component: () => import('src/layouts/AdminLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/admins/DashboardPage.vue') },
-<<<<<<< HEAD
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
@@ -81,19 +89,7 @@ const routes = [
     meta: {
       requaresAuth: true,
     },
-=======
-      { path: '/admin/approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
-      { path: '/admin/categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
-      { path: '/admin/topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
-      // { path: '/admin/users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
-      // { path: '/admin/profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
-      { path: '/admin/occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
-    ],
-    meta: {
-      requiresAuth: true,
-    },
 
->>>>>>> 0ab40f9c9d32931c79d5ed4d8996a5e25724af16
   },
 
   // Always leave this as last one,

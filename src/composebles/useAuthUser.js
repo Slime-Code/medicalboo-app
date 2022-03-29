@@ -43,7 +43,7 @@ export default function useAuthUser () {
         return user
     }
 
-    const update = async (data) => {
+    const updated = async (data) => {
         const { user, error } = await supabase.auth.update(data)
 
         if (error) throw error
@@ -70,7 +70,7 @@ export default function useAuthUser () {
         logout,
         isLoggedIn,
         register,
-        update,
+        updated,
         sendPasswordRestEmail,
         resetPassword
     }

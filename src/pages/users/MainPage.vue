@@ -23,7 +23,6 @@
 
     <div class="column justify-around" style="height: 100%">
 
-
      <q-tab-panels
      class="col"
       v-model="tab"
@@ -40,7 +39,6 @@
         :name="category"
       >
 
-    
         <q-card
           v-for="(topic, index) in topics"
           :key="index"
@@ -49,7 +47,7 @@
           bordered
           class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
         >
-          <q-item clickable v-ripple to="/approach">
+          <q-item clickable v-ripple @click="go(topic.id)">
             <q-item-section side>
               <q-avatar :color="color_icon" text-color="white" :icon="icon" />
             </q-item-section>
@@ -70,11 +68,11 @@
     </q-space>
  <q-toolbar-title class="text-caption q-pa-sm">
 
-        Outras versões Medicalbook 
+        Outras versões Medicalbook
 
       </q-toolbar-title>
     <q-card flat bordered v-if="!loadingTopic" class="col q-mb-md row justify-center items-start">
-     
+
         <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
           <template v-slot:avatar>
             <q-btn flat :to="{ name: 'prime' }">
@@ -104,7 +102,7 @@
         </q-banner>
     </q-card>
     </div>
-   
+
     <q-inner-loading
       :showing="loadingTopic"
       label="Carregando tópicos"
@@ -116,17 +114,19 @@
 </template>
 
 <script>
-import { showErrorNotification } from "src/functions/functionShowNotifications";
-import { defineComponent, ref } from "vue";
-// import { mapActions } from 'vuex';
+import { showErrorNotification } from 'src/functions/functionShowNotifications';
+import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
-import useApi from "../../composebles/useApi";
+import useApi from '../../composebles/useApi';
 
 export default defineComponent({
-  name: "PageIndex",
+  name: 'MainPage',
   setup() {
     const { list, getByField } = useApi();
+
+    const router = useRouter();
 
     const topics = ref([]);
 
@@ -134,7 +134,7 @@ export default defineComponent({
 
     const topicos = ref([]);
 
-    const tab = ref("");
+    const tab = ref('');
 
     const loadingCategory = ref(true);
 
@@ -145,19 +145,14 @@ export default defineComponent({
     const getTopicByCategory = async (id) => {
       loadingTopic.value = true;
 
-      topics.value = await getByField("topic", "categoria_id", id);
+      topics.value = await getByField('topic', 'categoria_id', id);
       loadingTopic.value = false;
     };
 
     const listTopics = async () => {
       try {
-        // const aux2 = await list("approach");
-
-        // categorys.value = aux2.map((elem) => elem.name);
-        // alert(JSON.stringify(topics));
         loadingCategory.value = true;
-        categorys.value = await list("categoria");
-        // categorys.value = aux1.map((elem) => elem.name);
+        categorys.value = await list('categoria');
         categorys.value.sort();
         loadingCategory.value = false;
         // eslint-disable-next-line prefer-destructuring
@@ -165,12 +160,12 @@ export default defineComponent({
 
         await getTopicByCategory(tab.value.id);
       } catch (error) {
-        showErrorNotification(
-          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(
-            error
-          )}`
-        );
+        showErrorNotification(`A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
       }
+    };
+
+    const go = async (id) => {
+      router.push(`/approach/${id}`);
     };
 
     const topicAcessado = ref({
@@ -181,6 +176,7 @@ export default defineComponent({
       console.log(topicAcessado.value);
     };
     return {
+      go,
       getTopicByCategory,
       todos,
       foi,
@@ -193,11 +189,11 @@ export default defineComponent({
       topicos,
       categorys,
 
-      caption: ref(""),
+      caption: ref(''),
 
-      icon: "img:img/feto.png",
+      icon: 'img:img/feto.png',
 
-      color_icon: "teal",
+      color_icon: 'teal',
     };
   },
   /*
