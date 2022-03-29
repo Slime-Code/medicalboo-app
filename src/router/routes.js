@@ -70,7 +70,6 @@ const routes = [
     component: () => import('src/layouts/AdminLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/admins/DashboardPage.vue') },
-<<<<<<< HEAD
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
@@ -81,19 +80,6 @@ const routes = [
     meta: {
       requaresAuth: true,
     },
-=======
-      { path: '/admin/approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
-      { path: '/admin/categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
-      { path: '/admin/topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
-      // { path: '/admin/users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
-      // { path: '/admin/profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
-      { path: '/admin/occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
-    ],
-    meta: {
-      requiresAuth: true,
-    },
-
->>>>>>> 0ab40f9c9d32931c79d5ed4d8996a5e25724af16
   },
 
   // Always leave this as last one,
