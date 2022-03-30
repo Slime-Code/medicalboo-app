@@ -5,19 +5,19 @@
       <div>
         <h5>Tópicos</h5>
         <div class="row q-gutter-sm" style="width:100px;">
-          <q-btn 
+          <q-btn
           @click="
            newDialog()
-          " 
+          "
           icon="add"
           color="primary"
           class="col"
           >
           </q-btn>
-          <q-btn 
+          <q-btn
           @click="
            listAll()
-          " 
+          "
           icon="update"
           color="primary"
           class="col"
@@ -48,7 +48,7 @@
             <q-item-section top side class="non-medium-screen-only">
               <q-btn-dropdown flat round dense icon="more_vert">
                 <q-list separator>
-               
+
                    <q-item clickable dense v-close-popup @click="newDialog(category)">
                     <q-item-section>
                       <q-item-label>Editar</q-item-label>
@@ -85,7 +85,6 @@
           </q-card-actions>
         </q-form>
 
-        
       </q-card>
 
           </q-dialog>
@@ -129,8 +128,10 @@ const rows = [
   },
 ];
 
-import { useQuasar } from 'quasar'
-import { defineComponent, ref, onMounted, reactive } from 'vue';
+import { useQuasar } from 'quasar';
+import {
+  defineComponent, ref, onMounted, reactive,
+} from 'vue';
 import useApi from '../../../composebles/useApi';
 
 export default defineComponent({
@@ -141,18 +142,19 @@ export default defineComponent({
 
   setup() {
     const loading = ref(true);
-    const $q = useQuasar()
+    const $q = useQuasar();
 
-
-    const { list, post, update, remove } = useApi();
+    const {
+      list, post, update, remove,
+    } = useApi();
 
     const topics = ref([]);
     const categories = ref([]);
 
     const formData = reactive({
-      name: "",
-      id: null
-    })
+      name: '',
+      id: null,
+    });
 
     const listAll = async () => {
       try {
@@ -163,29 +165,28 @@ export default defineComponent({
         alert(error);
       }
     };
-     const deleteItem = async (id) => {
+    const deleteItem = async (id) => {
       try {
         loading.value = true;
-            await remove('topic', id);
-          listAll()
+        await remove('topic', id);
+        listAll();
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
 
-       const saveItem = async () => {
+    const saveItem = async () => {
       try {
         loading.value = true;
-          if(!formData.id) {
-            delete formData.id
+        if (!formData.id) {
+          delete formData.id;
 
-             await post('topic', formData);
-          }else{
-
-            await update('topic', formData);
-          }
-          listAll()
+          await post('topic', formData);
+        } else {
+          await update('topic', formData);
+        }
+        listAll();
         loading.value = false;
       } catch (error) {
         alert(error);
@@ -200,36 +201,36 @@ export default defineComponent({
 
     };
 
-    const dialogCategory = ref(false)
+    const dialogCategory = ref(false);
     const newDialog = (data) => {
-      if(data) {
-        Object.keys(data).forEach(key => {
-          formData[key]= data[key]
-        })
-
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          formData[key] = data[key];
+        });
       } else {
-        formData.name=""
+        formData.name = '';
       }
-      dialogCategory.value=true
-    }
+      dialogCategory.value = true;
+    };
 
-    function confirmDelete (id) {
+    function confirmDelete(id) {
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
-         persistent: true,
-        cancel: "Cancelar"
+        persistent: true,
+        cancel: 'Cancelar',
       }).onOk(() => {
-        deleteItem(id)
+        deleteItem(id);
       }).onOk(() => {
         // console.log('>>>> second OK catcher')
       }).onCancel(() => {
         // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
       })
+        .onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+        });
     }
-    
+
     return {
       confirmDelete,
       newDialog,

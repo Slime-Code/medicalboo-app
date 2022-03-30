@@ -106,10 +106,10 @@ export default defineComponent({
         const id = '';
         const idFavorit = await getByField('favorite_approach_user', formData.approach_id, id);
         if (props.title.id === idFavorit.id) {
-          alert('cheguei');
+          // alert('cheguei');
           ratingModel.value = 1;
         } else { ratingModel.value = 0; }
-        alert(JSON.stringify(idFavorit));
+        // alert(JSON.stringify(idFavorit));
       } catch (error) {
         showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
       }

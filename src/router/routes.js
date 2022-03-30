@@ -88,10 +88,6 @@ const routes = [
     meta: {
       requaresAuth: true,
     },
-<<<<<<< HEAD
-
-=======
->>>>>>> 4e649f28a28b85ba588b150d2f7731d655e95b48
   },
 
   // Always leave this as last one,

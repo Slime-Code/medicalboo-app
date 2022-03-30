@@ -14,28 +14,6 @@
           </q-badge>
         </q-btn>
 
-<<<<<<< HEAD
-          <q-toolbar-title>{{ user.user_metadata.name }}</q-toolbar-title>
-          <q-space/>
-           <q-btn
-              no-caps
-              unelevated
-              rounded
-              @click="icon = true"
-              style="background: #FFFFFF; color: #1A4B9A">
-              <div class="row">
-                <div class="col-2">
-                  <q-icon left name="widgets" />
-                </div>
-                <div class="col-10 large-screen-only">
-                  <div>Mais acessados</div>
-                </div>
-               </div>
-               <q-tooltip>Notifications</q-tooltip>
-            </q-btn>
-        </q-toolbar>
-      </q-header>
-=======
         <q-toolbar-title>{{ user.user_metadata.name }}</q-toolbar-title>
         <q-space />
         <q-btn
@@ -56,7 +34,6 @@
         </q-btn>
       </q-toolbar>
     </q-header>
->>>>>>> 4e649f28a28b85ba588b150d2f7731d655e95b48
 
     <q-page-container>
       <router-view />
@@ -134,18 +111,14 @@
 </template>
 
 <script>
-import { showErrorNotification } from "src/functions/functionShowNotifications";
-import { defineComponent, ref, onMounted } from "vue";
-import TopicButtom from "../components/TopicButtom.vue";
-import useApi from "../composebles/useApi";
-import useAuthUser from "../composebles/useAuthUser";
+import { showErrorNotification } from 'src/functions/functionShowNotifications';
+import { defineComponent, ref, onMounted } from 'vue';
+import TopicButtom from '../components/TopicButtom.vue';
+import useApi from '../composebles/useApi';
+import useAuthUser from '../composebles/useAuthUser';
 
 export default defineComponent({
-<<<<<<< HEAD
   name: 'PrincipalLayout',
-=======
-  name: "MainLayout",
->>>>>>> 4e649f28a28b85ba588b150d2f7731d655e95b48
   components: {
     TopicButtom,
   },
@@ -162,13 +135,13 @@ export default defineComponent({
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        const aux = await list("access_topic_user");
+        const aux = await list('access_topic_user');
         const aux1 = [];
         // eslint-disable-next-line no-plusplus
         for (let index = 0; index < aux.length; index++) {
           if (aux[index].user_id === user.value.id) {
             // eslint-disable-next-line no-await-in-loop
-            aux1.push(await getById("topic", aux[index].topic_id));
+            aux1.push(await getById('topic', aux[index].topic_id));
           }
         }
         topics.value = aux1.map((elem) => elem.name);
@@ -177,7 +150,7 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         showErrorNotification(
-          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`
+          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`,
         );
       }
     };
@@ -186,7 +159,7 @@ export default defineComponent({
     });
     return {
       icon: ref(false),
-      tab: ref("inicio"),
+      tab: ref('inicio'),
       topics,
       user,
     };

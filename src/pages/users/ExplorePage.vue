@@ -63,7 +63,7 @@ export default {
     const loading = ref(true);
 
     const go = async (evt, row) => {
-      router.push(`approach-detail/${row.id}`);
+      router.push(`/approach-detail/${row.id}`);
     };
 
     const listTopics = async () => {
