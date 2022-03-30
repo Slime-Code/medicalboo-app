@@ -19,7 +19,7 @@
           <hr>
         </div >
         <div class="q-row">
-          <div v-for="i in notas" :key="i" >
+          <div v-for="(i, index) in notas" :key="index" >
             <br>
             <div class="q-pa-md" style="max-width: 400px">
               <div class="textarea">
@@ -50,6 +50,11 @@
             color="green"
             icon="add"
             class="flax absolute-down"
+        /> <br>
+        <q-spinner
+          v-if="loading"
+          size="xl"
+          color="primary"
         />
       </div>
     </q-page>
@@ -64,48 +69,48 @@ import useAuthUser from '../../composebles/useAuthUser';
 export default defineComponent({
   name: 'NotePage',
   setup() {
-    const data = new Date();
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const ano = data.getFullYear();
-    const dataAtual = `${dia}/${mes}/${ano}`;
+    const loading = ref(true);
 
     const cont = ref(1);
 
     const { user } = useAuthUser();
 
-    const { id } = user;
+    const notas = ref([]);
 
     const form = ref({
-      content: '', title: '', date: dataAtual, user_id: id,
+      content: '', title: '', date: null, user_id: user.value.id,
     });
 
-    const notas = ref([]);
-    const { post } = useApi();
-    const { list } = useApi();
+    const { post, list, update } = useApi();
+
     const addDataBase = async () => {
       try {
-        const aux = await list('notas');
-        notas.value = aux.map((elem) => elem);
-        alert(JSON.stringify(notas.value));
+        loading.value = true;
+        // alert(JSON.stringify(notas.value));
+        notas.value = await list('notas');
+        await update('notas', notas);
+        // notas.value = aux.map((elem) => elem);
+        loading.value = false;
       } catch (error) {
-        alert(error);
+        loading.value = false;
+        alert(JSON.stringify(error));
       }
     };
 
     const add = async () => {
       cont.value += 1;
-      notas.value.push(form);
-      await post('notas', form);
+      await post('notas', form.value);
       alert(JSON.stringify(form.value));
       alert(JSON.stringify(notas.value));
-      const aux = await list('notas');
-      notas.value = aux.map((elem) => elem);
+      await update('notas', notas.value);
+      // notas.value = await list('notas');
     };
-    onMounted(() => {
-      addDataBase();
+    onMounted(async () => {
+      await addDataBase();
+      // await add();
     });
     return {
+      loading,
       text: ref(''),
       cont,
       add,

@@ -24,6 +24,15 @@ export default function useApi() {
     return data[0];
   };
 
+  const getByField = async (table, field, value) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select('*')
+      .eq(field, value);
+    if (error) throw error;
+    return data;
+  };
+
   const post = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
@@ -41,7 +50,7 @@ export default function useApi() {
     const { data, error } = await supabase
       .from(table)
       .update([
-        ...form,
+        { ...form },
       ])
       .match({ id: form.id });
     if (error) throw error;
@@ -53,11 +62,13 @@ export default function useApi() {
       .from(table)
       .delete()
       .match({ id });
+
     if (error) throw error;
     return data;
   };
 
   return {
+    getByField,
     list,
     getById,
     post,

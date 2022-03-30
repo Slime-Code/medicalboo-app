@@ -4,6 +4,325 @@
     <div class="col q-ma-xs">
       <div>
         <h5 class="col-12 title" style="margin: 20px 0;">Abordagem</h5>
+        <div style="width: 100px;" class="row q-gutter-sm">
+          <q-btn
+            icon="add"
+            color="primary"
+            class="col"
+            @click="
+            newDialog()
+            " 
+          >
+          </q-btn>
+          <q-btn
+          icon="update"
+          color="primary"
+          class="col"
+          @click="getAproaches()"
+          >
+          </q-btn>
+        </div>
+      </div>
+      <div class="q-mt-md">
+        <q-table
+          :dense="$q.screen.lt.md"
+          flat
+          square
+          bordered
+          title="Lista de abordagens"
+          :rows="rows"
+          :columns="columns"
+          :visible-columns="['title', 'options']"
+          row-key="title"
+        >
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="title" :props="props">
+                {{ props.row.title }}
+              </q-td>
+              <q-td key="definition" :props="props">
+                  {{ props.row.definition }}
+              </q-td>
+              <q-td key="options" class="text-center" :props="props">
+                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
+
+      </div>
+    </div>
+    </div>
+
+    <q-dialog v-model="showAddApproach" persistent>
+
+      <q-card class="full-width">
+        <q-card-section>
+          <div class="text-h6">Nova Abordagem</div>
+        </q-card-section>
+        <q-form @submit="saveItem">
+
+            <q-card-section class="q-pt-none q-gutter-y-sm">
+
+              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Titulo' dense v-model.trim="formData.title"  autofocus />
+              <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.topic_id" :options="optionsTopic" label="Topico" />
+              <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.type_approach_id" :options="optionsAproach" label="Tipo de Abordagem" />
+              
+              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Definicao' dense v-model ="formData.definition" type="textarea"  />
+              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Diagnostico' dense v-model ="formData.diagnosis"   type="textarea"/>
+              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Complementar' dense v-model ="formData.complentary"  type="textarea" />
+
+              
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn  label="Cancelar " @click="loading=false" color="primary" v-ripple no-caps v-close-popup/>
+
+              <q-btn  label="Salvar"  color="primary"  type="submit" v-ripple no-caps />
+            </q-card-actions>
+        </q-form>
+
+        
+      </q-card>
+
+    </q-dialog>
+
+    <q-inner-loading
+      :showing="loading"
+      label="Atualizando..."
+      label-class="text-primary"
+      color="primary"
+      label-style="font-size: 1.1em"
+    />
+  </div>
+</template>
+
+<script>
+import {  computed, defineComponent, onMounted, reactive, ref } from "vue"
+import useApi from '../../../composebles/useApi';
+import {useQuasar} from "quasar"
+const columns = [
+  {
+    name: 'title',
+    required: true,
+    label: 'Titulo',
+    align: 'left',
+    field: 'title',
+    sortable: true
+  },
+  { name: 'definition', align: 'center', label: 'Definicao', field: 'definition', sortable: true },
+  { name: 'diagnosis', align: 'center', label: 'Diagnostico', field: 'diagnosis', sortable: true },
+  { name: 'complentary', align: 'center', label: 'Complementar', field: 'complentary', sortable: true },
+  { name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true },
+
+  
+]
+
+export default defineComponent({
+ 
+ 
+  setup(){
+
+     const $q = useQuasar()
+    const { list, post, update, remove, getById } = useApi();
+    const rows = ref([])
+    const optionsAproach = ref(null)
+    const optionsTopic = ref(null)
+    
+    const showAddApproach = ref(false)
+    const formData = reactive({
+      id: null,
+      title: "",
+      definition: "",
+      diagnosis: "",
+      complentary: "",
+      topic_id: null,
+      type_approach_id: null
+    })
+    const getLists = async () => {
+
+      const auxAproach =  await list('type_approach')
+      const auxTopic =  await list('topic')
+      optionsAproach.value = auxAproach.map((item)=>{
+        return {
+          label: item.type_approach,
+          value: item.id
+        }
+      })
+      optionsTopic.value = auxTopic.map((item)=>{
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
+    }
+
+    const getAproaches = async () => {
+      try {
+        loading.value = true
+        const aux =  await list('approach')
+        rows.value = aux.map((item)=>{
+          return {
+            id: item.id,
+            title: item.title,
+            definition: item.definition,
+            diagnosis: item.diagnosis,
+            complentary: item.complentary,
+            type_approach_id: item.type_approach_id,
+            topic_id: item.topic_id
+          }
+        })
+        loading.value = false
+      } catch (error) {
+        alert(error)
+      }
+      
+    }
+
+    const deleteItem = async (id) => {
+      await remove('favorite_approach_user', id)
+      await remove('approach', id)
+      getAproaches()
+    }
+   
+    onMounted(
+
+      ()=> {
+        getAproaches()
+        getLists()
+      }
+
+    )
+
+    const newDialog = async (data)=> {
+      
+      if(data) {
+        loading.value=true
+        Object.keys(data).forEach(key => {
+          formData[key]= data[key]
+        })
+
+        const result = await getById('type_approach', data.type_approach_id)
+        const resultTopic = await getById('topic', data.topic_id)
+
+        loading.value=true
+
+
+        formData.type_approach_id = {
+          label: result.type_approach,
+          value: result.id
+        }
+
+        formData.topic_id = {
+          label: resultTopic.name,
+          value: resultTopic.id
+        }
+
+
+      } else {
+        formData.title= ""
+        formData.definition= ""
+        formData.diagnosis= ""
+        formData.complentary= ""
+        formData.topic_id= null
+        formData.type_approach_id= null
+      }
+      showAddApproach.value=true
+    }
+
+    const loading = ref(false)
+
+     const saveItem =  async () => {
+      try {
+        
+      showAddApproach.value=false
+      loading.value = true;
+      if(!formData.id){
+        delete formData.id
+        formData.topic_id = formData.topic_id.value
+        formData.type_approach_id = formData.type_approach_id.value
+    
+        await post('approach', formData)
+      }else {
+        formData.topic_id = formData.topic_id.value
+        formData.type_approach_id = formData.type_approach_id.value
+        await update('approach', formData);
+      }
+      getAproaches()
+      loading.value = false;
+
+      } catch (error) {
+        alert(error)
+      }
+       
+
+    }
+
+        function confirmDelete (id) {
+      $q.dialog({
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
+         persistent: true,
+        cancel: "Cancelar"
+      }).onOk(() => {
+        deleteItem(id)
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
+
+    return {
+      newDialog,
+      showAddApproach,
+      formData,
+      optionsAproach,
+      optionsTopic,
+      saveItem,
+      deleteItem,
+      confirmDelete,
+      columns,
+      rows,
+      loading,
+      getAproaches
+    }
+  }
+})
+</script>
+
+<style>
+
+</style>
+
+<!--
+<template>
+  <div class="flex q-pt-xl flex-center">
+  <div class="column" style="min-width: 90%">
+    <div class="col q-ma-xs">
+      <div>
+        <h5 class="col-12 title" style="margin: 20px 0;">Abordagem</h5>
+        <div style="width: 100px;" class="row q-gutter-sm">
+          <q-btn
+            icon="add"
+            color="primary"
+            class="col"
+            @click="
+            newDialog()
+            " 
+          >
+          </q-btn>
+          <q-btn
+          icon="update"
+          color="primary"
+          class="col"
+
+          >
+          </q-btn>
+        </div>
       </div>
     </div>
     <div class="col q-mt-md">
@@ -53,11 +372,40 @@ export default defineComponent({
     ApproachListItem,
     AddApproach,
   },
-  data() {
+  setup(){
+    const showAddApproach = ref(false)
+    const loading = ref(false)
+    const formData = reactive({
+      title: "",
+      definition: "",
+      diagnosis: "",
+      complentary: "",
+      topic_id: null,
+      type_approach: null
+    })
+
+    const newDialog = ()=> {
+      if(data) {
+        Object.keys(data).forEach(key => {
+          formData[key]= data[key]
+        })
+
+      } else {
+        formData.title= ""
+      formData.definition= ""
+      formData.diagnosis= ""
+      formData.complentary= ""
+      formData.topic_id= null
+      formData.type_approach= null
+      }
+      showAddApproach.value=true
+    }
+
     return {
-      showAddApproach: false,
-      loading: false,
-    };
+      newDialog,
+      showAddApproach,
+      loading
+    }
   },
   methods: {
     ...mapActions('approach', ['getApproaches']),
@@ -77,3 +425,4 @@ export default defineComponent({
   .explore
     width: 80vw
 </style>
+-->

@@ -1,8 +1,7 @@
 <template>
-    <q-page :loading='loading' class="flex flex-center">
-      <div class="column explore">
+    <q-page :loading='loading' class="constrain">
+      <div class="column">
         <div class="col">
-          <br>
           <br>
           <q-input
             outlined
@@ -10,7 +9,9 @@
             bottom-slots
             v-model="text"
             label="Pesquise o seu tópico favorito"
-            dense>
+            dense
+            class="constrain-2"
+            >
 
             <template v-slot:append>
               <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
@@ -19,23 +20,41 @@
 
           </q-input>
         </div>
-        <div class="col">
+        <div class="col constrain">
           <br>
           <strong style="color: blue;">Abordagem Geral</strong><hr>
-          <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index"/>
+          <q-spinner
+            class="flex flex-center"
+            v-if="loading"
+            size="xl"
+            color="primary"
+          />
+          <ApproachButtom
+           v-for="(approach, index) in approachs.geral" :title="approach" :key="index"/>
           <br>
           <strong style="color: blue;">Abordagem Terapeutica</strong><hr>
-          <ApproachButtom v-for="(topic, index) in topics" :title="topic" :key="index"/>
+            <q-spinner
+              class="flex flex-center"
+              v-if="loading1"
+              size="xl"
+              color="primary"
+            />
+          <ApproachButtom
+           v-for="(approach, index) in approachs.terapeutica" :title="approach" :key="index"/>
         </div>
       </div>
     </q-page>
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import {
+  showErrorNotification
+} from 'src/functions/functionShowNotifications';
 import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import ApproachButtom from '../../components/ApproachButtom.vue';
 import useApi from '../../composebles/useApi';
+import useAuthUser from '../../composebles/useAuthUser';
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -43,37 +62,70 @@ export default defineComponent({
     ApproachButtom,
   },
   setup() {
+    const route = useRoute();
+
     const loading = ref(true);
 
-    const { list } = useApi();
+    const loading1 = ref(true);
 
-    const topics = ref([]);
+    const { list, getById, post } = useApi();
+    const { user } = useAuthUser();
 
-    const types = ref([]);
+    const approachs = { geral: [], terapeutica: [] };
 
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
         const aux = await list('approach');
-        // const aux1 = await list('type_approach');
-        topics.value = aux.map((elem) => elem.title);
-        types.value = aux.map((elem) => elem.name);
+        aux.forEach((element) => {
+          if (element.type_approach_id === 1 && element.topic_id == route.params.id) {
+            approachs.geral.push(element);
+          } else if (element.type_approach_id === 2 && element.topic_id == route.params.id) {
+            approachs.terapeutica.push(element);
+          }
+        });
+
         loading.value = false;
+        loading1.value = false;
       } catch (error) {
-        Notify(error);
+        showErrorNotification(error);
       }
     };
-    onMounted(() => {
-      listTopicsAproachs();
+
+    // ------------- Adicionar nos Mais Acessados---------------------------
+    const addMoreAccesse = async () => {
+      try {
+        const data1 = {
+          id: null,
+          topic_id: null,
+          access_date: null,
+          times_access: 7,
+          user_id: null,
+        };
+        data1.topic_id = route.params.id;
+        data1.user_id = user.value.id;
+        data1.id = route.params.id;
+        data1.access_date = new Date();
+        const data = await getById('access_topic_user', route.params.id);
+        if (!data) {
+          post('access_topic_user', data1);
+        }
+      } catch (error) {
+        showErrorNotification(error);
+      }
+    };
+
+    onMounted(async () => {
+      await listTopicsAproachs();
+      await addMoreAccesse();
     });
     return {
       loading,
+      loading1,
       text: ref(''),
-      topics,
-      types,
-      // topics: ['Covid-19', 'Malaria', 'Paludismo', 'Diabetes'],
+      approachs,
       slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
+      rota: 'approach',
     };
   },
 });

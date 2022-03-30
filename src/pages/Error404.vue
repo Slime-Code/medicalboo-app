@@ -6,16 +6,20 @@
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
+        Rota Inválida, Não há nada nessa Página...!!!
+      </div>
+      <div class="text-h4" style="opacity:.4">
+        Clique no Botão A baixo Para Voltar na Página Inicial:
       </div>
 
       <q-btn
+        icon="arrow_back"
         class="q-mt-xl"
         color="white"
         text-color="blue"
         unelevated
         to="/"
-        label="Go Home"
+        label="Página Inicial"
         no-caps
       />
     </div>

@@ -27,7 +27,7 @@ export default function useAuthUser () {
         if (error) throw error
     }
 
-    const isLoggedin = async () => {
+    const isLoggedIn = async () => {
         return !!user.value
     }
 
@@ -43,7 +43,7 @@ export default function useAuthUser () {
         return user
     }
 
-    const update = async (data) => {
+    const updated = async (data) => {
         const { user, error } = await supabase.auth.update(data)
 
         if (error) throw error
@@ -68,9 +68,9 @@ export default function useAuthUser () {
         login,
         loginWithSociaProvider,
         logout,
-        isLoggedin,
+        isLoggedIn,
         register,
-        update,
+        updated,
         sendPasswordRestEmail,
         resetPassword
     }

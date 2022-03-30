@@ -1,150 +1,193 @@
 <template>
-    <q-page class="flex flex-center ">
-      <div class="column">
-        <div class="col">
-          <q-tabs
-            v-model="tab"
-            inline-label
-            dense
-            mobile-arrows
-            class="category"
-          >
-            <q-tab
-            v-for="(category, index) in categorys" :key="index"
-            :name="category"
-            :label="category"
-            />
-            <div class=" flex flex-center ">
-              <q-spinner v-if="loadingCategory"
-                color="primary"
-                size="3em"
-              />
-            </div>
-          </q-tabs>
-        </div>
-
-        <div class="col column col-md-4 col-sm-6 col-xs-10 q-gutter-y-lg">
-          <q-scroll-area style="height: 45vh; margin-top: 40px">
-            <q-tab-panels
-              v-model="tab"
-              animated
-              swipeable
-              vertical
-              transition-prev="jump-up"
-              transition-next="jump-up"
-            >
-
-              <q-tab-panel v-for="(category, index) in categorys" :key="index" :name="category">
-
-                <div class="text-h4 q-mb-md">
-                  {{ category }}
-                </div>
-                  <div class="row">
-                    <q-spinner-cube
-                    class="absolute-center"
-                      v-if="loadingTopic"
-                      size="xl"
-                      color="primary"
-                    />
-                    <div class="col-6" v-for="(topic, index) in topics" :key="index">
-                      <a href="/approach"
-                      class="q-link rounded-borders q-pa-md q-ma-md
-                      cursor-pointer column justify-center bg-grey-1">
-                        <div class="row no-wrap items-center">
-                          <q-avatar
-                            :color="color_icon"
-                            text-color="white"
-                            :icon="icon" />
-                            <div class="col q-pl-lg">
-                              <div class="text-uppercase">{{ topic }}</div>
-                            <div class="text-weight-bold">{{ caption }}</div>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-              </q-tab-panel>
-            </q-tab-panels>
-          </q-scroll-area>
-        </div>
+  <q-page class="q-pa-md constrain">
+    <q-tabs
+      v-model="tab"
+      inline-label
+      mobile-arrows
+      active-color="primary"
+      outline
+      indicator-color="transparent"
+    >
+      <q-tab
+        v-for="(category, index) in categorys"
+        :key="index"
+        :name="category"
+        :label="category.name"
+        @click="getTopicByCategory(category.id)"
+      />
+      <div>
+        <q-spinner v-if="loadingCategory" color="primary" size="3em" />
       </div>
-    <div class="q-pa-md">
-    <div class="q-col-gutter-md row items-start">
-      <div class="col-50">
-        <q-img src="img/banner-premium.png">
-          <div class="absolute-bottom text-subtitle1 text-center">
-            Caption
-          </div>
-        </q-img>
-      </div>
+    </q-tabs>
+    <q-separator v-if="!loadingTopic" />
 
-      <div class="col-6">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-top text-center">
-            Caption
-          </div>
-        </q-img>
-      </div>
+    <div class="column justify-around" style="height: 100%">
 
-      <div class="col-6">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-bottom-right text-subtitle2">
-            Caption
-          </div>
-        </q-img>
-      </div>
+     <q-tab-panels
+     class="col"
+      v-model="tab"
+      animated
+      swipeable
+      vertical
+      transition-prev="jump-up"
+      transition-next="jump-up"
+    >
+      <q-tab-panel
+        class="row justify-center q-gutter-sm items-center"
+        v-for="(category, index) in categorys"
+        :key="index"
+        :name="category"
+      >
 
+        <q-card
+          v-for="(topic, index) in topics"
+          :key="index"
+          style="background-color: #f6f6f6"
+          flat
+          bordered
+          class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
+        >
+          <q-item clickable v-ripple @click="go(topic.id)">
+            <q-item-section side>
+              <q-avatar :color="color_icon" text-color="white" :icon="icon" />
+            </q-item-section>
+
+            <q-item-section>
+              {{ topic.name }}
+            </q-item-section>
+          </q-item>
+        </q-card>
+        <span v-if="!topics.length && !loadingTopic" class="text-center text-body1 ">
+           Nenhum tópico para esta categória
+        </span>
+      </q-tab-panel>
+    </q-tab-panels>
+
+    <q-space vertical>
+
+    </q-space>
+ <q-toolbar-title class="text-caption q-pa-sm">
+
+        Outras versões Medicalbook
+
+      </q-toolbar-title>
+    <q-card flat bordered v-if="!loadingTopic" class=" q-mb-md row justify-center items-start">
+
+        <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
+          <template v-slot:avatar>
+            <q-btn flat :to="{ name: 'prime' }">
+              <img class="full-width" src="img/banner-premium.png" style="height: 100%" />
+            </q-btn>
+          </template>
+
+          <template v-slot:action> </template>
+        </q-banner>
+        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
+          <template v-slot:avatar>
+            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
+              <img src="img/Grátis@2x.png" style="width: 100%; height: 100%" />
+            </q-btn>
+          </template>
+
+          <template v-slot:action> </template>
+        </q-banner>
+        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
+          <template v-slot:avatar>
+            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
+              <img src="img/Grátis-2.png" style="width: 100%; height: 100%" />
+            </q-btn>
+          </template>
+
+          <template v-slot:action> </template>
+        </q-banner>
+    </q-card>
     </div>
-  </div>
-    </q-page>
+
+    <q-inner-loading
+      :showing="loadingTopic"
+      label="Carregando tópicos"
+      label-class="text-primary"
+      color="primary"
+      label-style="font-size: 1.1em"
+    />
+  </q-page>
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import { showErrorNotification } from 'src/functions/functionShowNotifications';
 import { defineComponent, ref } from 'vue';
-// import { mapActions } from 'vuex';
+import { useRouter } from 'vue-router';
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
 import useApi from '../../composebles/useApi';
 
 export default defineComponent({
-  name: 'PageIndex',
+  name: 'MainPage',
   setup() {
-    const { list } = useApi();
+    const { list, getByField } = useApi();
+
+    const router = useRouter();
 
     const topics = ref([]);
 
     const categorys = ref([]);
 
+    const topicos = ref([]);
+
+    const tab = ref('');
+
     const loadingCategory = ref(true);
 
     const loadingTopic = ref(true);
 
+    const todos = ref([[]]);
+
+    const getTopicByCategory = async (id) => {
+      loadingTopic.value = true;
+
+      topics.value = await getByField('topic', 'categoria_id', id);
+      loadingTopic.value = false;
+    };
+
     const listTopics = async () => {
       try {
-        // alert(JSON.stringify(topics));
         loadingCategory.value = true;
-        const aux1 = await list('categoria');
-        categorys.value = aux1.map((elem) => elem.name);
+        categorys.value = await list('categoria');
+        categorys.value.sort();
         loadingCategory.value = false;
+        // eslint-disable-next-line prefer-destructuring
+        tab.value = categorys.value[0];
 
-        loadingTopic.value = true;
-        const aux = await list('topic');
-        topics.value = aux.map((elem) => elem.name);
-        loadingTopic.value = false;
+        await getTopicByCategory(tab.value.id);
       } catch (error) {
-        Notify(error);
+        showErrorNotification(`A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
       }
     };
+
+    const go = async (id) => {
+      router.push(`/approach/${id}`);
+    };
+
+    const topicAcessado = ref({
+      chave: null,
+      valo: null,
+    });
+    const foi = async () => {
+      console.log(topicAcessado.value);
+    };
     return {
+      go,
+      getTopicByCategory,
+      todos,
+      foi,
+      topicAcessado,
       loadingTopic,
       loadingCategory,
       listTopics,
-      tab: ref('Geral'),
+      tab,
       topics,
+      topicos,
       categorys,
-      slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo provident incidunt ducimus iusto perferendis porro earum. Totam, numquam?',
 
       caption: ref(''),
 
@@ -165,25 +208,25 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-  .category
-    width: 90vw
-  .category .q-tabs__arrows
-    color: #f4f4f4
-    background: #f4f4f4
-  .category .q-tab
-    color: #c6cfe1
-    margin: 0 10px
-    border: 2px solid #c6cfe1
-    border-radius: 4px
-  .category .q-tab--active
-    background: #0053ab
-    color: white
-    border: none
+.category
+  width: 90vw
+.category .q-tabs__arrows
+  color: #f4f4f4
+  background: #f4f4f4
+.category .q-tab
+  color: #c6cfe1
+  margin: 0 10px
+  border: 2px solid #c6cfe1
+  border-radius: 4px
+.category .q-tab--active
+  background: #0053ab
+  color: white
+  border: none
 
-    .q-link
-    text-decoration: none
-    color: black
-    border: 0.5px solid #f2f2f2
-  .q-link:hover
-    border: 0.5px solid #e0e0e0
+  .q-link
+  text-decoration: none
+  color: black
+  border: 0.5px solid #f2f2f2
+.q-link:hover
+  border: 0.5px solid #e0e0e0
 </style>

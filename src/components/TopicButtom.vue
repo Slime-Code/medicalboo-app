@@ -1,5 +1,5 @@
 <template>
-  <a :href="link"
+  <a :href="link+id"
   class="q-link rounded-borders q-pa-md q-ma-md cursor-pointer column justify-center bg-grey-1">
     <div class="row no-wrap items-center">
       <q-avatar
@@ -40,9 +40,13 @@ export default defineComponent({
       default: 'teal',
     },
 
+    id: {
+      type: Number,
+    },
+
     link: {
       type: String,
-      default: '/approach',
+      default: '/approach/',
     },
   },
 });

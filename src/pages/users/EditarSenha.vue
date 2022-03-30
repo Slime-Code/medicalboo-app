@@ -22,6 +22,9 @@
 </template>
 
 <script>
+import {
+  showSuccessNotification,
+} from 'src/functions/functionShowNotifications';
 import { defineComponent, ref, onMounted } from 'vue';
 import useAuthUser from 'src/composebles/useAuthUser';
 import { useRouter } from 'vue-router';
@@ -39,7 +42,7 @@ export default defineComponent({
 
     const valid = ref(true);
 
-    alert(JSON.stringify(aux.value));
+    // alert(JSON.stringify(aux.value));
 
     const { sendPasswordRestEmail } = useAuthUser();
 
@@ -50,7 +53,7 @@ export default defineComponent({
     const handleResetEmail = async () => {
       try {
         await sendPasswordRestEmail(text.value);
-        alert(`Senha Alterada com Sucesso: ${text.value}`);
+        showSuccessNotification(`Senha Alterada com Sucesso: ${text.value}`);
         router.replace({ name: '' });
       } catch (error) {
         alert(error);

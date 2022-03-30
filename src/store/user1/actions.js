@@ -2,7 +2,7 @@ import { Loading, LocalStorage } from 'quasar';
 import {
   showErrorNotification,
   showSuccessNotification,
-} from 'src/functions/function-show-notifications';
+} from 'src/functions/functionShowNotifications';
 import axios from 'axios';
 import { api } from 'boot/axios';
 
@@ -18,7 +18,7 @@ function login({ commit }, payload) {
         })
         .then((response1) => {
           commit('setLoggedIn', true);
-          console.log(response1.data.user);
+          // console.log(response1.data.user);
           const userType = response1.data.user.type;
 
           api.defaults.headers.common.Authorization = `Bearer ${response1.data.token}`;
@@ -61,4 +61,13 @@ function getState({ commit }) {
   commit('setDetails', details);
 }
 
-export { login, getState };
+function setDataForm({ commit }, payload) {
+  if (payload.name) {
+    commit('setFormOne', payload);
+  } else if (payload.email) {
+    commit('setFormSecond', payload);
+  } else if (payload.graduation_year) {
+    commit('setFormThird', payload);
+  }
+}
+export { login, getState, setDataForm };

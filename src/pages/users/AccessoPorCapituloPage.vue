@@ -1,5 +1,4 @@
 <template>
-  <template>
     <q-page class="flex flex-center">
       <div class="column explore">
         <div class="col">
@@ -10,7 +9,6 @@
             v-model="text"
             label="Pesquise aqui um tópico"
             dense>
-
             <template v-slot:append>
               <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
               <q-icon name="search" />
@@ -24,6 +22,7 @@
           <ApproachButtom v-for="(topic, index) in topics"
           :title="topic"
           :key="index"
+          :accessCap="false"
           color="green"
           icon="time"/>
         </div><br><br>
@@ -38,15 +37,13 @@
 </template>
 
 <script>
-import {
-  showErrorNotification,
-} from 'src/functions/functionShowNotifications';
+import { Notify } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import ApproachButtom from '../../components/ApproachButtom.vue';
 import useApi from '../../composebles/useApi';
 
 export default defineComponent({
-  name: 'ProfilePage',
+  name: 'AccessoPorCapituloPage',
   components: {
     ApproachButtom,
   },
@@ -60,12 +57,11 @@ export default defineComponent({
     const listTopics = async () => {
       try {
         loading.value = true;
-        const aux = await list('approach');
-        topics.value = aux.map((elem) => elem.title);
-        topics.value.sort();
+        topics.value = await list('approach');
+        // topics.value = aux.map((elem) => elem.title);
         loading.value = false;
       } catch (error) {
-        showErrorNotification(error);
+        Notify(error);
       }
     };
     return {

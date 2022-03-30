@@ -31,19 +31,21 @@ export default route((/* { store, ssrContext } */) => {
 
   // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
-    const { isLoggedin } = useAuthUser();
+    const { user } = useAuthUser();
     if (
       to.hash.includes('type=recovery')
-      && to.name !== 'reset-password'
+         && to.name !== 'reset-password'
     ) {
       const accessToken = to.hash.split('&')[0];
       const token = accessToken.replace('#acess_token=', '');
       return { name: 'reset-password', query: { token } };
     }
 
+    const isLoggedIn = !!user.value;
+
     if (
-      !isLoggedin()
-      && to.meta.requaresAuth
+      !isLoggedIn
+      && to.meta.requiresAuth
       && !Object.keys(to.query).includes('fromEmail')
     ) {
       return { name: 'login' };
