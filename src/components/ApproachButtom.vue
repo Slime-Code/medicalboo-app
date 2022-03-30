@@ -72,8 +72,6 @@ export default defineComponent({
 
     const { post, remove, getByField } = useApi();
 
-    const ratingModel = ref(0);
-
     const formData = {
       user_id: '',
       approach_id: '',
@@ -83,11 +81,27 @@ export default defineComponent({
       router.push(`/approach-detail/${props.title.id}`);
     };
 
+    // ---------- Inicializar O estado De Favoritos -------------
+    const ratingModel = ref(0);
+    const initFavorit = async () => {
+      try {
+        const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
+        if (idFavorit.length > 0) {
+          ratingModel.value = 1;
+        } else { ratingModel.value = 0; }
+        // alert(JSON.stringify(idFavorit));
+      } catch (error) {
+        showErrorNotification(`falha na Operação Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+      }
+      /// loading.value = false;
+    };
+    // ---------- Fim Inicializar O estado De Favoritos -------------
+
     const addFavorit = async () => {
       try {
         if (ratingModel.value !== 1) {
-          // alert(JSON.stringify(formData));
-          remove('favorite_approach_user', props.title.id);
+          const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
+          await remove('favorite_approach_user', idFavorit[0].id);
         } else {
           formData.user_id = user.value.id;
           formData.approach_id = props.title.id;
@@ -100,23 +114,9 @@ export default defineComponent({
         showErrorNotification(JSON.stringify(error));
       }
     };
-    // ----------hhhhhhhhhhhhhhhhhhhh-------------------------
-    const listTable = async () => {
-      try {
-        const id = '';
-        const idFavorit = await getByField('favorite_approach_user', formData.approach_id, id);
-        if (props.title.id === idFavorit.id) {
-          // alert('cheguei');
-          ratingModel.value = 1;
-        } else { ratingModel.value = 0; }
-        // alert(JSON.stringify(idFavorit));
-      } catch (error) {
-        showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
-      }
-      /// loading.value = false;
-    };
+
     onMounted(async () => {
-      listTable();
+      await initFavorit();
     });
 
     return {

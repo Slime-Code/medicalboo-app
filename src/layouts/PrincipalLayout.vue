@@ -101,7 +101,7 @@
         <q-card-section>
           <div class="row">
             <div class="col-6" v-for="(topic, index) in topics" :key="index">
-              <TopicButtom :title="topic" />
+              <TopicButtom :title="topic.name" :id="topic.id"/>
             </div>
           </div>
         </q-card-section>
@@ -113,6 +113,7 @@
 <script>
 import { showErrorNotification } from 'src/functions/functionShowNotifications';
 import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import TopicButtom from '../components/TopicButtom.vue';
 import useApi from '../composebles/useApi';
 import useAuthUser from '../composebles/useAuthUser';
@@ -125,6 +126,8 @@ export default defineComponent({
   setup() {
     const loading = ref(true);
 
+    const router = useRouter();
+
     const { user } = useAuthUser();
 
     const { list, getById } = useApi();
@@ -136,15 +139,13 @@ export default defineComponent({
       try {
         loading.value = true;
         const aux = await list('access_topic_user');
-        const aux1 = [];
         // eslint-disable-next-line no-plusplus
         for (let index = 0; index < aux.length; index++) {
           if (aux[index].user_id === user.value.id) {
             // eslint-disable-next-line no-await-in-loop
-            aux1.push(await getById('topic', aux[index].topic_id));
+            topics.value.push(await getById('topic', aux[index].topic_id));
           }
         }
-        topics.value = aux1.map((elem) => elem.name);
 
         loading.value = false;
       } catch (error) {
@@ -154,6 +155,11 @@ export default defineComponent({
         );
       }
     };
+
+    const go = async (id) => {
+      router.push(`/approach/${id}`);
+    };
+
     onMounted(() => {
       listTopicsAproachs();
     });
@@ -162,6 +168,7 @@ export default defineComponent({
       tab: ref('inicio'),
       topics,
       user,
+      go,
     };
   },
 });

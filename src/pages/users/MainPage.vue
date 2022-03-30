@@ -72,7 +72,7 @@
 
       </q-toolbar-title>
     <q-card flat bordered v-if="!loadingTopic" class=" q-mb-md row justify-center items-start">
-     
+
         <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
           <template v-slot:avatar>
             <q-btn flat :to="{ name: 'prime' }">

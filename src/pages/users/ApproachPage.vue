@@ -54,6 +54,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import ApproachButtom from '../../components/ApproachButtom.vue';
 import useApi from '../../composebles/useApi';
+import useAuthUser from '../../composebles/useAuthUser';
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -67,7 +68,8 @@ export default defineComponent({
 
     const loading1 = ref(true);
 
-    const { list } = useApi();
+    const { list, getById, post } = useApi();
+    const { user } = useAuthUser();
 
     const approachs = { geral: [], terapeutica: [] };
 
@@ -89,8 +91,33 @@ export default defineComponent({
         showErrorNotification(error);
       }
     };
-    onMounted(() => {
-      listTopicsAproachs();
+
+    // ------------- Adicionar nos Mais Acessados---------------------------
+    const addMoreAccesse = async () => {
+      try {
+        const data1 = {
+          id: null,
+          topic_id: null,
+          access_date: null,
+          times_access: 7,
+          user_id: null,
+        };
+        data1.topic_id = route.params.id;
+        data1.user_id = user.value.id;
+        data1.id = route.params.id;
+        data1.access_date = new Date();
+        const data = await getById('access_topic_user', route.params.id);
+        if (!data) {
+          post('access_topic_user', data1);
+        }
+      } catch (error) {
+        showErrorNotification(error);
+      }
+    };
+
+    onMounted(async () => {
+      await listTopicsAproachs();
+      await addMoreAccesse();
     });
     return {
       loading,

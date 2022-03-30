@@ -147,8 +147,12 @@
 
        <q-dialog v-model="dialogAvaliarApp">
         <q-card style="min-width: 350px">
-          <q-card-section>
-            <div class="text-h6">Avalie o App</div>
+          <q-card-section class="q-pb-none">
+            <div class="text-h6 row items-center q-pb-none">
+              <div>Avalie o App</div>
+              <q-space/>
+              <q-btn icon="close" flat round dense v-close-popup />
+            </div>
           </q-card-section>
             <div class="q-pa-md">
               <q-form @submit="onSubmit" class="q-gutter-md">
