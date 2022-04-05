@@ -1,6 +1,8 @@
 const routes = [
   { path: '', name: 'Init', component: () => import('pages/login/InitPage.vue') },
+
   { path: '/login', name: 'login', component: () => import('pages/login/LoginPage.vue') },
+
   {
     path: '/',
     component: () => import('src/layouts/PrincipalLayout.vue'),
@@ -82,6 +84,7 @@ const routes = [
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
       { path: '/admin/users', name: 'users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
+      { path: '/admin/colaboradores', name: 'colaboradores', component: () => import('src/pages/admins/user/ColaboradoresListPage.vue') },
       { path: '/admin/profile-types', name: 'profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
     ],

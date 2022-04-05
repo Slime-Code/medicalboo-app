@@ -1,33 +1,48 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <q-layout view="lHh Lpr fff" class="bg-grey-1">
+    <div class="col-md-4 col-sm-6 col-xs-10">
+      <q-header elevated class="bg-white text-grey-8" height-hint="64">
+        <q-toolbar class="GPL__toolbar" style="height: 64px">
+          <q-btn
+            flat
+            dense
+            round
+            @click="toggleLeftDrawer"
+            aria-label="Menu"
+            icon="menu"
+            class="q-mx-md"
+          />
+            <q-toolbar-title>
+              <img style="width: 55%; margin-left: 5px; " src="img/logo-original.png">
+            </q-toolbar-title>
 
-        <q-toolbar-title>
-          <span class="medium-screen-only">MedicalBook</span>
-          <span class="non-medium-screen-only" style="font-size: .8em;">MedicalBook</span>
-        </q-toolbar-title>
+          <q-input style="width: 70%" class="GPL__toolbar-input" dense standout="bg-primary" v-model="search" placeholder="Search">
+            <template v-slot:prepend>
+              <q-icon v-if="search === ''" name="search" />
+              <q-icon v-else name="clear" class="cursor-pointer" @click="search = ''" />
+            </template>
+          </q-input>
 
-        <div class="medium-screen-only">
-          <q-btn no-caps icon="perm_identity" flat label="Yuri José Rego"/>
-          <q-btn to="/" icon="logout" flat label="sair"/>
-        </div>
-        <div class="non-medium-screen-only">
-          <q-btn no-caps icon="perm_identity" flat round dense/>
-          <q-btn icon="logout" flat round dense @click="handleLogout()"/>
-        </div>
-      </q-toolbar>
-    </q-header>
+          <q-btn flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
 
-    <q-drawer
+          <q-btn flat dense color="grey-8" no-caps label="Suporte" class="q-ml-sm q-px-md" />
+
+          <q-btn
+            @click="dilogPremi = true"
+            size="13px"
+            no-caps
+            no-wrap
+            unelevated
+            text-color="black"
+            icon="fas fa-crown"
+            label="Premium"
+            class="btn-profile btn-prime q-ml-sm q-px-md"
+            style="background-color: #FFC300;"
+          />
+        </q-toolbar>
+      </q-header>
+
+      <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -60,17 +75,40 @@
             </q-item-section>
           </q-item>
         </div>
+        <q-separator />
+        <q-separator />
         <ItemMenuSideBar
           v-for="link in principaisLinks"
           :key="link.title"
           v-bind="link"
         />
+        <q-separator/>
+        <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+      <q-page-container class="GPL__page-container">
+        <router-view />
+        <q-dialog v-model="dilogPremi" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6">Nova area de ocupação</div>
+            </q-card-section>
+            <q-form>
+              <q-card-section class="q-pt-none">
+                <q-input dense  autofocus />
+              </q-card-section>
+
+              <q-card-actions align="right" class="text-primary">
+                <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+                <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+              </q-card-actions>
+            </q-form>
+          </q-card>
+
+        </q-dialog>
+      </q-page-container>
+    </div>
   </q-layout>
 </template>
 
@@ -81,7 +119,7 @@ const linksList = [
   {
     title: 'Dashboard',
     icon: 'event',
-    link: '/admin',
+    link: '/admin/',
   },
   {
     title: 'Categorias',
@@ -108,64 +146,124 @@ const linksList = [
   //   icon: 'perm_identity',
   //   link: '/admin/profile-types',
   // },
-  // {
-  //   title: 'Usuarios',
-  //   icon: 'group',
-  //   link: '/admin/users',
-  // },
+  {
+    title: 'Usuarios',
+    icon: 'person',
+    link: '/admin/users',
+  },
+  {
+    title: 'Colaboradores',
+    icon: 'group',
+    link: '/admin/colaboradores',
+  },
 ];
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
+import {
+  showErrorNotification,
+} from 'src/functions/functionShowNotifications';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+import useAuthUser from 'src/composebles/useAuthUser';
 
-import {useQuasar } from 'quasar'
-
-import useAuthUser from "../composebles/useAuthUser"
-import {useRouter} from "vue-router"
-export default defineComponent({
+export default {
   name: 'AdminLayout',
   components: {
     ItemMenuSideBar,
   },
+
   setup() {
     const leftDrawerOpen = ref(false);
-    const { logout } = useAuthUser()
-    const $q = useQuasar()
-    const router = useRouter()
+    const search = ref('');
+    const storage = ref(0.26);
 
-     const handleLogout = async () => {
+    const $q = useQuasar();
+
+    const router = useRouter();
+
+    const loading = ref(false);
+
+    const dilogPremi = ref(false);
+
+    const { logout } = useAuthUser();
+
+    function toggleLeftDrawer() {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    }
+
+    const handleLogout = async () => {
       $q.dialog({
         title: 'Logout',
-        message: 'Quer realmente sair?',
+        message: 'Tens a certeza que queres Sair ?',
         cancel: true,
         persistent: true,
       }).onOk(async () => {
-        await logout();
-        router.replace({ name: 'login' });
+        try {
+          loading.value = true;
+          await logout();
+          loading.value = false;
+          router.replace({ name: 'login' });
+        } catch (error) {
+          loading.value = false;
+          showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+        }
       });
     };
 
     return {
-      handleLogout,
-      principaisLinks: linksList,
+      dilogPremi,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
+      search,
+      storage,
+      principaisLinks: linksList,
+
+      toggleLeftDrawer,
+      miniState: ref(true),
+      handleLogout,
     };
   },
-});
+};
 </script>
 
-<style lang="sass" scoped>
-  .q-header
-    background-color: #0053ab
-  .pic
-    position: absolute
-    top: 85px
-    left: 80px
-  .item
-    margin-bottom: 20px
-  .btn-profile
-    min-width: 150px
-    width: 95%
-    margin-right: 10px
+<style lang="sass">
+.GPL
+
+  &__toolbar
+    height: 64px
+
+  &__toolbar-input
+    width: 35%
+
+  &__drawer-item
+    line-height: 24px
+    border-radius: 0 24px 24px 0
+    margin-right: 12px
+
+    .q-item__section--avatar
+      padding-left: 12px
+      .q-icon
+        color: #5f6368
+
+    .q-item__label:not(.q-item__label--caption)
+      color: #3c4043
+      letter-spacing: .01785714em
+      font-size: .875rem
+      font-weight: 500
+      line-height: 1.25rem
+
+    &--storage
+      border-radius: 0
+      margin-right: 0
+      padding-top: 24px
+      padding-bottom: 24px
+
+  &__side-btn
+    &__label
+      font-size: 12px
+      line-height: 24px
+      letter-spacing: .01785714em
+      font-weight: 500
+
+  @media (min-width: 1024px)
+    &__page-container
+      padding-left: 94px
 </style>

@@ -3,7 +3,7 @@
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
       <div>
-        <h5 class="col-12 title" style="margin: 20px 0;">tópico</h5>
+        <h5 class="col-12 title" style="margin: 20px 0;">Colaborador</h5>
         <div style="width: 100px;" class="row q-gutter-sm">
           <q-btn
             icon="add"
@@ -29,7 +29,7 @@
           flat
           square
           bordered
-          title="Lista de tópicos"
+          title="Lista de Colaboradores"
           :rows="rows"
           :columns="columns"
           :visible-columns="['title', 'options']"
@@ -56,22 +56,23 @@
     </div>
 
     <q-dialog v-model="dialogCategory" persistent>
-      <q-card style="min-width: 350px">
+       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Novo tpico</div>
+          <div class="text-h6">Novo Colaborador</div>
         </q-card-section>
         <q-form @submit="saveItem">
           <q-card-section class="q-pt-none">
-            <q-input dense v-model.trim="formData.name"  autofocus />
-          </q-card-section>
+          <q-input dense v-model.trim="formData.name"  autofocus />
+        </q-card-section>
 
-          <q-card-actions align="right" class="text-primary">
-            <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-            <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
-          </q-card-actions>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
+          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
+        </q-card-actions>
         </q-form>
 
       </q-card>
+
     </q-dialog>
 
     <q-inner-loading
@@ -102,7 +103,7 @@ const columns = [
   },
 
   {
-    name: 'options', align: 'right', label: 'Acção', field: 'options', sortable: true,
+    name: 'options', align: 'right', label: 'Ação', field: 'options', sortable: true,
   },
 
 ];
@@ -126,10 +127,15 @@ export default defineComponent({
       id: null,
     });
 
+    const users = ref([]);
+    const getAllUsers = async () => {
+      users.value = await list('users');
+    };
+
     const listAll = async () => {
       try {
         loading.value = true;
-        rows.value = await list('topic');
+        rows.value = await list('categoria');
         loading.value = false;
       } catch (error) {
         alert(error);
@@ -138,12 +144,11 @@ export default defineComponent({
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        await remove('topic', id);
+        await remove('categoria', id);
         listAll();
         loading.value = false;
       } catch (error) {
-        loading.value = false;
-        alert(JSON.stringify(error));
+        alert(error);
       }
     };
 
@@ -153,9 +158,9 @@ export default defineComponent({
         if (!formData.id) {
           delete formData.id;
 
-          await post('topic', formData);
+          await post('categoria', formData);
         } else {
-          await update('topic', formData);
+          await update('categoria', formData);
         }
         listAll();
         loading.value = false;

@@ -11,7 +11,7 @@
             class="col"
             @click="
             newDialog()
-            " 
+            "
           >
           </q-btn>
           <q-btn
@@ -68,12 +68,11 @@
               <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Titulo' dense v-model.trim="formData.title"  autofocus />
               <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.topic_id" :options="optionsTopic" label="Topico" />
               <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.type_approach_id" :options="optionsAproach" label="Tipo de Abordagem" />
-              
+
               <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Definicao' dense v-model ="formData.definition" type="textarea"  />
               <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Diagnostico' dense v-model ="formData.diagnosis"   type="textarea"/>
               <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Complementar' dense v-model ="formData.complentary"  type="textarea" />
 
-              
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -83,7 +82,6 @@
             </q-card-actions>
         </q-form>
 
-        
       </q-card>
 
     </q-dialog>
@@ -99,9 +97,12 @@
 </template>
 
 <script>
-import {  computed, defineComponent, onMounted, reactive, ref } from "vue"
+import {
+  computed, defineComponent, onMounted, reactive, ref,
+} from 'vue';
+import { useQuasar } from 'quasar';
 import useApi from '../../../composebles/useApi';
-import {useQuasar} from "quasar"
+
 const columns = [
   {
     name: 'title',
@@ -109,171 +110,156 @@ const columns = [
     label: 'Titulo',
     align: 'left',
     field: 'title',
-    sortable: true
+    sortable: true,
   },
-  { name: 'definition', align: 'center', label: 'Definicao', field: 'definition', sortable: true },
-  { name: 'diagnosis', align: 'center', label: 'Diagnostico', field: 'diagnosis', sortable: true },
-  { name: 'complentary', align: 'center', label: 'Complementar', field: 'complentary', sortable: true },
-  { name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true },
 
-  
-]
+  {
+    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
+  },
+
+];
 
 export default defineComponent({
- 
- 
-  setup(){
 
-     const $q = useQuasar()
-    const { list, post, update, remove, getById } = useApi();
-    const rows = ref([])
-    const optionsAproach = ref(null)
-    const optionsTopic = ref(null)
-    
-    const showAddApproach = ref(false)
+  setup() {
+    const $q = useQuasar();
+
+    const loading = ref(false);
+
+    const {
+      list, post, update, remove, getById,
+    } = useApi();
+    const rows = ref([]);
+    const optionsAproach = ref(null);
+    const optionsTopic = ref(null);
+
+    const showAddApproach = ref(false);
     const formData = reactive({
       id: null,
-      title: "",
-      definition: "",
-      diagnosis: "",
-      complentary: "",
+      title: '',
+      definition: '',
+      diagnosis: '',
+      complentary: '',
       topic_id: null,
-      type_approach_id: null
-    })
+      type_approach_id: null,
+    });
     const getLists = async () => {
-
-      const auxAproach =  await list('type_approach')
-      const auxTopic =  await list('topic')
-      optionsAproach.value = auxAproach.map((item)=>{
-        return {
-          label: item.type_approach,
-          value: item.id
-        }
-      })
-      optionsTopic.value = auxTopic.map((item)=>{
-        return {
-          label: item.name,
-          value: item.id
-        }
-      })
-    }
+      const auxAproach = await list('type_approach');
+      const auxTopic = await list('topic');
+      optionsAproach.value = auxAproach.map((item) => ({
+        label: item.type_approach,
+        value: item.id,
+      }));
+      optionsTopic.value = auxTopic.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+    };
 
     const getAproaches = async () => {
       try {
-        loading.value = true
-        const aux =  await list('approach')
-        rows.value = aux.map((item)=>{
-          return {
-            id: item.id,
-            title: item.title,
-            definition: item.definition,
-            diagnosis: item.diagnosis,
-            complentary: item.complentary,
-            type_approach_id: item.type_approach_id,
-            topic_id: item.topic_id
-          }
-        })
-        loading.value = false
+        loading.value = true;
+        const aux = await list('approach');
+        rows.value = aux.map((item) => ({
+          id: item.id,
+          title: item.title,
+          definition: item.definition,
+          diagnosis: item.diagnosis,
+          complentary: item.complentary,
+          type_approach_id: item.type_approach_id,
+          topic_id: item.topic_id,
+        }));
+        loading.value = false;
       } catch (error) {
-        alert(error)
+        alert(error);
       }
-      
-    }
+    };
 
     const deleteItem = async (id) => {
-      await remove('favorite_approach_user', id)
-      await remove('approach', id)
-      getAproaches()
-    }
-   
+      await remove('favorite_approach_user', id);
+      await remove('approach', id);
+      getAproaches();
+    };
+
     onMounted(
 
-      ()=> {
-        getAproaches()
-        getLists()
-      }
+      () => {
+        getAproaches();
+        getLists();
+      },
 
-    )
+    );
 
-    const newDialog = async (data)=> {
-      
-      if(data) {
-        loading.value=true
-        Object.keys(data).forEach(key => {
-          formData[key]= data[key]
-        })
+    const newDialog = async (data) => {
+      if (data) {
+        loading.value = true;
+        Object.keys(data).forEach((key) => {
+          formData[key] = data[key];
+        });
 
-        const result = await getById('type_approach', data.type_approach_id)
-        const resultTopic = await getById('topic', data.topic_id)
+        const result = await getById('type_approach', data.type_approach_id);
+        const resultTopic = await getById('topic', data.topic_id);
 
-        loading.value=true
-
+        loading.value = true;
 
         formData.type_approach_id = {
           label: result.type_approach,
-          value: result.id
-        }
+          value: result.id,
+        };
 
         formData.topic_id = {
           label: resultTopic.name,
-          value: resultTopic.id
-        }
-
-
+          value: resultTopic.id,
+        };
       } else {
-        formData.title= ""
-        formData.definition= ""
-        formData.diagnosis= ""
-        formData.complentary= ""
-        formData.topic_id= null
-        formData.type_approach_id= null
+        formData.title = '';
+        formData.definition = '';
+        formData.diagnosis = '';
+        formData.complentary = '';
+        formData.topic_id = null;
+        formData.type_approach_id = null;
       }
-      showAddApproach.value=true
-    }
+      showAddApproach.value = true;
+    };
 
-    const loading = ref(false)
-
-     const saveItem =  async () => {
+    const saveItem = async () => {
       try {
-        
-      showAddApproach.value=false
-      loading.value = true;
-      if(!formData.id){
-        delete formData.id
-        formData.topic_id = formData.topic_id.value
-        formData.type_approach_id = formData.type_approach_id.value
-    
-        await post('approach', formData)
-      }else {
-        formData.topic_id = formData.topic_id.value
-        formData.type_approach_id = formData.type_approach_id.value
-        await update('approach', formData);
-      }
-      getAproaches()
-      loading.value = false;
+        showAddApproach.value = false;
+        loading.value = true;
+        if (!formData.id) {
+          delete formData.id;
+          formData.topic_id = formData.topic_id.value;
+          formData.type_approach_id = formData.type_approach_id.value;
 
+          await post('approach', formData);
+        } else {
+          formData.topic_id = formData.topic_id.value;
+          formData.type_approach_id = formData.type_approach_id.value;
+          await update('approach', formData);
+        }
+        getAproaches();
+        loading.value = false;
       } catch (error) {
-        alert(error)
+        alert(error);
       }
-       
+    };
 
-    }
-
-        function confirmDelete (id) {
+    function confirmDelete(id) {
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
-         persistent: true,
-        cancel: "Cancelar"
+        persistent: true,
+        cancel: 'Cancelar',
       }).onOk(() => {
-        deleteItem(id)
+        deleteItem(id);
       }).onOk(() => {
         // console.log('>>>> second OK catcher')
       }).onCancel(() => {
         // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
       })
+        .onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+        });
     }
 
     return {
@@ -288,10 +274,10 @@ export default defineComponent({
       columns,
       rows,
       loading,
-      getAproaches
-    }
-  }
-})
+      getAproaches,
+    };
+  },
+});
 </script>
 
 <style>
@@ -312,7 +298,7 @@ export default defineComponent({
             class="col"
             @click="
             newDialog()
-            " 
+            "
           >
           </q-btn>
           <q-btn

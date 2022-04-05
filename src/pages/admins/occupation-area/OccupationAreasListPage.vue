@@ -26,6 +26,7 @@
     </div>
     <div class="col q-mt-md">
       <q-table
+        :dense="$q.screen.lt.md"
         flat
         square
         bordered
@@ -40,11 +41,9 @@
               <q-td key="name" :props="props">
                 {{ props.row.occupation_area }}
               </q-td>
-              <q-td key="actions" :props="props">
-                  <div class="row q-gutter-sm">
-                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
-                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" class="q-ml-sm" dense/>
-                  </div>
+              <q-td key="actions" class="text-right" :props="props">
+                <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" class="q-ml-sm" dense/>
               </q-td>
             </q-tr>
           </template>
@@ -66,8 +65,6 @@
             <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
           </q-card-actions>
         </q-form>
-
-        
       </q-card>
 
           </q-dialog>
@@ -93,30 +90,20 @@ const columns = [
     format: (val) => `${val}`,
     sortable: true,
   },
+
   {
     name: 'actions',
     required: true,
     label: 'Acoes',
-    align: 'left',
+    align: 'right',
     field: (row) => row.name,
     format: (val) => `${val}`,
-    sortable: false,
+    sortable: true,
   },
 
 ];
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%',
-  },
-];
+const rows = [];
 
 import { useQuasar } from 'quasar'
 import { defineComponent, ref, onMounted, reactive } from 'vue';

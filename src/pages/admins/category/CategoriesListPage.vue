@@ -1,73 +1,61 @@
 <template>
-<div class="flex q-pt-xl flex-center">
+  <div class="flex q-pt-xl flex-center">
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
-      <div class="row q-gutter-sm">
-        <h5 class="col-12 title" style="margin: 20px 0;">Categorias</h5>
-        <div class="col-12" style="margin: auto 0;">
-          <q-btn 
-          @click="
-           newDialog()
-          " 
-          icon="add"
-          color="primary"
+      <div>
+        <h5 class="col-12 title" style="margin: 20px 0;">Categoria</h5>
+        <div style="width: 100px;" class="row q-gutter-sm">
+          <q-btn
+            icon="add"
+            color="primary"
+            class="col"
+            @click="
+            newDialog()
+            "
           >
           </q-btn>
-          <q-btn 
-          @click="
-           listAll()
-          " 
+          <q-btn
           icon="update"
           color="primary"
+          class="col"
+          @click="listAll()"
           >
           </q-btn>
         </div>
       </div>
-    </div>
-    <div class="col q-mt-md">
-      <q-list v-if="!loading" bordered class="rounded-borders"
-        style="min-width: 160px; width:100%;">
-          <q-item-label header><strong>Lista de categorias</strong></q-item-label>
+      <div class="q-mt-md">
+        <q-table
+          :dense="$q.screen.lt.md"
+          flat
+          square
+          bordered
+          title="Lista de Categorias"
+          :rows="rows"
+          :columns="columns"
+          :visible-columns="['title', 'options']"
+          row-key="title"
+        >
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="title" :props="props">
+                {{ props.row.name }}
+              </q-td>
+              <q-td key="definition" :props="props">
+                  {{ props.row.definition }}
+              </q-td>
+              <q-td key="options" class="text-right" :props="props">
+                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
 
-            <q-separator/>
-
-          <q-item v-for="(category, index) in categories" :key="index">
-            <q-item-section>
-              <q-item-label class="q-mt-sm">{{ category.name }}</q-item-label>
-            </q-item-section>
-
-            <q-item-section top side class="medium-screen-only">
-              <div class="text-grey-8 q-gutter-xs">
-                <q-btn size="12px" flat dense round icon="edit" @click="newDialog(category)" />
-                <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click="confirmDelete(category.id)"/>
-              </div>
-            </q-item-section>
-
-            <q-item-section top side class="non-medium-screen-only">
-              <q-btn-dropdown flat round dense icon="more_vert">
-                <q-list separator>
-               
-                   <q-item clickable dense v-close-popup @click="newDialog(category)">
-                    <q-item-section>
-                      <q-item-label>Editar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable dense v-close-popup @click="confirmDelete(category.id)">
-                    <q-item-section>
-                      <q-item-label>Eliminar</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
-            </q-item-section>
-          </q-item>
-
-          <q-separator/>
-        </q-list>
       </div>
     </div>
-     <q-dialog v-model="dialogCategory" persistent>
+    </div>
+
+    <q-dialog v-model="dialogCategory" persistent>
        <q-card style="min-width: 350px">
         <q-card-section>
           <div class="text-h6">Nova categoria</div>
@@ -83,109 +71,93 @@
         </q-card-actions>
         </q-form>
 
-        
       </q-card>
 
-          </q-dialog>
+    </q-dialog>
 
-              <q-inner-loading
-        :showing="loading"
-        label="Atualizando..."
-        label-class="text-primary"
-        color="primary"
-        label-style="font-size: 1.1em"
-      />
+    <q-inner-loading
+      :showing="loading"
+      label="Atualizando..."
+      label-class="text-primary"
+      color="primary"
+      label-style="font-size: 1.1em"
+    />
   </div>
 </template>
 
 <script>
+import {
+  defineComponent, onMounted, reactive, ref,
+} from 'vue';
+import { useQuasar } from 'quasar';
+import useApi from '../../../composebles/useApi';
+
 const columns = [
   {
-    name: 'name',
+    name: 'title',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: 'Titulo',
     align: 'left',
-    field: (row) => row.name,
-    format: (val) => `${val}`,
+    field: 'title',
     sortable: true,
   },
-  {
-    name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true,
-  },
-];
 
-const rows = [
   {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%',
+    name: 'options', align: 'right', label: 'Ação', field: 'options', sortable: true,
   },
-];
 
-import { useQuasar } from 'quasar'
-import { defineComponent, ref, onMounted, reactive } from 'vue';
-import useApi from '../../../composebles/useApi';
-import EditarCategoria from './EditarCategoria.vue';
+];
 
 export default defineComponent({
-  name: 'CategoriesListPage',
-
-  components: {
-    EditarCategoria,
-  },
 
   setup() {
     const loading = ref(true);
-    const $q = useQuasar()
+    const $q = useQuasar();
 
+    const {
+      list, post, update, remove,
+    } = useApi();
 
-    const { list, post, update, remove } = useApi();
+    const rows = ref([]);
 
     const topics = ref([]);
-    const categories = ref([]);
 
     const formData = reactive({
-      name: "",
-      id: null
-    })
+      name: '',
+      id: null,
+    });
 
     const listAll = async () => {
       try {
         loading.value = true;
-        categories.value = await list('categoria');
+        rows.value = await list('categoria');
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
-     const deleteItem = async (id) => {
+    const deleteItem = async (id) => {
       try {
         loading.value = true;
-            await remove('categoria', id);
-          listAll()
+        await remove('categoria', id);
+        listAll();
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
 
-       const saveItem = async () => {
+    const saveItem = async () => {
       try {
         loading.value = true;
-          if(!formData.id) {
-            delete formData.id
+        if (!formData.id) {
+          delete formData.id;
 
-             await post('categoria', formData);
-          }else{
-
-            await update('categoria', formData);
-          }
-          listAll()
+          await post('categoria', formData);
+        } else {
+          await update('categoria', formData);
+        }
+        listAll();
         loading.value = false;
       } catch (error) {
         alert(error);
@@ -200,36 +172,36 @@ export default defineComponent({
 
     };
 
-    const dialogCategory = ref(false)
+    const dialogCategory = ref(false);
     const newDialog = (data) => {
-      if(data) {
-        Object.keys(data).forEach(key => {
-          formData[key]= data[key]
-        })
-
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          formData[key] = data[key];
+        });
       } else {
-        formData.name=""
+        formData.name = '';
       }
-      dialogCategory.value=true
-    }
+      dialogCategory.value = true;
+    };
 
-    function confirmDelete (id) {
+    function confirmDelete(id) {
       $q.dialog({
         title: 'Eliminar registro',
         message: 'Gostaria de apagar este registro?',
         persistent: true,
-        cancel: "Cancelar"
+        cancel: 'Cancelar',
       }).onOk(() => {
-        deleteItem(id)
+        deleteItem(id);
       }).onOk(() => {
         // console.log('>>>> second OK catcher')
       }).onCancel(() => {
         // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
       })
+        .onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+        });
     }
-    
+
     return {
       confirmDelete,
       newDialog,
@@ -237,7 +209,6 @@ export default defineComponent({
       loading,
       deleteItem,
       dialogCategory,
-      categories,
       saveItem,
       onItemClick,
       columns,
@@ -247,13 +218,9 @@ export default defineComponent({
       varDialogPassword: ref(false),
     };
   },
-  //  <q-btn class="gt-xs" size="12px" flat dense round icon="visibility" />
 });
 </script>
 
-<style lang="sass" scoped>
-  .q-header
-    background-color: #0053ab
-  .explore
-    width: 80vw
+<style>
+
 </style>
