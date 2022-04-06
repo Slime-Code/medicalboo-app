@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr fff" class="bg-grey-1">
+  <q-layout view="lHr LpR lFr" class="bg-grey-1">
     <div class="col-md-4 col-sm-6 col-xs-10">
       <q-header elevated class="bg-white text-grey-8" height-hint="64">
         <q-toolbar class="GPL__toolbar" style="height: 64px">
@@ -42,50 +42,57 @@
         </q-toolbar>
       </q-header>
 
+      <q-footer elevated class="bg-white text-grey-8">
+        <q-toolbar>
+          <p> <strong> copyright 2022-2023 </strong>
+          <strong style="color: #007BCE"> MedicalBook</strong>. Todos os direitos reservados. </p>
+        </q-toolbar>
+      </q-footer>
+
       <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-    >
-      <q-list>
-        <div class="flex flex-center">
-          <div class="column" align="center">
-            <div class="col item q-pt-lg">
-                <q-btn style="background: #1A4B9A; color: #1378B3"
-                  round icon="fas fa-user"
-                  size="40px">
-                  <q-badge class="pic" style="background: #49D16B" rounded>
-                    <q-icon dense name="camera" color="white" size="30px"/>
-                  </q-badge>
-                </q-btn>
+      >
+        <q-list>
+          <div class="flex flex-center">
+            <div class="column" align="center">
+              <div class="col item q-pt-lg">
+                  <q-btn style="background: #1A4B9A; color: #1378B3"
+                    round icon="fas fa-user"
+                    size="40px">
+                    <q-badge class="pic" style="background: #49D16B" rounded>
+                      <q-icon dense name="camera" color="white" size="30px"/>
+                    </q-badge>
+                  </q-btn>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="text-center">
-          <q-item
-            clickable
-          >
-            <q-item-section>
-              <q-item-label
-                header
-              >
-                <strong>Yuri José Rego</strong><br>
-                <span>Administrador</span>
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </div>
-        <q-separator />
-        <q-separator />
-        <ItemMenuSideBar
-          v-for="link in principaisLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-        <q-separator/>
-        <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
-      </q-list>
-    </q-drawer>
+          <div class="text-center">
+            <q-item
+              clickable
+            >
+              <q-item-section>
+                <q-item-label
+                  header
+                >
+                  <strong>Yuri José Rego</strong><br>
+                  <span>Administrador</span>
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+          <q-separator />
+          <q-separator />
+          <ItemMenuSideBar
+            v-for="link in principaisLinks"
+            :key="link.title"
+            v-bind="link"
+          />
+          <q-separator/>
+          <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
+        </q-list>
+      </q-drawer>
 
       <q-page-container class="GPL__page-container">
         <router-view />

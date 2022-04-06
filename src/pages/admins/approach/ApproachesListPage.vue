@@ -1,6 +1,6 @@
 <template>
-  <div class="flex q-pt-xl flex-center">
-  <div class="column" style="min-width: 90%">
+  <div class="flex q-pt-xl">
+  <div class="column" style="min-width: 99.9%">
     <div class="col q-ma-xs">
       <div>
         <h5 class="col-12 title" style="margin: 20px 0;">Abordagem</h5>
@@ -25,25 +25,31 @@
       </div>
       <div class="q-mt-md">
         <q-table
-          :dense="$q.screen.lt.md"
+
+          color="amber"
+          :dense="$q.screen.lt.sm"
           flat
           square
           bordered
           title="Lista de abordagens"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'options']"
+          :visible-columns="['title', 'options', 'categoria', 'criado']"
           row-key="title"
+          separator="vertical"
         >
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="title" :props="props">
                 {{ props.row.title }}
               </q-td>
-              <q-td key="definition" :props="props">
-                  {{ props.row.definition }}
+              <q-td class="text-left" key="categoria" :props="props">
+                {{ props.row.categoria }}
               </q-td>
-              <q-td key="options" class="text-center" :props="props">
+              <q-td class="text-left" key="criado" :props="props">
+                  Yuri Rego aos: {{ props.row.created_at }}
+              </q-td>
+              <q-td key="options" class="text-left" :props="props">
                     <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
                     <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
               </q-td>
@@ -98,7 +104,7 @@
 
 <script>
 import {
-  computed, defineComponent, onMounted, reactive, ref,
+  defineComponent, onMounted, reactive, ref,
 } from 'vue';
 import { useQuasar } from 'quasar';
 import useApi from '../../../composebles/useApi';
@@ -107,14 +113,22 @@ const columns = [
   {
     name: 'title',
     required: true,
-    label: 'Titulo',
+    label: 'Nome do Artigo',
     align: 'left',
     field: 'title',
     sortable: true,
   },
 
   {
-    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
+    name: 'categoria', align: 'left', label: 'Categoria', field: 'categoria', sortable: true,
+  },
+
+  {
+    name: 'criado', align: 'left', label: 'Criado Por', field: 'criado Por', sortable: true,
+  },
+
+  {
+    name: 'options', align: 'left', label: 'Ação', field: 'options', sortable: true,
   },
 
 ];
@@ -155,11 +169,12 @@ export default defineComponent({
         value: item.id,
       }));
     };
-
+    const cat = [];
     const getAproaches = async () => {
       try {
         loading.value = true;
         const aux = await list('approach');
+
         rows.value = aux.map((item) => ({
           id: item.id,
           title: item.title,
@@ -168,9 +183,13 @@ export default defineComponent({
           complentary: item.complentary,
           type_approach_id: item.type_approach_id,
           topic_id: item.topic_id,
+          created_at: item.created_at,
+          categoria: item.categoria,
         }));
+
         loading.value = false;
       } catch (error) {
+        loading.value = false;
         alert(error);
       }
     };

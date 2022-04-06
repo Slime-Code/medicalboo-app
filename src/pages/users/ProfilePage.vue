@@ -306,7 +306,7 @@ export default defineComponent({
 
     const handleLogout = async () => {
       $q.dialog({
-        title: 'Logout',
+        title: 'Sair',
         message: 'Tens a certeza que queres Sair ?',
         cancel: true,
         persistent: true,

@@ -1,6 +1,6 @@
 <template>
   <div class="flex q-pt-xl flex-center">
-  <div class="column" style="min-width: 90%">
+  <div class="column" style="min-width: 99.9%">
     <div class="col q-ma-xs">
       <div>
         <h5 class="col-12 title" style="margin: 20px 0;">Categoria</h5>
@@ -34,6 +34,7 @@
           :columns="columns"
           :visible-columns="['title', 'options']"
           row-key="title"
+          separator="vertical"
         >
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -44,8 +45,8 @@
                   {{ props.row.definition }}
               </q-td>
               <q-td key="options" class="text-right" :props="props">
-                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
-                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+                <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
               </q-td>
             </q-tr>
           </template>
