@@ -85,7 +85,7 @@ const routes = [
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
       { path: '/admin/users', name: 'users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
       { path: '/admin/colaboradores', name: 'colaboradores', component: () => import('src/pages/admins/user/ColaboradoresListPage.vue') },
-      { path: '/admin/profile-types', name: 'profile-types', component: () => import('src/pages/admins/profile-type/ProfileTypesListPage.vue') },
+      { path: '/admin/tipos-De-Abordagens', name: 'tipos-De-Abordagens', component: () => import('src/pages/admins/approach-type/TiposDeAbordagensListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
     ],
     meta: {

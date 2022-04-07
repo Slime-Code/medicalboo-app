@@ -61,6 +61,9 @@
           <div class="text-h6">Novo tpico</div>
         </q-card-section>
         <q-form @submit="saveItem">
+          <q-card-section>
+            <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="categoria" :options="optionsCategory" label="Categoria" />
+          </q-card-section>
           <q-card-section class="q-pt-none">
             <q-input dense v-model.trim="formData.name"  autofocus />
           </q-card-section>
@@ -121,15 +124,25 @@ export default defineComponent({
 
     const topics = ref([]);
 
+    const optionsCategory = ref(null);
+
+    const categoria = ref(null);
+
     const formData = reactive({
       name: '',
       id: null,
+      categoria_id: null,
     });
 
     const listAll = async () => {
       try {
         loading.value = true;
         rows.value = await list('topic');
+        const auxCategory = await list('categoria');
+        optionsCategory.value = auxCategory.map((item) => ({
+          label: item.name,
+          id: item.id,
+        }));
         loading.value = false;
       } catch (error) {
         alert(error);
@@ -152,15 +165,18 @@ export default defineComponent({
         loading.value = true;
         if (!formData.id) {
           delete formData.id;
+          formData.categoria_id = categoria.value.id;
 
           await post('topic', formData);
         } else {
+          delete formData.categoria_id;
           await update('topic', formData);
         }
         listAll();
         loading.value = false;
       } catch (error) {
-        alert(error);
+        loading.value = false;
+        alert(JSON.stringify(error));
       }
     };
 
@@ -203,6 +219,8 @@ export default defineComponent({
     }
 
     return {
+      categoria,
+      optionsCategory,
       confirmDelete,
       newDialog,
       formData,

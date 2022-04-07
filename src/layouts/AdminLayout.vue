@@ -148,11 +148,11 @@ const linksList = [
     icon: 'work',
     link: '/admin/occupation-areas',
   },
-  // {
-  //   title: 'Tipos de perfis',
-  //   icon: 'perm_identity',
-  //   link: '/admin/profile-types',
-  // },
+  {
+    title: 'Tipos de abordagens',
+    icon: 'type',
+    link: '/admin/tipos-De-Abordagens',
+  },
   {
     title: 'Usuarios',
     icon: 'person',
