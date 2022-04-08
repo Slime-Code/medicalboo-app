@@ -99,17 +99,18 @@
         <q-dialog v-model="dilogPremi" persistent>
           <q-card style="min-width: 350px">
             <q-card-section>
-              <div class="text-h6">Nova area de ocupação</div>
-            </q-card-section>
-            <q-form>
-              <q-card-section class="q-pt-none">
-                <q-input dense  autofocus />
-              </q-card-section>
-
-              <q-card-actions align="right" class="text-primary">
-                <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-                <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
-              </q-card-actions>
+              <div class="text-h6 row item-start">
+                <q-icon name="fas fa-crown" style="margin-right: 10px"/> Alterar valor do pacote Premium
+                <q-space/>
+                <q-btn icon="close" flat round dense v-close-popup />
+              </div>
+              <q-separator />
+            </q-card-section><br>
+            <q-form @submit="updatValuePremium">
+              <q-card-actions align="left" class="text-primary">
+                <q-input filled v-model="money" type="number" label="valor" style="max-width: 150px; width: 150px;" suffix="R$ "/>
+                <q-btn  label="Salvar Valor" size="19px" no-caps no-wrap unelevated style="background-color: #FFC300; margin-left: 10px; max-width: 150px; width: 150px" text-color="black"  type="submit" v-ripple v-close-popup />
+              </q-card-actions><br>
             </q-form>
           </q-card>
 
@@ -164,13 +165,14 @@ const linksList = [
     link: '/admin/colaboradores',
   },
 ];
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import {
   showErrorNotification,
 } from 'src/functions/functionShowNotifications';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import useAuthUser from 'src/composebles/useAuthUser';
+import useApi from 'src/composebles/useApi';
 
 export default {
   name: 'AdminLayout',
@@ -191,7 +193,13 @@ export default {
 
     const dilogPremi = ref(false);
 
+    const money = ref(297.90);
+
+    const form = { valor: 0.0, id: 1 };
+
     const { logout } = useAuthUser();
+
+    const { list, update } = useApi();
 
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -216,7 +224,22 @@ export default {
       });
     };
 
+    const getValuePremium = async () => {
+      const aux = await list('valorPremium');
+      money.value = aux.map((e) => e.valor);
+    };
+
+    const updatValuePremium = async () => {
+      form.valor = money.value;
+      await update('valorPremium', form);
+    };
+
+    onMounted(() => {
+      getValuePremium();
+    });
+
     return {
+      updatValuePremium,
       dilogPremi,
       leftDrawerOpen,
       search,
@@ -226,7 +249,9 @@ export default {
       toggleLeftDrawer,
       miniState: ref(true),
       handleLogout,
+      money,
     };
+
   },
 };
 </script>
