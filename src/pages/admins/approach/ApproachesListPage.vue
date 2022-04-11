@@ -1,147 +1,412 @@
 <template>
-  <div class="flex q-pt-xl">
-  <div class="column" style="min-width: 99.9%">
-    <div class="col q-ma-xs">
-      <div>
-        <h5 class="col-12 title" style="margin: 20px 0;">Abordagem</h5>
-        <div style="width: 100px;" class="row q-gutter-sm">
-          <q-btn
-            icon="add"
-            color="primary"
-            class="col"
-            @click="
-            newDialog()
-            "
-          >
-          </q-btn>
-          <q-btn
-          icon="update"
+  <q-page class="q-pa-md">
+    <div class="text-h5 q-pa-sm">Abordagens</div>
+
+    <q-slide-transition>
+      <q-card-section class="q-px-none" v-show="currentApproach">
+        <q-card flat bordered>
+          <q-card-section v-if="currentApproach" class="row">
+            {{ currentApproach.title }}
+            <q-space></q-space>
+            <q-btn flat round icon="close" dense @click="currentApproach = null" />
+            <q-btn
+              flat
+              :loading="loadingContent"
+              round
+              icon="save"
+              dense
+              @click="saveContent()"
+            >
+              <template v-slot:loading> <q-spinner-facebook /></template>
+            </q-btn>
+          </q-card-section>
+          <q-separator></q-separator>
+          <q-card-section>
+            <q-list
+              v-for="(content, index) in contents"
+              :key="index"
+              bordered
+              class="rounded-borders q-my-sm"
+            >
+              <q-expansion-item label="Conteúdo">
+                <q-separator />
+
+                <template v-slot:header>
+                  <q-item-section> {{ content.title }} </q-item-section>
+
+                  <q-item-section side>
+                    <div class="row items-center">
+                      <q-btn
+                        icon="cancel"
+                        color="red"
+                        round
+                        flat
+                        @click="removeContent(index)"
+                      />
+                    </div>
+                  </q-item-section>
+                </template>
+                <q-card>
+                  <q-card-section>
+                    <q-input
+                      :rules="[(val) => !!val || 'Campo obrigatório']"
+                      outlined
+                      label="Título"
+                      dense
+                      v-model="contents[index].title"
+                    >
+                    </q-input>
+                    <q-editor
+                      v-model="contents[index].content"
+                      min-height="8rem"
+                      :toolbar="[
+                        [
+                          {
+                            label: $q.lang.editor.align,
+                            icon: $q.iconSet.editor.align,
+                            fixedLabel: true,
+                            list: 'only-icons',
+                            options: ['left', 'center', 'right', 'justify'],
+                          },
+                          {
+                            label: $q.lang.editor.align,
+                            icon: $q.iconSet.editor.align,
+                            fixedLabel: true,
+                            options: ['left', 'center', 'right', 'justify'],
+                          },
+                        ],
+                        [
+                          'bold',
+                          'italic',
+                          'strike',
+                          'underline',
+                          'subscript',
+                          'superscript',
+                        ],
+                        ['token', 'hr', 'link', 'custom_btn'],
+                        ['print', 'fullscreen'],
+                        [
+                          {
+                            label: $q.lang.editor.formatting,
+                            icon: $q.iconSet.editor.formatting,
+                            list: 'no-icons',
+                            options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code'],
+                          },
+                          {
+                            label: $q.lang.editor.fontSize,
+                            icon: $q.iconSet.editor.fontSize,
+                            fixedLabel: true,
+                            fixedIcon: true,
+                            list: 'no-icons',
+                            options: [
+                              'size-1',
+                              'size-2',
+                              'size-3',
+                              'size-4',
+                              'size-5',
+                              'size-6',
+                              'size-7',
+                            ],
+                          },
+                          {
+                            label: $q.lang.editor.defaultFont,
+                            icon: $q.iconSet.editor.font,
+                            fixedIcon: true,
+                            list: 'no-icons',
+                            options: [
+                              'default_font',
+                              'arial',
+                              'arial_black',
+                              'comic_sans',
+                              'courier_new',
+                              'impact',
+                              'lucida_grande',
+                              'times_new_roman',
+                              'verdana',
+                            ],
+                          },
+                          'removeFormat',
+                        ],
+                        ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+
+                        ['undo', 'redo'],
+                        ['viewsource'],
+                      ]"
+                      :fonts="{
+                        arial: 'Arial',
+                        arial_black: 'Arial Black',
+                        comic_sans: 'Comic Sans MS',
+                        courier_new: 'Courier New',
+                        impact: 'Impact',
+                        lucida_grande: 'Lucida Grande',
+                        times_new_roman: 'Times New Roman',
+                        verdana: 'Verdana',
+                      }"
+                    >
+                    </q-editor>
+
+                    <div v-html="contents[index].content"></div>
+                  </q-card-section>
+                </q-card>
+              </q-expansion-item>
+            </q-list>
+
+            <q-btn
+              class="q-mb-sm"
+              icon="add"
+              color="primary"
+              outline
+              label="Adicionar conteúdo"
+              no-caps
+              @click="addContent"
+            />
+          </q-card-section>
+        </q-card>
+      </q-card-section>
+    </q-slide-transition>
+    <q-card class="q-mb-sm" flat bordered>
+      <div class="row q-pa-md q-gutter-sm">
+        <q-input
+          class="col-7 col-sm-7 col-md-7 col-xs-12 col-lg-7 col-xl-7"
+          v-model="filter"
+          placeholder="Pesquisar abordagem"
+          dense
+          outlined
+        />
+        <q-space />
+        <q-btn
+          class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
           color="primary"
-          class="col"
-          @click="getAproaches()"
-          >
-          </q-btn>
-        </div>
-      </div>
-      <div class="q-mt-md">
-        <q-table
-
-          color="amber"
-          :dense="$q.screen.lt.sm"
-          flat
-          square
-          bordered
-          title="Lista de abordagens"
-          :rows="rows"
-          :columns="columns"
-          :visible-columns="['title', 'options', 'categoria', 'criado']"
-          row-key="title"
-          separator="vertical"
+          label="Nova abordagem"
+          @click="newDialog()"
+          no-caps
+          rounded
         >
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td key="title" :props="props">
-                {{ props.row.title }}
-              </q-td>
-              <q-td class="text-left" key="categoria" :props="props">
-                {{ props.row.categoria }}
-              </q-td>
-              <q-td class="text-left" key="criado" :props="props">
-                  Yuri Rego aos: {{ props.row.created_at }}
-              </q-td>
-              <q-td key="options" class="text-left" :props="props">
-                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
-                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
-
+        </q-btn>
+        <q-btn
+          class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
+          color="primary"
+          label="Atualizar"
+          @click="getAproaches()"
+          no-caps
+          rounded
+        >
+        </q-btn>
       </div>
-    </div>
-    </div>
+    </q-card>
+    <q-table
+      color="primary"
+      :dense="$q.screen.lt.sm"
+      flat
+      square
+      bordered
+      :loading="loadingTable"
+      :rows="rows"
+      :columns="columns"
+      :visible-columns="['title', 'options', 'topic', 'type_approach', 'criado']"
+      row-key="title"
+      separator="cell"
+      :filter="filter"
+    >
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="title" :props="props">
+            {{ props.row.title }}
+          </q-td>
+          <q-td class="text-left" key="topic" :props="props">
+            {{ props.row.topic }}
+          </q-td>
+          <q-td class="text-left" key="type_approach" :props="props">
+            {{ props.row.type_approach }}
+          </q-td>
+
+          <q-td class="text-left" key="criado" :props="props">
+            Yuri Rego aos:
+            {{
+              new Date(props.row.created_at).toLocaleString("en-GB", { timeZone: "UTC" })
+            }}
+          </q-td>
+          <q-td key="options" class="text-left" :props="props">
+            <q-btn
+              icon="content_copy"
+              :disable="!props.row.link"
+              flat
+              round
+              size="sm"
+              dense
+              @click="copyTo(props.row.id)"
+            >
+              <q-tooltip>
+                {{
+                  props.row.link ? "Copiar conteúdo como Hyperlink" : "Não conteúdo Hyperlink"
+                }}
+              </q-tooltip>
+            </q-btn>
+
+            <q-btn flat round size="sm" icon="edit" @click="newDialog(props.row)" dense />
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="source"
+              @click="getContents(props.row)"
+              dense
+            />
+
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="delete"
+              @click="confirmDelete(props.row.id)"
+              dense
+            />
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
 
     <q-dialog v-model="showAddApproach" persistent>
-
       <q-card class="full-width">
-        <q-card-section>
-          <div class="text-h6">Nova Abordagem</div>
-        </q-card-section>
         <q-form @submit="saveItem">
+          <q-card-section class="q-py-sm">
+            <div class="text-h6">Nova Abordagem</div>
+          </q-card-section>
+          <q-separator />
 
-            <q-card-section class="q-pt-none q-gutter-y-sm">
+          <q-card-section class="scroll" style="max-height: 55vh">
+            <div class="row">
+              <q-input
+                class="col-12"
+                :rules="[(val) => !!val || 'Campo obrigatório']"
+                outlined
+                label="Titulo"
+                dense
+                v-model.trim="formData.title"
+                autofocus
+              />
+              <q-select
+                class="col-12"
+                :rules="[(val) => !!val || 'Campo obrigatório']"
+                dense
+                outlined
+                v-model="formData.topic_id"
+                :options="optionsTopic"
+                label="Topico"
+              />
+              <q-select
+                class="col-12"
+                :rules="[(val) => !!val || 'Campo obrigatório']"
+                dense
+                outlined
+                v-model="formData.type_approach_id"
+                :options="optionsAproach"
+                label="Tipo de Abordagem"
+              />
 
-              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Titulo' dense v-model.trim="formData.title"  autofocus />
-              <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.topic_id" :options="optionsTopic" label="Topico" />
-              <q-select :rules="[val => !!val || 'Campo obrigatório']" dense outlined v-model="formData.type_approach_id" :options="optionsAproach" label="Tipo de Abordagem" />
+              <div class="col-12">
+                  <q-checkbox
+                    v-model="formData.link"
+                    class="col-4"
+                    label="Conteúdo hyperlink"
+                  />
+                 
+              </div>
+            </div>
+          </q-card-section>
 
-              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Definicao' dense v-model ="formData.definition" type="textarea"  />
-              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Diagnostico' dense v-model ="formData.diagnosis"   type="textarea"/>
-              <q-input :rules="[val => !!val || 'Campo obrigatório']" outlined label='Complementar' dense v-model ="formData.complentary"  type="textarea" />
+          <q-separator />
 
-            </q-card-section>
+          <q-card-actions align="right">
+            <q-btn
+              label="Cancelar "
+              @click="loadingForm = false"
+              color="primary"
+              v-ripple
+              no-caps
+              dense
+              v-close-popup
+            />
 
-            <q-card-actions align="right" class="text-primary">
-              <q-btn  label="Cancelar " @click="loading=false" color="primary" v-ripple no-caps v-close-popup/>
-
-              <q-btn  label="Salvar"  color="primary"  type="submit" v-ripple no-caps />
-            </q-card-actions>
+            <q-btn label="Salvar" color="primary" dense type="submit" v-ripple no-caps />
+          </q-card-actions>
         </q-form>
-
       </q-card>
-
     </q-dialog>
 
     <q-inner-loading
-      :showing="loading"
-      label="Atualizando..."
+      :showing="loadingForm"
+      label="Carregando dados..."
       label-class="text-primary"
       color="primary"
       label-style="font-size: 1.1em"
     />
-  </div>
+  </q-page>
 </template>
 
 <script>
-import {
-  defineComponent, onMounted, reactive, ref,
-} from 'vue';
-import { useQuasar } from 'quasar';
-import useApi from '../../../composebles/useApi';
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import { useQuasar, copyToClipboard } from "quasar";
+import useApi from "../../../composebles/useApi";
 
 const columns = [
   {
-    name: 'title',
+    name: "title",
     required: true,
-    label: 'Nome do Artigo',
-    align: 'left',
-    field: 'title',
+    label: "Título",
+    align: "left",
+    field: "title",
     sortable: true,
   },
 
   {
-    name: 'categoria', align: 'left', label: 'Categoria', field: 'categoria', sortable: true,
+    name: "topic",
+    align: "left",
+    label: "Tópico",
+    field: "topic",
+    sortable: true,
+  },
+  {
+    name: "type_approach",
+    align: "left",
+    label: "Tipo de abordagem",
+    field: "type_approach",
+    sortable: true,
   },
 
   {
-    name: 'criado', align: 'left', label: 'Criado Por', field: 'criado Por', sortable: true,
+    name: "criado",
+    align: "left",
+    label: "Criado Por",
+    field: "criado Por",
+    sortable: true,
   },
 
   {
-    name: 'options', align: 'left', label: 'Ação', field: 'options', sortable: true,
+    name: "options",
+    align: "left",
+    label: "Ação",
+    field: "options",
+    sortable: true,
   },
-
 ];
 
 export default defineComponent({
-
   setup() {
     const $q = useQuasar();
 
-    const loading = ref(false);
+    const loadingForm = ref(false);
+    const loadingTable = ref(false);
 
     const {
-      list, post, update, remove, getById,
+      list,
+      joinTables,
+      post,
+      update,
+      removeWhere,
+      remove,
+      getById,
+      getByField,
     } = useApi();
     const rows = ref([]);
     const optionsAproach = ref(null);
@@ -149,17 +414,14 @@ export default defineComponent({
 
     const showAddApproach = ref(false);
     const formData = reactive({
-      id: null,
-      title: '',
-      definition: '',
-      diagnosis: '',
-      complentary: '',
+      title: "",
       topic_id: null,
       type_approach_id: null,
+      link: false,
     });
     const getLists = async () => {
-      const auxAproach = await list('type_approach');
-      const auxTopic = await list('topic');
+      const auxAproach = await list("type_approach");
+      const auxTopic = await list("topic");
       optionsAproach.value = auxAproach.map((item) => ({
         label: item.type_approach,
         value: item.id,
@@ -172,54 +434,62 @@ export default defineComponent({
     const cat = [];
     const getAproaches = async () => {
       try {
-        loading.value = true;
-        const aux = await list('approach');
+        loadingTable.value = true;
+        const aux = await joinTables("approach", [
+          {
+            name: "topic",
+            foreign_key: "topic_id",
+            fields: "name",
+          },
+          {
+            name: "type_approach",
+            foreign_key: "type_approach_id",
+            fields: "type_approach",
+          },
+        ]);
 
         rows.value = aux.map((item) => ({
           id: item.id,
           title: item.title,
-          definition: item.definition,
-          diagnosis: item.diagnosis,
-          complentary: item.complentary,
+          link: item.link,
           type_approach_id: item.type_approach_id,
           topic_id: item.topic_id,
+          topic: item.topic.name,
+          type_approach: item.type_approach.type_approach,
           created_at: item.created_at,
-          categoria: item.categoria,
         }));
 
-        loading.value = false;
+        loadingTable.value = false;
       } catch (error) {
-        loading.value = false;
+        loadingTable.value = false;
         alert(error);
       }
     };
 
     const deleteItem = async (id) => {
-      await remove('favorite_approach_user', id);
-      await remove('approach', id);
+      await remove("favorite_approach_user", id);
+      await removeWhere("approach_contents", "id_approach", id);
+      await remove("approach", id);
       getAproaches();
     };
 
-    onMounted(
-
-      () => {
-        getAproaches();
-        getLists();
-      },
-
-    );
+    onMounted(() => {
+      getAproaches();
+      getLists();
+    });
 
     const newDialog = async (data) => {
       if (data) {
-        loading.value = true;
-        Object.keys(data).forEach((key) => {
-          formData[key] = data[key];
-        });
+        loadingForm.value = true;
 
-        const result = await getById('type_approach', data.type_approach_id);
-        const resultTopic = await getById('topic', data.topic_id);
+        const result = await getById("type_approach", data.type_approach_id);
+        const resultTopic = await getById("topic", data.topic_id);
 
-        loading.value = true;
+        formData.title = data.title;
+        formData.id = data.id;
+        formData.link = data.link;
+
+        loadingForm.value = false;
 
         formData.type_approach_id = {
           label: result.type_approach,
@@ -231,10 +501,8 @@ export default defineComponent({
           value: resultTopic.id,
         };
       } else {
-        formData.title = '';
-        formData.definition = '';
-        formData.diagnosis = '';
-        formData.complentary = '';
+        contents.value = [];
+        formData.title = "";
         formData.topic_id = null;
         formData.type_approach_id = null;
       }
@@ -244,20 +512,24 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         showAddApproach.value = false;
-        loading.value = true;
+        loadingForm.value = true;
+        let approach_id = formData.id;
+
         if (!formData.id) {
           delete formData.id;
           formData.topic_id = formData.topic_id.value;
           formData.type_approach_id = formData.type_approach_id.value;
 
-          await post('approach', formData);
+          const result = await post("approach", formData);
+          approach_id = result[0].id;
         } else {
           formData.topic_id = formData.topic_id.value;
           formData.type_approach_id = formData.type_approach_id.value;
-          await update('approach', formData);
+          await update("approach", formData);
         }
+
         getAproaches();
-        loading.value = false;
+        loadingForm.value = false;
       } catch (error) {
         alert(error);
       }
@@ -265,43 +537,131 @@ export default defineComponent({
 
     function confirmDelete(id) {
       $q.dialog({
-        title: 'Eliminar registro',
-        message: 'Gostaria de apagar este registro?',
+        title: "Eliminar registro",
+        message: "Gostaria de apagar este registro?",
         persistent: true,
-        cancel: 'Cancelar',
-      }).onOk(() => {
-        deleteItem(id);
-      }).onOk(() => {
-        // console.log('>>>> second OK catcher')
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
+        cancel: "Cancelar",
       })
+        .onOk(() => {
+          deleteItem(id);
+        })
+        .onOk(() => {
+          // console.log('>>>> second OK catcher')
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
         .onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
+          // console.log('I am triggered on both OK and Cancel')
         });
     }
 
+    const filter = ref("");
+
+    const contents = ref([]);
+
+    const addContent = () => {
+      contents.value.push({
+        title: `Novo conteúdo`,
+        content: "",
+      });
+    };
+
+    const currentApproach = ref();
+    const loadingContent = ref(false);
+
+    const saveContent = async () => {
+      contents.value.forEach(async (content) => {
+        const data = {
+          title: content.title,
+          content: content.content,
+          id: content.id,
+          id_approach: currentApproach.value.id,
+        };
+        loadingContent.value = true;
+
+        if (content.id) {
+          await update("approach_contents", data);
+        } else {
+          delete data.id;
+          await post("approach_contents", data);
+        }
+        loadingContent.value = false;
+      });
+    };
+    const removeContent = (index) => {
+      if (contents.value[index].id) {
+        const id = contents.value[index].id;
+
+        $q.dialog({
+          title: "Eliminar conteúdo",
+          message: `Gostaria de apagar conteúdo ${contents.value[index].title} ?`,
+          persistent: true,
+          cancel: "Cancelar",
+        }).onOk(async () => {
+          await remove("approach_contents", id);
+          $q.notify({
+            message: "Conteúdo apagado com sucesso!!",
+          });
+        });
+      }
+
+      contents.value.splice(index, 1);
+    };
+
+    const getContents = async (approach) => {
+      currentApproach.value = approach;
+      loadingForm.value = true;
+      contents.value = await getByField(
+        "approach_contents",
+        "id_approach",
+        currentApproach.value.id
+      );
+      loadingForm.value = false;
+    };
+
+    const copyTo = (key) => {
+      copyToClipboard(`${window.location.origin}/content/${key}`)
+        .then(() => {
+          // success!
+          $q.notify({
+            message: "Conteúdo copiado",
+          });
+        })
+        .catch(() => {
+          // fail
+        });
+    };
+
     return {
+      copyTo,
+      getContents,
+      loadingContent,
+      saveContent,
+      contents,
+      loadingForm,
+      loadingTable,
+      addContent,
+      removeContent,
+      filter,
       newDialog,
       showAddApproach,
       formData,
       optionsAproach,
       optionsTopic,
       saveItem,
+      currentApproach,
       deleteItem,
       confirmDelete,
       columns,
       rows,
-      loading,
       getAproaches,
     };
   },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>
 
 <!--
 <template>

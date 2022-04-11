@@ -93,7 +93,6 @@ export default defineComponent({
         loading.value = false;
       } catch (error) {
         loading.value = false;
-        alert(JSON.stringify(error));
       }
     };
 

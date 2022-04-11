@@ -33,6 +33,25 @@ export default function useApi() {
     return data;
   };
 
+  const joinTables = async (origin, tables) => {
+
+    const fields = tables.reduce((previousValue, currentValue, index) => {
+
+      return `${previousValue.name}:${previousValue.foreign_key}(${previousValue.fields})` +
+        ',' + `${currentValue.name}:${currentValue.foreign_key}(${currentValue.fields})`
+    });
+
+
+    const { data, error } = await supabase
+      .from(origin)
+      .select(`*,${fields}`)
+    if (error) throw error;
+
+    console.log(data)
+    return data;
+  };
+
+
   const post = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
@@ -67,6 +86,17 @@ export default function useApi() {
     return data;
   };
 
+  const removeWhere = async (table, field,id) => {
+    const { data, error } = await supabase
+      .from(table)
+      .delete()
+      .match({ [field]: id });
+
+    if (error) throw error;
+    return data;
+  };
+
+
   return {
     getByField,
     list,
@@ -74,5 +104,7 @@ export default function useApi() {
     post,
     update,
     remove,
+    removeWhere,
+    joinTables
   };
 }
