@@ -83,8 +83,34 @@
             :key="link.title"
             v-bind="link"
           />
-          <q-separator/>
+
+          <q-list class="rounded-borders">
+            <q-expansion-item
+              dense
+              dense-toggle
+              expand-separator
+              icon="person"
+              label="Usuários"
+            >
+              <q-expansion-item :to="{name: 'colaboradores'}" switch-toggle-side dense-toggle label="Admin"/>
+
+              <q-expansion-item  :to="{name: 'users'}" switch-toggle-side dense-toggle label="Normal"/>
+            </q-expansion-item><br>
+
+            <q-expansion-item
+              dense
+              dense-toggle
+              expand-separator
+              icon="group"
+              label="Colaboradores"
+            >
+              <q-expansion-item :to="{name: 'register'}" switch-toggle-side dense-toggle label="Admin"/>
+
+              <q-expansion-item  :to="{name: 'colaboradores'}" switch-toggle-side dense-toggle label="Liista de Colaboradores"/>
+            </q-expansion-item>
+          </q-list><br>
           <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
+          <br>
         </q-list>
       </q-drawer>
 
@@ -116,6 +142,7 @@
 
 <script>
 import ItemMenuSideBar from 'components/ItemMenuSideBar.vue';
+// import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const linksList = [
   {
@@ -145,20 +172,11 @@ const linksList = [
   },
   {
     title: 'Tipos de abordagens',
-    icon: 'type',
+    icon: 'folder',
     link: '/admin/tipos-De-Abordagens',
   },
-  {
-    title: 'Usuarios',
-    icon: 'person',
-    link: '/admin/users',
-  },
-  {
-    title: 'Colaboradores',
-    icon: 'group',
-    link: '/admin/colaboradores',
-  },
 ];
+
 import { ref, onMounted } from 'vue';
 import {
   showErrorNotification,

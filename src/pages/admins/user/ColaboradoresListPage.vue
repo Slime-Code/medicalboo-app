@@ -96,7 +96,7 @@ const columns = [
   {
     name: 'title',
     required: true,
-    label: 'Titulo',
+    label: 'Nome',
     align: 'left',
     field: 'title',
     sortable: true,
