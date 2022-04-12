@@ -6,15 +6,6 @@
         <h5 class="col-12 title" style="margin: 20px 0;">Usuários</h5>
         <div style="width: 100px;" class="row q-gutter-sm">
           <q-btn
-            icon="add"
-            color="primary"
-            class="col"
-            @click="
-            newDialog()
-            "
-          >
-          </q-btn>
-          <q-btn
           icon="update"
           color="primary"
           class="col"
@@ -25,26 +16,46 @@
       </div>
       <div class="q-mt-md">
         <q-table
-          :dense="$q.screen.lt.md"
+          color="primary"
+          :dense="$q.screen.lt.sm"
           flat
           square
           bordered
           title="Lista de Usuários"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'options']"
+          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'perfil', 'options']"
           row-key="title"
+          separator="cell"
         >
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="title" :props="props">
                 {{ props.row.name }}
               </q-td>
-              <q-td key="definition" :props="props">
-                  {{ props.row.definition }}
+              <q-td key="data" :props="props">
+                  {{ props.row.data }}
+              </q-td>
+              <q-td key="cpf" :props="props">
+                  {{ props.row.cpf }}
+              </q-td>
+              <q-td key="nacionalidade" :props="props">
+                  {{ props.row.nacionalidade }}
+              </q-td>
+              <q-td key="ano-de-graduacao" :props="props">
+                  {{ props.row.ano_de_graduacao }}
+              </q-td>
+              <q-td key="area-de-ocupacao" :props="props">
+                  {{ props.row.area_de_ocupacao }}
+              </q-td>
+              <q-td key="data-cadastro" :props="props">
+                  {{ props.row.created_at }}
+              </q-td>
+              <q-td key="perfil" :props="props">
+                <p v-if="props.row.perfil == 1">Estudante</p>
+                <p v-else-if="props.row.perfil == 2">Proficional</p>
               </q-td>
               <q-td key="options" class="text-right" :props="props">
-                <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
                 <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
               </q-td>
             </q-tr>
@@ -70,7 +81,7 @@
                   class="col"
                   style="min-width: 250px"
                   dense
-                  v-model="formUser.name"
+                  v-model="rows.name"
                   rounded
                   outlined
                   type="text"
@@ -84,7 +95,7 @@
                   class="col"
                   style="min-width: 120px"
                   dense
-                  v-model="formUser.birthday"
+                  v-model="rows.birthday"
                   rounded
                   outlined
                   type="date"
@@ -99,7 +110,7 @@
                   class="col"
                   style="min-width: 250px"
                   dense
-                  v-model="formUser.cpf"
+                  v-model="rows.cpf"
                   rounded
                   outlined
                   type="text"
@@ -112,7 +123,7 @@
                 <div>
                   <div class="q-pa-xs">
                     <q-option-group
-                      v-model="formUser.profile_type_id"
+                      v-model="rows.profile_type_id"
                       :options="tipo"
                       color="primary"
                       inline
@@ -125,7 +136,7 @@
                   dense
                   rounded
                   outlined
-                  v-model="formUser.nationality"
+                  v-model="rows.nationality"
                   :options="options"
                   label="Nacionalidade"
                 />
@@ -136,7 +147,7 @@
                   style="min-width: 30%"
                   class="col"
                   dense
-                  v-model="formData.email"
+                  v-model="rows.email"
                   rounded
                   outlined
                   type="email"
@@ -158,14 +169,14 @@
                   lazy-rules
                   :rules="[
                     val => val !== null && val !== '' || 'Campo não pode estar vazio',
-                    val => val.trim() === formData.email.trim() || 'Email não correspondente'
+                    val => val.trim() === rows.email.trim() || 'Email não correspondente'
                   ]"
                 />
                 <q-input
                   style="min-width: 30%; max-width: 50%"
                   class="col"
                   dense
-                  v-model="formData.password"
+                  v-model="rows.password"
                   rounded
                   outlined
                   type="password"
@@ -179,7 +190,7 @@
                   class="col"
                   style="min-width: 50%; max-width: 50%"
                   dense
-                  v-model="formData.confirm_password"
+                  v-model="rows.confirm_password"
                   rounded
                   outlined
                   type="password"
@@ -187,7 +198,7 @@
                   lazy-rules
                   :rules="[
                     val => val !== null && val !== '' || 'Campo não pode estar vazio',
-                    val => val.trim() === formData.password.trim() || 'Senha não correspondente'
+                    val => val.trim() === rows.password.trim() || 'Senha não correspondente'
                   ]"
                 />
 
@@ -199,7 +210,7 @@
                 rounded
                 outlined
                 :loading='loading'
-                v-model="formData.occupation_area"
+                v-model="rows.occupation_area"
                 :options="options2"
                 label="Área de actuação"
                 class="col"
@@ -210,7 +221,7 @@
                   dense
                   rounded
                   outlined
-                  v-model="formData.graduation_year"
+                  v-model="rows.graduation_year"
                   :options="options1"
                   label="Ano de formatura"
                   class="col"
@@ -265,6 +276,62 @@ const columns = [
     label: 'Nome',
     align: 'left',
     field: 'title',
+    sortable: true,
+  },
+
+  {
+    name: "data",
+    align: "left",
+    label: "Data de Nascimento",
+    field: "data",
+    sortable: true,
+  },
+
+  {
+    name: "CPF",
+    align: "left",
+    label: "CPF",
+    field: "CPF",
+    sortable: true,
+  },
+
+  {
+    name: "nacionalidade",
+    align: "left",
+    label: "Nacionalidade",
+    field: "Nacionalidade",
+    sortable: true,
+  },
+
+  {
+    name: "ano-de-graduacao",
+    align: "left",
+    label: "Ano de Graduação",
+    field: "ano-de-graduacao",
+    sortable: true,
+  },
+
+    {
+    name: "area-de-ocupacao",
+    align: "left",
+    label: "Área de Ocupação",
+    field: "area-de-ocupacao",
+    sortable: true,
+  },
+
+  {
+    name: "data-cadastro",
+    align: "left",
+    label: "Cadastrado Aos",
+    field: "data",
+    sortable: true,
+  },
+
+  {
+    name: "perfil",
+    align: "left",
+    label: "Perfil",
+    field: "perfil",
     sortable: true,
   },
 
@@ -331,7 +398,20 @@ export default defineComponent({
     const listAll = async () => {
       try {
         loading.value = true;
-        rows.value = await list('categoria');
+        const aux = await list('perfil');
+        rows.value = aux.map((item) => ({
+          id: item.id,
+          name: item.name,
+          data: item.birthday,
+          cpf: item.cpf,
+          perfil: item.profile_type_id,
+          area_de_ocupacao: item.occupation_area,
+          ano_de_graduacao: item.graduation_year,
+          email: item.email,
+          created_at: item.created_at,
+          password: item.password,
+          nacionalidade: item.nationality,
+        }));
         loading.value = false;
       } catch (error) {
         alert(error);
@@ -340,7 +420,7 @@ export default defineComponent({
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        await remove('categoria', id);
+        await remove('perfil', id);
         listAll();
         loading.value = false;
       } catch (error) {
@@ -354,9 +434,9 @@ export default defineComponent({
         if (!formData.id) {
           delete formData.id;
 
-          await post('categoria', formData);
+          await post('perfil', formData);
         } else {
-          await update('categoria', formData);
+          await update('perfil', formData);
         }
         listAll();
         loading.value = false;
@@ -391,8 +471,8 @@ export default defineComponent({
     onMounted(() => {
       listTopicsAproachs();
       listAll();
-      getAllUsers();
       listOcupationAreaGraduation();
+      getAllUsers();
     });
 
     const onItemClick = async () => {

@@ -3,7 +3,7 @@
   <div class="column" style="min-width: 90%">
     <div class="col q-ma-xs">
       <div>
-        <h5 class="col-12 title" style="margin: 20px 0;">Colaborador</h5>
+        <h5 class="col-12 title" style="margin: 20px 0;">Usuários Admin</h5>
         <div style="width: 100px;" class="row q-gutter-sm">
           <q-btn
             icon="add"
@@ -12,8 +12,7 @@
             @click="
             newDialog()
             "
-          >
-          </q-btn>
+          />
           <q-btn
           icon="update"
           color="primary"
@@ -25,27 +24,47 @@
       </div>
       <div class="q-mt-md">
         <q-table
-          :dense="$q.screen.lt.md"
+          color="primary"
+          :dense="$q.screen.lt.sm"
           flat
           square
           bordered
-          title="Lista de Colaboradores"
+          title="Lista de Usuários"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'options']"
+          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'perfil', 'options']"
           row-key="title"
+          separator="cell"
         >
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="title" :props="props">
                 {{ props.row.name }}
               </q-td>
-              <q-td key="definition" :props="props">
-                  {{ props.row.definition }}
+              <q-td key="data" :props="props">
+                  {{ props.row.data }}
+              </q-td>
+              <q-td key="cpf" :props="props">
+                  {{ props.row.cpf }}
+              </q-td>
+              <q-td key="nacionalidade" :props="props">
+                  {{ props.row.nacionalidade }}
+              </q-td>
+              <q-td key="ano-de-graduacao" :props="props">
+                  {{ props.row.ano_de_graduacao }}
+              </q-td>
+              <q-td key="area-de-ocupacao" :props="props">
+                  {{ props.row.area_de_ocupacao }}
+              </q-td>
+              <q-td key="data-cadastro" :props="props">
+                  {{ props.row.created_at }}
+              </q-td>
+              <q-td key="perfil" :props="props">
+                <p>Admin</p>
               </q-td>
               <q-td key="options" class="text-right" :props="props">
-                    <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
-                    <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+                <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
+                <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
               </q-td>
             </q-tr>
           </template>
@@ -55,24 +74,186 @@
     </div>
     </div>
 
-    <q-dialog v-model="dialogCategory" persistent>
-       <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Novo Colaborador</div>
-        </q-card-section>
+    <q-dialog v-model="dialogUser" persistent>
+      <q-card class="full-width">
         <q-form @submit="saveItem">
-          <q-card-section class="q-pt-none">
-          <q-input dense v-model.trim="formData.name"  autofocus />
-        </q-card-section>
+          <q-card-section class="q-py-sm">
+            <div class="text-h6">Novo Usuário</div>
+          </q-card-section>
+          <q-separator />
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-          <q-btn  label="Salvar" color="primary"  type="submit" v-ripple no-caps v-close-popup />
-        </q-card-actions>
+          <q-card-section class="scroll" style="max-height: 77vh">
+            <div class="q-pa-md">
+              <div class="q-gutter-md row items-start">
+                <q-input
+                  class="col"
+                  style="min-width: 250px"
+                  dense
+                  v-model="formUser.name"
+                  rounded
+                  outlined
+                  type="text"
+                  label="Nome completo"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  ]"
+                />
+                <q-input
+                  class="col"
+                  style="min-width: 120px"
+                  dense
+                  v-model="formUser.birthday"
+                  rounded
+                  outlined
+                  type="date"
+                  label="Data de nascimento"
+                  stack-label
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  ]"
+                />
+                <q-input
+                  class="col"
+                  style="min-width: 250px"
+                  dense
+                  v-model="formUser.cpf"
+                  rounded
+                  outlined
+                  type="text"
+                  label="CPF"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  ]"
+                />
+                <div>
+                  <div class="q-pa-xs">
+                    <q-option-group
+                      v-model="formUser.profile_type_id"
+                      :options="tipo"
+                      color="primary"
+                      inline
+                    />
+                  </div>
+                </div>
+                <q-select
+                  class="col"
+                  style="min-width: 230px"
+                  dense
+                  rounded
+                  outlined
+                  v-model="formUser.nationality"
+                  :options="options"
+                  label="Nacionalidade"
+                />
+
+                <q-separator />
+
+                <q-input
+                  style="min-width: 30%"
+                  class="col"
+                  dense
+                  v-model="formUser.email"
+                  rounded
+                  outlined
+                  type="email"
+                  label="Email"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  ]"
+                />
+                <q-input
+                  style="min-width: 50%"
+                  dense
+                  class="col"
+                  v-model="formData.confirm_email"
+                  rounded
+                  outlined
+                  type="email"
+                  label="Confirme o email"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                    val => val.trim() === formUser.email.trim() || 'Email não correspondente'
+                  ]"
+                />
+                <q-input
+                  style="min-width: 30%; max-width: 50%"
+                  class="col"
+                  dense
+                  v-model="formUser.password"
+                  rounded
+                  outlined
+                  type="password"
+                  label="Senha"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  ]"
+                />
+                <q-input
+                  class="col"
+                  style="min-width: 50%; max-width: 50%"
+                  dense
+                  v-model="formUser.confirm_password"
+                  rounded
+                  outlined
+                  type="password"
+                  label="Confirme a senha"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                    val => val.trim() === formUser.password.trim() || 'Senha não correspondente'
+                  ]"
+                />
+
+                <q-separator />
+
+                <q-select
+                style="min-width: 30%; max-width: 50%"
+                dense
+                rounded
+                outlined
+                :loading='loading'
+                v-model="formUser.occupation_area"
+                :options="options2"
+                label="Área de actuação"
+                class="col"
+                />
+                <q-select
+                  style="min-width: 50%; max-width: 50%"
+                  :loading='loading'
+                  dense
+                  rounded
+                  outlined
+                  v-model="formUser.graduation_year"
+                  :options="options1"
+                  label="Ano de formatura"
+                  class="col"
+                /> <br>
+
+                <q-card-actions align="right">
+                  <q-btn
+                    label="Cancelar "
+                    @click="loadingForm = false"
+                    color="primary"
+                    v-ripple
+                    no-caps
+                    dense
+                    v-close-popup
+                  />
+
+                  <q-btn label="Salvar" color="primary" dense type="submit" v-ripple no-caps />
+                </q-card-actions>
+
+              </div>
+            </div>
+          </q-card-section>
         </q-form>
-
       </q-card>
-
     </q-dialog>
 
     <q-inner-loading
@@ -87,10 +268,15 @@
 
 <script>
 import {
+  showErrorNotification,
+  // showSuccessNotification,
+} from 'src/functions/functionShowNotifications';
+import {
   defineComponent, onMounted, reactive, ref,
 } from 'vue';
 import { useQuasar } from 'quasar';
 import useApi from '../../../composebles/useApi';
+import useAuthUser from 'src/composebles/useAuthUser';
 
 const columns = [
   {
@@ -99,6 +285,62 @@ const columns = [
     label: 'Nome',
     align: 'left',
     field: 'title',
+    sortable: true,
+  },
+
+  {
+    name: "data",
+    align: "left",
+    label: "Data de Nascimento",
+    field: "data",
+    sortable: true,
+  },
+
+  {
+    name: "cpf",
+    align: "left",
+    label: "CPF",
+    field: "CPF",
+    sortable: true,
+  },
+
+  {
+    name: "nacionalidade",
+    align: "left",
+    label: "Nacionalidade",
+    field: "Nacionalidade",
+    sortable: true,
+  },
+
+  {
+    name: "ano-de-graduacao",
+    align: "left",
+    label: "Ano de Graduação",
+    field: "ano-de-graduacao",
+    sortable: true,
+  },
+
+    {
+    name: "area-de-ocupacao",
+    align: "left",
+    label: "Área de Ocupação",
+    field: "area-de-ocupacao",
+    sortable: true,
+  },
+
+  {
+    name: "data-cadastro",
+    align: "left",
+    label: "Cadastrado Aos",
+    field: "data",
+    sortable: true,
+  },
+
+  {
+    name: "perfil",
+    align: "left",
+    label: "Perfil",
+    field: "perfil",
     sortable: true,
   },
 
@@ -118,6 +360,8 @@ export default defineComponent({
       list, post, update, remove,
     } = useApi();
 
+    const { user } = useAuthUser;
+
     const rows = ref([]);
 
     const topics = ref([]);
@@ -127,6 +371,39 @@ export default defineComponent({
       id: null,
     });
 
+    const formUser = reactive({
+      name: '',
+      birthday: '',
+      cpf: '',
+      nationality: '',
+      profile_type_id: 1,
+      email: '',
+      password: '',
+      confirm_email: '',
+      confirm_password: '',
+      occupation_area: '',
+      graduation_year: '',
+      user_id: '',
+    });
+
+    const dialogUser = ref(false);
+
+    const options = ref([]);
+
+    const options2 = ref([]);
+    const options1 = ref([]);
+
+    const tipo = ref([
+      {
+        label: 'Estudante',
+        value: 1,
+      },
+      {
+        label: 'Profissional',
+        value: 2,
+      },
+    ]);
+
     const users = ref([]);
     const getAllUsers = async () => {
       users.value = await list('users');
@@ -135,19 +412,35 @@ export default defineComponent({
     const listAll = async () => {
       try {
         loading.value = true;
-        rows.value = await list('categoria');
+        const aux = await list('perfil');
+        rows.value = aux.map((item) => ({
+          id: item.id,
+          name: item.name,
+          data: item.birthday,
+          cpf: item.cpf,
+          perfil: item.profile_type_id,
+          area_de_ocupacao: item.occupation_area,
+          ano_de_graduacao: item.graduation_year,
+          email: item.email,
+          created_at: item.created_at,
+          password: item.password,
+          nacionalidade: item.nationality,
+          user_id: item.user_id,
+        }));
         loading.value = false;
       } catch (error) {
-        alert(error);
+        loading.value = false;
+        alert(JSON.stringify(error));
       }
     };
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        await remove('categoria', id);
+        await remove('perfil', id);
         listAll();
         loading.value = false;
       } catch (error) {
+        loading.value = false;
         alert(error);
       }
     };
@@ -155,38 +448,96 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        if (!formData.id) {
-          delete formData.id;
+        delete formUser.confirm_email;
+        delete formUser.confirm_password;
+        if (!formUser.user_id) {
+          alert(JSON.stringify(formUser.user_id));
+          delete formUser.id;
+          formUser.user_id = user.id;
 
-          await post('categoria', formData);
+          await post('perfil', formUser);
         } else {
-          await update('categoria', formData);
+          alert('atualizar');
+          await update('perfil', formUser);
         }
         listAll();
+        loading.value = false;
+        dialogUser.value = false;
+      } catch (error) {
+        loading.value = false;
+        dialogUser.value = false;
+        alert(JSON.stringify(error));
+      }
+    };
+
+    const listTopicsAproachs = async () => {
+      try {
+        const aux = await list('nationality');
+        options.value = aux.map((elem) => elem.name);
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
 
+    const listOcupation = async () => {
+      try {
+        loading.value = true;
+        const aux1 = await list('occupation_area');
+        options2.value = aux1.map((elem) => elem.occupation_area);
+        const aux = await list('graduation_year');
+        options1.value = aux.map((elem) => elem.graduation_year);
+        loading.value = false;
+      } catch (error) {
+        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`);
+      }
+    };
+
     onMounted(() => {
+      listOcupation();
+      listTopicsAproachs();
       listAll();
+      getAllUsers();
     });
 
     const onItemClick = async () => {
 
     };
 
-    const dialogCategory = ref(false);
     const newDialog = (data) => {
       if (data) {
         Object.keys(data).forEach((key) => {
           formData[key] = data[key];
         });
+        formUser.id = data.id;
+        formUser.name = data.name;
+        formUser.birthday = data.data;
+        formUser.cpf = data.cpf;
+        formUser.graduation_year = data.ano_de_graduacao;
+        formUser.nationality = data.nacionalidade;
+        formUser.profile_type_id = data.perfil;
+        formUser.email = data.email;
+        formUser.password = data.password;
+        formUser.occupation_area = data.area_de_ocupacao;
+        formUser.confirm_email = data.email;
+        formUser.confirm_password = data.password;
+        formUser.user_id = data.user_id;
+        formUser.created_at = data.created_at;
       } else {
         formData.name = '';
+        formUser.name = '';
+        formUser.birthday = '';
+        formUser.cpf = '';
+        formUser.graduation_year = '';
+        formUser.nationality = '';
+        formUser.email = '';
+        formUser.password = '';
+        formUser.occupation_area = '';
+        formUser.confirm_email = '';
+        formUser.confirm_password = '';
+        formUser.user_id = '';
       }
-      dialogCategory.value = true;
+      dialogUser.value = true;
     };
 
     function confirmDelete(id) {
@@ -208,12 +559,17 @@ export default defineComponent({
     }
 
     return {
+      options2,
+      options1,
+      options,
+      tipo,
       confirmDelete,
       newDialog,
       formData,
+      formUser,
       loading,
       deleteItem,
-      dialogCategory,
+      dialogUser,
       saveItem,
       onItemClick,
       columns,
