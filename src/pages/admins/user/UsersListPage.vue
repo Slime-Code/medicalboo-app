@@ -29,7 +29,7 @@
           separator="cell"
         >
           <template v-slot:body="props">
-            <q-tr :props="props">
+            <q-tr :props="props" v-if="props.row.perfil !== 3">
               <q-td key="title" :props="props">
                 {{ props.row.name }}
               </q-td>

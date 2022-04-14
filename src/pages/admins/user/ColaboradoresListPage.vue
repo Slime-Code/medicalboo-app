@@ -128,16 +128,6 @@
                     val => val !== null && val !== '' || 'Campo não pode estar vazio'
                   ]"
                 />
-                <div>
-                  <div class="q-pa-xs">
-                    <q-option-group
-                      v-model="formUser.profile_type_id"
-                      :options="tipo"
-                      color="primary"
-                      inline
-                    />
-                  </div>
-                </div>
                 <q-select
                   class="col"
                   style="min-width: 230px"
@@ -169,7 +159,7 @@
                   style="min-width: 50%"
                   dense
                   class="col"
-                  v-model="formData.confirm_email"
+                  v-model="formUser.confirm_email"
                   rounded
                   outlined
                   type="email"
@@ -238,7 +228,7 @@
                 <q-card-actions align="right">
                   <q-btn
                     label="Cancelar "
-                    @click="loadingForm = false"
+                    @click="loading = false"
                     color="primary"
                     v-ripple
                     no-caps
@@ -267,6 +257,7 @@
 </template>
 
 <script>
+/* eslint-disable no-plusplus */
 import {
   showErrorNotification,
   // showSuccessNotification,
@@ -275,8 +266,8 @@ import {
   defineComponent, onMounted, reactive, ref,
 } from 'vue';
 import { useQuasar } from 'quasar';
-import useApi from '../../../composebles/useApi';
 import useAuthUser from 'src/composebles/useAuthUser';
+import useApi from '../../../composebles/useApi';
 
 const columns = [
   {
@@ -289,58 +280,58 @@ const columns = [
   },
 
   {
-    name: "data",
-    align: "left",
-    label: "Data de Nascimento",
-    field: "data",
+    name: 'data',
+    align: 'left',
+    label: 'Data de Nascimento',
+    field: 'data',
     sortable: true,
   },
 
   {
-    name: "cpf",
-    align: "left",
-    label: "CPF",
-    field: "CPF",
+    name: 'cpf',
+    align: 'left',
+    label: 'CPF',
+    field: 'CPF',
     sortable: true,
   },
 
   {
-    name: "nacionalidade",
-    align: "left",
-    label: "Nacionalidade",
-    field: "Nacionalidade",
+    name: 'nacionalidade',
+    align: 'left',
+    label: 'Nacionalidade',
+    field: 'Nacionalidade',
     sortable: true,
   },
 
   {
-    name: "ano-de-graduacao",
-    align: "left",
-    label: "Ano de Graduação",
-    field: "ano-de-graduacao",
-    sortable: true,
-  },
-
-    {
-    name: "area-de-ocupacao",
-    align: "left",
-    label: "Área de Ocupação",
-    field: "area-de-ocupacao",
+    name: 'ano-de-graduacao',
+    align: 'left',
+    label: 'Ano de Graduação',
+    field: 'ano-de-graduacao',
     sortable: true,
   },
 
   {
-    name: "data-cadastro",
-    align: "left",
-    label: "Cadastrado Aos",
-    field: "data",
+    name: 'area-de-ocupacao',
+    align: 'left',
+    label: 'Área de Ocupação',
+    field: 'area-de-ocupacao',
     sortable: true,
   },
 
   {
-    name: "perfil",
-    align: "left",
-    label: "Perfil",
-    field: "perfil",
+    name: 'data-cadastro',
+    align: 'left',
+    label: 'Cadastrado Aos',
+    field: 'data',
+    sortable: true,
+  },
+
+  {
+    name: 'perfil',
+    align: 'left',
+    label: 'Perfil',
+    field: 'perfil',
     sortable: true,
   },
 
@@ -360,7 +351,7 @@ export default defineComponent({
       list, post, update, remove,
     } = useApi();
 
-    const { user } = useAuthUser;
+    const { user, register } = useAuthUser;
 
     const rows = ref([]);
 
@@ -376,7 +367,7 @@ export default defineComponent({
       birthday: '',
       cpf: '',
       nationality: '',
-      profile_type_id: 1,
+      profile_type_id: 3,
       email: '',
       password: '',
       confirm_email: '',
@@ -427,6 +418,13 @@ export default defineComponent({
           nacionalidade: item.nationality,
           user_id: item.user_id,
         }));
+        // filtrar todos os Admins -------------------------------
+        for (let index = 0; index < rows.value.length; index++) {
+          if (rows.value[index].perfil !== 3) {
+            rows.value.splice(index, 1);
+            index -= 1;
+          }
+        }
         loading.value = false;
       } catch (error) {
         loading.value = false;
@@ -448,12 +446,17 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        delete formUser.confirm_email;
-        delete formUser.confirm_password;
         if (!formUser.user_id) {
+          // delete formUser.value.id;
+          formUser.profile_type_id = 3;
+          delete formUser.user_id;
+          alert(JSON.stringify(formUser));
+          const use = await register(formUser);
+          alert(use);
+          formUser.user_id = use.id;
           alert(JSON.stringify(formUser.user_id));
-          delete formUser.id;
-          formUser.user_id = user.id;
+          delete formUser.confirm_email;
+          delete formUser.confirm_password;
 
           await post('perfil', formUser);
         } else {
@@ -465,8 +468,9 @@ export default defineComponent({
         dialogUser.value = false;
       } catch (error) {
         loading.value = false;
-        dialogUser.value = false;
-        alert(JSON.stringify(error));
+        // dialogUser.value = false;
+        alert(error);
+        showErrorNotification(`houve uma falha ao carregar os dados para o banco: ${error}`);
       }
     };
 
@@ -515,7 +519,7 @@ export default defineComponent({
         formUser.cpf = data.cpf;
         formUser.graduation_year = data.ano_de_graduacao;
         formUser.nationality = data.nacionalidade;
-        formUser.profile_type_id = data.perfil;
+        formUser.profile_type_id = 3;
         formUser.email = data.email;
         formUser.password = data.password;
         formUser.occupation_area = data.area_de_ocupacao;
@@ -559,6 +563,7 @@ export default defineComponent({
     }
 
     return {
+      user,
       options2,
       options1,
       options,
