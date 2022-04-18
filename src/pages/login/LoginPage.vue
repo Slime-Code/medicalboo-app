@@ -90,7 +90,7 @@ export default defineComponent({
         loading.value = true;
         await login(form.value);
         loading.value = false;
-        router.replace({ name: 'home' });
+        router.push('/admin');
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(error.message);

@@ -1,30 +1,38 @@
 <template>
-  <div class="flex q-pt-xl flex-center">
-  <div class="column" style="min-width: 99.9%">
-    <div class="col q-ma-xs">
-      <div>
-        <h5 class="col-12 title" style="margin: 20px 0;">Tipos de Abordagem</h5>
-        <div style="width: 100px;" class="row q-gutter-sm">
-          <q-btn
-            icon="add"
-            color="primary"
-            class="col"
-            @click="
-            newDialog()
-            "
-          >
-          </q-btn>
-          <q-btn
-          icon="update"
+
+ <q-page class="q-pa-md">
+    <div class="text-h5 q-pa-sm">Tipos de Abordagem</div>
+    <q-card class="q-mb-sm" flat bordered>
+      <div class="row q-pa-md q-gutter-sm">
+        <q-input
+          class="col-7 col-sm-7 col-md-7 col-xs-12 col-lg-7 col-xl-7"
+          v-model="filter"
+          placeholder="Pesquisar abordagem"
+          dense
+          outlined
+        />
+        <q-space />
+        <q-btn
+          class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
           color="primary"
-          class="col"
+          label="Nova tipo"
+          @click="newDialog()"
+          no-caps
+          rounded
+        >
+        </q-btn>
+        <q-btn
+          class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
+          color="primary"
+          label="Atualizar"
           @click="listAll()"
-          >
-          </q-btn>
-        </div>
+          no-caps
+          rounded
+        >
+        </q-btn>
       </div>
-      <div class="q-mt-md">
-        <q-table
+    </q-card>
+     <q-table
           :dense="$q.screen.lt.md"
           flat
           square
@@ -34,7 +42,8 @@
           :columns="columns"
           :visible-columns="['title', 'options']"
           row-key="title"
-          separator="vertical"
+          :filter="filter"
+          separator="cell"
         >
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -44,17 +53,18 @@
               <q-td key="definition" :props="props">
                   {{ props.row.definition }}
               </q-td>
-              <q-td key="options" class="text-right" :props="props">
+               <q-td key="options" class="text-center" :props="props">
                 <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
                 <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+
               </q-td>
+            
             </q-tr>
           </template>
         </q-table>
+  </q-page>
 
-      </div>
-    </div>
-    </div>
+  <div>
 
     <q-dialog v-model="dialogCategory" persistent>
        <q-card style="min-width: 350px">
@@ -104,7 +114,7 @@ const columns = [
   },
 
   {
-    name: 'options', align: 'right', label: 'Ação', field: 'options', sortable: true,
+    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
   },
 
 ];
@@ -204,7 +214,10 @@ export default defineComponent({
         });
     }
 
+    const filter = ref('')
+
     return {
+      filter,
       confirmDelete,
       newDialog,
       formData,
