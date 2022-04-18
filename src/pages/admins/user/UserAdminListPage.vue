@@ -84,13 +84,12 @@
 
           <q-card-section class="scroll" style="max-height: 77vh">
             <div class="q-pa-md">
-              <div class="q-gutter-md row items-start">
+              <div class="q-gutter-md colum">
                 <q-input
                   class="col"
 
                   dense
                   v-model="formUser.name"
-                  rounded
                   outlined
                   type="text"
                   label="Nome completo"
@@ -104,7 +103,6 @@
 
                   dense
                   v-model="formUser.birthday"
-                  rounded
                   outlined
                   type="date"
                   label="Data de nascimento"
@@ -119,7 +117,6 @@
 
                   dense
                   v-model="formUser.cpf"
-                  rounded
                   outlined
                   type="text"
                   label="CPF"
@@ -132,7 +129,6 @@
                   class="col"
 
                   dense
-                  rounded
                   outlined
                   v-model="formUser.nationality"
                   :options="options"
@@ -146,7 +142,6 @@
                   class="col"
                   dense
                   v-model="formUser.email"
-                  rounded
                   outlined
                   type="email"
                   label="Email"
@@ -160,7 +155,6 @@
                   dense
                   class="col"
                   v-model="formUser.confirm_email"
-                  rounded
                   outlined
                   type="email"
                   label="Confirme o email"
@@ -175,7 +169,6 @@
                   class="col"
                   dense
                   v-model="formUser.password"
-                  rounded
                   outlined
                   type="password"
                   label="Senha"
@@ -189,7 +182,6 @@
 
                   dense
                   v-model="formUser.confirm_password"
-                  rounded
                   outlined
                   type="password"
                   label="Confirme a senha"
@@ -199,10 +191,22 @@
                     val => val.trim() === formUser.password.trim() || 'Senha não correspondente'
                   ]"
                 />
+                <q-input
+                  class="col"
+                  type="number"
+                  dense
+                  v-model="formUser.phone"
+                  outlined
+                  label="Telefone"
+                  mask="(##) #### - ####"
+                  hint="Mask: (##) #### - ####"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                  ]"
+                />
 
                 <q-separator />
-
-                <br>
 
                 <q-card-actions align="right">
                   <q-btn
@@ -239,7 +243,7 @@
 /* eslint-disable no-plusplus */
 import {
   showErrorNotification,
-  // showSuccessNotification,
+  showSuccessNotification,
 } from 'src/functions/functionShowNotifications';
 import {
   defineComponent, onMounted, reactive, ref,
@@ -338,11 +342,13 @@ export default defineComponent({
     const topics = ref([]);
 
     const formData = reactive({
+      
       name: '',
       id: null,
     });
 
     const formUser = reactive({
+      // id: '',
       name: '',
       birthday: '',
       cpf: '',
@@ -355,6 +361,8 @@ export default defineComponent({
       occupation_area: '',
       graduation_year: '',
       user_id: '',
+      phone: '',
+      premium: false,
     });
 
     const dialogUser = ref(false);
@@ -427,14 +435,9 @@ export default defineComponent({
       try {
         loading.value = true;
         if (!formUser.user_id) {
-          // delete formUser.value.id;
-          formUser.profile_type_id = 3;
-          delete formUser.user_id;
-          alert(JSON.stringify(formUser));
           const use = await register(formUser);
-          alert(use);
+          showSuccessNotification('Dados Cadastrados Com Sucesso!');
           formUser.user_id = use.id;
-          alert(JSON.stringify(formUser.user_id));
           delete formUser.confirm_email;
           delete formUser.confirm_password;
 
@@ -444,12 +447,13 @@ export default defineComponent({
           await update('perfil', formUser);
         }
         listAll();
+        showSuccessNotification('Dados Cadastrados Com Sucesso!');
         loading.value = false;
         dialogUser.value = false;
       } catch (error) {
         loading.value = false;
-        // dialogUser.value = false;
-        alert(error);
+        dialogUser.value = false;
+        alert(JSON.stringify(error));
         showErrorNotification(`houve uma falha ao carregar os dados para o banco: ${error}`);
       }
     };

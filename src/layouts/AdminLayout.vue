@@ -92,22 +92,10 @@
               icon="person"
               label="Usuários"
             >
-              <q-expansion-item :to="{name: 'user-admin'}" switch-toggle-side dense-toggle label="Admin"/>
+              <q-expansion-item :to="{name: 'admin'}" switch-toggle-side dense-toggle label="Admin"/>
 
               <q-expansion-item  :to="{name: 'users'}" switch-toggle-side dense-toggle label="Normal"/>
             </q-expansion-item><br>
-
-            <q-expansion-item
-              dense
-              dense-toggle
-              expand-separator
-              icon="group"
-              label="Colaboradores"
-            >
-              <q-expansion-item :to="{name: 'register'}" switch-toggle-side dense-toggle label="Admin"/>
-
-              <q-expansion-item  :to="{name: 'user-admin'}" switch-toggle-side dense-toggle label="Liista de Colaboradores"/>
-            </q-expansion-item>
           </q-list><br>
           <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
           <br>
