@@ -78,7 +78,7 @@
       <q-card class="full-width">
         <q-form @submit="saveItem">
           <q-card-section class="q-py-sm">
-            <div class="text-h6">Novo Usuário</div>
+            <div class="text-h6">Novo Usuário Admin</div>
           </q-card-section>
           <q-separator />
 
@@ -87,7 +87,7 @@
               <div class="q-gutter-md row items-start">
                 <q-input
                   class="col"
-                  style="min-width: 250px"
+
                   dense
                   v-model="formUser.name"
                   rounded
@@ -101,7 +101,7 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 120px"
+
                   dense
                   v-model="formUser.birthday"
                   rounded
@@ -116,7 +116,7 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 250px"
+
                   dense
                   v-model="formUser.cpf"
                   rounded
@@ -130,7 +130,7 @@
                 />
                 <q-select
                   class="col"
-                  style="min-width: 230px"
+
                   dense
                   rounded
                   outlined
@@ -142,7 +142,7 @@
                 <q-separator />
 
                 <q-input
-                  style="min-width: 30%"
+
                   class="col"
                   dense
                   v-model="formUser.email"
@@ -156,7 +156,7 @@
                   ]"
                 />
                 <q-input
-                  style="min-width: 50%"
+
                   dense
                   class="col"
                   v-model="formUser.confirm_email"
@@ -171,7 +171,7 @@
                   ]"
                 />
                 <q-input
-                  style="min-width: 30%; max-width: 50%"
+
                   class="col"
                   dense
                   v-model="formUser.password"
@@ -186,7 +186,7 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 50%; max-width: 50%"
+
                   dense
                   v-model="formUser.confirm_password"
                   rounded
@@ -202,28 +202,7 @@
 
                 <q-separator />
 
-                <q-select
-                style="min-width: 30%; max-width: 50%"
-                dense
-                rounded
-                outlined
-                :loading='loading'
-                v-model="formUser.occupation_area"
-                :options="options2"
-                label="Área de actuação"
-                class="col"
-                />
-                <q-select
-                  style="min-width: 50%; max-width: 50%"
-                  :loading='loading'
-                  dense
-                  rounded
-                  outlined
-                  v-model="formUser.graduation_year"
-                  :options="options1"
-                  label="Ano de formatura"
-                  class="col"
-                /> <br>
+                <br>
 
                 <q-card-actions align="right">
                   <q-btn
@@ -342,6 +321,7 @@ const columns = [
 ];
 
 export default defineComponent({
+  name: 'UserAdminListPage',
 
   setup() {
     const loading = ref(true);
@@ -351,7 +331,7 @@ export default defineComponent({
       list, post, update, remove,
     } = useApi();
 
-    const { user, register } = useAuthUser;
+    const { user, register } = useAuthUser();
 
     const rows = ref([]);
 
