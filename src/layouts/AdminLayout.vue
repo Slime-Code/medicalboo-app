@@ -70,7 +70,7 @@
                 <q-item-label
                   header
                 >
-                  <strong>Yuri José Rego</strong><br>
+                  <strong>{{user.user_metadata.name}}</strong><br>
                   <span>Administrador</span>
                 </q-item-label>
               </q-item-section>
@@ -209,7 +209,7 @@ export default {
 
     const form = { valor: 0.0, id: 1 };
 
-    const { logout } = useAuthUser();
+    const { logout, user } = useAuthUser();
 
     const { list, update } = useApi();
 
@@ -251,6 +251,7 @@ export default {
     });
 
     return {
+      user,
       updatValuePremium,
       dilogPremi,
       leftDrawerOpen,
