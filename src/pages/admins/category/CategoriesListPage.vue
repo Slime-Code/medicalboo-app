@@ -151,18 +151,13 @@ export default defineComponent({
         alert(error);
       }
     };
-
+    const idTopic = [];
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        const idTopic = await getByField('topic', 'categoria_id', id);
+        idTopic.value = await getByField('topic', 'categoria_id', id);
         idTopic.forEach(async (e) => {
-          const idAcessTopicUser = await getByField('access_topic_user', 'topic_id', e.id);
           const approachId = await getByField('approach', 'topic_id', e.id);
-
-          idAcessTopicUser.forEach(async (el) => {
-            await remove('access_topic_user', el.id);
-          });
           approachId.forEach(async (elem) => {
             const exameId = await getByField('exameComplementar', 'approach_id', elem.id);
             exameId.forEach(async (ment) => {
@@ -183,16 +178,28 @@ export default defineComponent({
 
             await remove('approach', elem.id);
           });
+
+          const idAcessTopicUser = await getByField('access_topic_user', 'topic_id', e.id);
+          idAcessTopicUser.forEach(async (el) => {
+            await remove('access_topic_user', el.id);
+          });
+
           await remove('topic', e.id);
         });
 
-        // alert(JSON.stringify(idTopic));
-        // idTopic.forEach(async (element) => {
-        // alert('foiiiiiii');
-        // await remove('topic', element.id);
-        // });
+        for await (let topi of idTopic.value) {
+          await remove('topic', topi.id);
+        }
+
+        idTopic.value.forEach(async (element) => {
+          // await remove('topic', e.id);
+          await remove('topic', element.id);
+          alert(`eliminar${JSON.stringify(element)}`);
+        });
 
         await remove('categoria', id);
+
+        // await remove('categoria', id);
       } catch (error) {
         alert(JSON.stringify(error));
       } finally {
