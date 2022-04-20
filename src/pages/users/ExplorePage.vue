@@ -1,35 +1,30 @@
 <template>
-  <div class="q-pa-xs">
+  <q-page padding>
+    <div class="text-h5 q-pa-sm">
+      Explorar
+    </div>
     <q-table
       :rows="rows"
       :columns="columns"
+      flat
+      bordered
       :filter="filter"
       no-data-label="Nenhuma abordagem encontrada"
       no-results-label="Nenhuma Resultado encontrada"
-      color="blue"
-      row-key="title"
+      row-key="id"
       hide-header
+      hide-bottom
+      grid
       @row-click="go"
-      class="col-md full-width"
+      separator="cell"
     >
-      <template v-slot:top-right>
-        <div class="column explore">
-            <q-input
-              placeholder="Search"
-              outlined
-              rounded
-              bottom-slots
-              v-model="filter"
-              label="Pesquise aqui um tópico"
-              dense
-            >
-              <template v-slot:append>
-                <q-icon v-if="filter !== ''" name="close"
-                class="cursor-pointer" />
-                <q-icon name="search" />
-              </template>
-            </q-input>
-        </div>
+
+     <template v-slot:top-right>
+        <q-input class="full-width" outlined rounded dense debounce="300" v-model="filter" placeholder="Pesquise uma abordagem">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
       </template>
 
       <template v-slot:no-data="{ icon, message, filter }">
@@ -42,7 +37,7 @@
         </div>
       </template>
     </q-table>
-  </div>
+  </q-page>
 </template>
 
 <script>

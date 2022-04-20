@@ -11,10 +11,8 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 // se houver alguma modificação no estado do usuário logado:
 supabase.auth.onAuthStateChange((event, session) => {
   const { user } = useAuthUser()
-
   user.value = session?.user || null
 })
-console.log('init supabase', supabase)
 export default function useSupabase () {
   return { supabase }
 }

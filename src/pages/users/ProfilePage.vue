@@ -52,15 +52,6 @@
           <div class="column q-ma-md">
             <div class="col">
               <q-btn
-                @click="dialogPassword=true"
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Editar Senha"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
                 @click="dialogAvaliarApp=true"
                 align="left"
                 flat
@@ -114,36 +105,7 @@
           </div>
         </div>
       </div>
-      <q-dialog v-model="dialogPassword" persistent>
-        <q-card style="min-width: 350px">
-          <q-card-section>
-            <div class="text-h6">Alterar Senha</div>
-          </q-card-section>
-          <q-form>
-            <q-card-section class="q-pt-none">
-              <q-input label="Antiga Senha"
-                dense v-model.trim="formData.antigo"  autofocus />
-            </q-card-section>
-
-            <q-card-section class="q-pt-none">
-              <q-input label="Nova Senha"
-                dense v-model.trim="formData.password"  autofocus />
-            </q-card-section>
-
-            <q-card-section class="q-pt-none">
-              <q-input label="Confirme a Nova Senha" dense
-                v-model.trim="formData.password1"  autofocus />
-            </q-card-section>
-
-            <q-card-actions align="right" class="text-primary">
-              <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
-            <q-btn  label="Salvar" color="primary"
-             @click="updatPassword" v-ripple no-caps v-close-popup />
-          </q-card-actions>
-          </q-form>
-
-        </q-card>
-      </q-dialog>
+  
 
        <q-dialog v-model="dialogAvaliarApp">
         <q-card style="min-width: 350px">

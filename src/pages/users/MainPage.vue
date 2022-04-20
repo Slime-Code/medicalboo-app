@@ -11,7 +11,7 @@
       <q-tab
         v-for="(category, index) in categorys"
         :key="index"
-        :name="category"
+        :name="category.name"
         :label="category.name"
         @click="getTopicByCategory(category.id)"
       />
@@ -22,57 +22,55 @@
     <q-separator v-if="!loadingTopic" />
 
     <div class="column justify-around" style="height: 100%">
-
-     <q-tab-panels
-     class="col"
-      v-model="tab"
-      animated
-      swipeable
-      vertical
-      transition-prev="jump-up"
-      transition-next="jump-up"
-    >
-      <q-tab-panel
-        class="row justify-center q-gutter-sm items-center"
-        v-for="(category, index) in categorys"
-        :key="index"
-        :name="category"
+      <q-tab-panels
+        class="col"
+        v-model="tab"
+        animated
+        swipeable
+        vertical
+        transition-prev="jump-up"
+        transition-next="jump-up"
       >
-
-        <q-card
-          v-for="(topic, index) in topics"
+        <q-tab-panel
+          class="row justify-center q-gutter-sm items-center"
+          v-for="(category, index) in categorys"
           :key="index"
-          style="background-color: #f6f6f6"
-          flat
-          bordered
-          class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
+          :name="category.name"
         >
-          <q-item clickable v-ripple @click="go(topic.id)">
-            <q-item-section side>
-              <q-avatar :color="color_icon" text-color="white" :icon="icon" />
-            </q-item-section>
+          <q-card
+            v-for="(topic, index) in topics"
+            :key="index"
+            style="background-color: #f6f6f6"
+            flat
+            bordered
+            class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
+          >
+            <q-item clickable v-ripple @click="go(topic.id)">
+              <q-item-section side>
+                <q-avatar :color="color_icon" text-color="white" :icon="icon" />
+              </q-item-section>
 
-            <q-item-section>
-              {{ topic.name }}
-            </q-item-section>
-          </q-item>
-        </q-card>
-        <span v-if="!topics.length && !loadingTopic" class="text-center text-body1 ">
-           Nenhum tópico para esta categória
-        </span>
-      </q-tab-panel>
-    </q-tab-panels>
+              <q-item-section>
+                {{ topic.name }}
+              </q-item-section>
+            </q-item>
+          </q-card>
+          <span v-if="!topics.length && !loadingTopic" class="text-center text-body1">
+            Nenhum tópico para esta categória
+          </span>
+        </q-tab-panel>
+      </q-tab-panels>
 
-    <q-space vertical>
-
-    </q-space>
- <q-toolbar-title class="text-caption q-pa-sm">
-
+      <q-space vertical> </q-space>
+      <q-toolbar-title v-if="!loadingTopic" class="text-caption q-pa-sm">
         Outras versões Medicalbook
-
       </q-toolbar-title>
-    <q-card flat bordered v-if="!loadingTopic" class=" q-mb-md row justify-center items-start">
-
+      <q-card
+        flat
+        bordered
+        v-if="!loadingTopic"
+        class="q-mb-md row justify-center items-start"
+      >
         <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
           <template v-slot:avatar>
             <q-btn flat :to="{ name: 'prime' }">
@@ -100,7 +98,7 @@
 
           <template v-slot:action> </template>
         </q-banner>
-    </q-card>
+      </q-card>
     </div>
 
     <q-inner-loading
@@ -114,15 +112,15 @@
 </template>
 
 <script>
-import { showErrorNotification } from 'src/functions/functionShowNotifications';
-import { defineComponent, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { showErrorNotification } from "src/functions/functionShowNotifications";
+import { defineComponent, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
-import useApi from '../../composebles/useApi';
+import useApi from "../../composebles/useApi";
 
 export default defineComponent({
-  name: 'MainPage',
+  name: "MainPage",
   setup() {
     const { list, getByField } = useApi();
 
@@ -134,33 +132,45 @@ export default defineComponent({
 
     const topicos = ref([]);
 
-    const tab = ref('');
+    const tab = ref("");
 
-    const loadingCategory = ref(true);
+    const loadingCategory = ref(false);
 
-    const loadingTopic = ref(true);
+    const loadingTopic = ref(false);
 
     const todos = ref([[]]);
 
     const getTopicByCategory = async (id) => {
-      loadingTopic.value = true;
+      try {
+        loadingTopic.value = true;
 
-      topics.value = await getByField('topic', 'categoria_id', id);
-      loadingTopic.value = false;
+        topics.value = await getByField("topic", "categoria_id", id);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        loadingTopic.value = false;
+      }
     };
 
     const listTopics = async () => {
       try {
-        loadingCategory.value = true;
-        categorys.value = await list('categoria');
+        loadingTopic.value = true;
+        categorys.value = await list("categoria");
+
         categorys.value.sort();
         loadingCategory.value = false;
-        // eslint-disable-next-line prefer-destructuring
-        tab.value = categorys.value[0];
+        // // eslint-disable-next-line prefer-destructuring
+        tab.value = categorys.value[0].name;
 
-        await getTopicByCategory(tab.value.id);
+        await getTopicByCategory(categorys.value[0].id);
       } catch (error) {
-        showErrorNotification(`A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+        showErrorNotification(
+          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(
+            error
+          )}`
+        );
+      } finally {
+        loadingTopic.value = false;
       }
     };
 
@@ -175,6 +185,10 @@ export default defineComponent({
     const foi = async () => {
       console.log(topicAcessado.value);
     };
+
+    onMounted(() => {
+      listTopics();
+    });
     return {
       go,
       getTopicByCategory,
@@ -189,20 +203,12 @@ export default defineComponent({
       topicos,
       categorys,
 
-      caption: ref(''),
+      caption: ref(""),
 
-      icon: 'img:img/feto.png',
+      icon: "img:img/feto.png",
 
-      color_icon: 'teal',
+      color_icon: "teal",
     };
-  },
-  /*
-  methods: {
-    ...mapActions('approach', ['getApproaches']),
-  },
-  */
-  mounted() {
-    this.listTopics();
   },
 });
 </script>

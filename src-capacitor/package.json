@@ -1,0 +1,13 @@
+{
+  "name": "medicalbookapp",
+  "version": "0.0.1",
+  "description": "A Front of App Medical Book ",
+  "author": "Ally Dreezy <kellydreezybreezy@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "2.5.0",
+    "@capacitor/cli": "^2.0.0",
+    "@capacitor/core": "^2.0.0",
+    "@capacitor/ios": "2.5.0"
+  }
+}

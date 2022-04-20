@@ -1,83 +1,61 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-page class="flex flex-center q-px-md container">
-      <div class="row">
-        <div class="col-8 offset-2">
-          <q-img
-            src="img/logo-original.png"
-            class="q-my-lg"
-          />
-        </div>
-
-        <div class="login-content">
-          <q-form
-            @submit="handleLogin"
-            class="q-gutter-md"
-          >
-            <div class="login-cab">
-              <h5 class="login-title">Vamos começar?</h5>
-              <span>Para iniciar a sua conta informe os dados</span>
-            </div>
-
-            <div class="login-text-area">
-              <q-input
-                dense
-                v-model="form.email"
-                rounded
-                outlined
-                label="Email"
-                lazy-rules
-                :rules="[ val => val && val.length > 0 || 'Campo não pode estar vazio']"
-              />
-
-              <q-input
-                dense
-                v-model="form.password"
-                rounded
-                outlined
-                type="password"
-                label="Password"
-                lazy-rules
-                :rules="[
-                  val => val !== null && val !== '' || 'Campo não pode estar vazio'
-                ]"
-              />
-            </div>
-
-            <div class="login-btn-area">
-              <PrimaryButtom label="acessar" type="submit" />
-              <SecondaryButtom label="criar conta gratuita" link="/register"/>
-            </div>
-            <br>
-            <q-spinner
-              class="absolute-center"
-              v-if="loading"
-              size="xl"
-              color="primary"
+    <q-page padding>
+      <div class="column bg-white q-gutter-md items-center" :class="{
+        'login-size': ($q.screen.width) > 599,
+        'absolute-center': ($q.screen.width) > 599
+      }">
+          <q-img class="q-mb-xl" src="img/logo-original.png" style="height:80%; width:80%"/>
+         
+        <q-form @submit="handleLogin" class="q-mt-lg">
+             <q-input
+              dense
+              v-model="form.email"
+              rounded
+              outlined
+              label="Email"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Campo não pode estar vazio']"
             />
-          </q-form>
-        </div>
+
+            <q-input
+              dense
+              v-model="form.password"
+              rounded
+              outlined
+              type="password"
+              label="Senha"
+              lazy-rules
+              :rules="[
+                (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+              ]"
+            />
+            <PrimaryButtom class="q-my-md" label="acessar" type="submit" />
+            <SecondaryButtom label="criar conta gratuita" link="/register" />
+          <br />
+          <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
+        </q-form>
       </div>
     </q-page>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from "vue";
 // import { mapActions } from 'vuex';
-import useAuthUser from 'src/composebles/useAuthUser';
-import { useRouter } from 'vue-router';
-import PrimaryButtom from '../../components/PrimaryButtom.vue';
-import SecondaryButtom from '../../components/SecondaryButtom.vue';
-
+import useAuthUser from "src/composebles/useAuthUser";
+import { useRouter } from "vue-router";
+import PrimaryButtom from "../../components/PrimaryButtom.vue";
+import SecondaryButtom from "../../components/SecondaryButtom.vue";
+import { message } from '../../composebles/messageAPI'
 export default defineComponent({
-  name: 'LoginPage',
+  name: "LoginPage",
   components: {
     PrimaryButtom,
     SecondaryButtom,
   },
   setup() {
-    const form = ref({ email: '', password: '' });
+    const form = ref({ email: "", password: "" });
 
     const loading = ref(false);
 
@@ -89,11 +67,12 @@ export default defineComponent({
       try {
         loading.value = true;
         await login(form.value);
-        loading.value = false;
-        router.push('/admin');
+        router.push("/home");
       } catch (error) {
         // eslint-disable-next-line no-alert
-        alert(error.message);
+        alert(message(error.message));
+      }finally {
+        loading.value = false;
       }
     };
     return {
@@ -112,33 +91,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .login-content {
-    margin-top: 40px;
-    margin-bottom: auto;
-    height: 100%;
-  }
-
-  .login-cab {
-    padding: 0 10px;
-    margin-bottom: 30px;
-  }
-
-  .login-title {
-    font-weight: bold;
-    margin: 0;
-    padding: 0;
-  }
-
-  .login-text-area .q-field {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  .login-btn-area {
-    margin-top: 40px;
-  }
-
-  .login-content .q-btn {
-    margin: 5px 0;
-  }
 </style>

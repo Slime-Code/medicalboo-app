@@ -1,0 +1,7 @@
+{
+  "appId": "org.medicalboo.app",
+  "appName": "Medical Book Front End App",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www"
+}

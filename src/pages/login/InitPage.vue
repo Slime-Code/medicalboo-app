@@ -1,32 +1,43 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-page class="constrain">
-      <q-img src="img/BG.png" loading="lazy" height="100%">
-        <div class="row login-btn-area absolute-bottom">
-          <PrimaryButtom label="criar conta gratuita" :to="{ name: 'register' }" />
-          <q-btn
-            rounded
-            unelevated
-            dense
-            label="Já Tenho Conta"
-            :to="{ name: 'login' }"
-          />
-        </div>
+
+      <div v-if="$q.screen.width <= 599">
+          <q-img src="img/BG.png" loading="lazy" height="100%">
       </q-img>
+         <q-inner-loading
+        :showing="true"
+        color="white"
+        class="bg-transparent"
+      />
+      </div>
+
+      <div v-else class="column items-center absolute-center q-gutter-y-lg" style="width: 300px; height: 300px">
+         <q-img  src="img/logo-original.png"/>
+        <q-spinner-dots
+          color="primary"
+          size="4em"
+        />
+      </div>
+      
     </q-page>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import PrimaryButtom from "../../components/PrimaryButtom.vue";
-
+import { defineComponent, onMounted } from "vue";
+import {useRouter} from 'vue-router'
 export default defineComponent({
   name: "InitPage",
-  components: {
-    PrimaryButtom,
-  },
   setup() {
+     const $router = useRouter()
+    onMounted(() => {
+      setTimeout(() => {
+
+        $router.push({name: 'login'})
+
+      }, 2500)
+    })
     return {};
   },
 });

@@ -196,7 +196,7 @@
     </q-card>
     <q-table
       color="primary"
-      :dense="$q.screen.lt.sm"
+      :dense="$q.screen.lt.xs"
       flat
       square
       bordered
