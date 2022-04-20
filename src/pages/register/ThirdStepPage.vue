@@ -68,19 +68,21 @@
 import {
   showErrorNotification,
   // showSuccessNotification,
-} from "src/functions/functionShowNotifications";
-import { defineComponent, reactive, ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { useQuasar } from "quasar";
-import useAuthUser from "src/composebles/useAuthUser";
-import useApi from "../../composebles/useApi";
-import { message } from "../../composebles/messageAPI";
+} from 'src/functions/functionShowNotifications';
+import {
+  defineComponent, reactive, ref, computed, onMounted,
+} from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+import useAuthUser from 'src/composebles/useAuthUser';
+import useApi from '../../composebles/useApi';
+import { message } from '../../composebles/messageAPI';
 // import user from '../../api/User';
 /* eslint-disable no-alert */
 
 export default defineComponent({
-  name: "ThirdStepPage",
+  name: 'ThirdStepPage',
 
   setup() {
     const { register } = useAuthUser();
@@ -97,11 +99,11 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const teste = computed(() => store.getters["user/getData"]);
+    const teste = computed(() => store.getters['user/getData']);
 
     const formData = reactive({
-      occupation_area: "",
-      graduation_year: "",
+      occupation_area: '',
+      graduation_year: '',
     });
 
     const options = ref([]);
@@ -110,9 +112,9 @@ export default defineComponent({
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        const aux1 = await list("occupation_area");
+        const aux1 = await list('occupation_area');
         options.value = aux1.map((elem) => elem.occupation_area);
-        const aux = await list("graduation_year");
+        const aux = await list('graduation_year');
 
         for (let index = 1922; index <= new Date().getFullYear(); index++) {
           options1.value.push(index);
@@ -121,7 +123,7 @@ export default defineComponent({
         loading.value = false;
       } catch (error) {
         showErrorNotification(
-          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`
+          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`,
         );
       }
     };
@@ -133,14 +135,14 @@ export default defineComponent({
     const nextStep = async () => {
       try {
         loading1.value = true;
-        store.commit("user/setFormThird", formData);
+        store.commit('user/setFormThird', formData);
         const form = { ...store.state.user.formData };
         const user = await register(form);
-        delete form.email;
-        delete form.password;
+        // delete form.email;
+        // delete form.password;
         form.user_id = user.id;
-        await post("perfil", form);
-        router.replace({ name: "concluido" });
+        await post('perfil', form);
+        router.replace({ name: 'concluido' });
         loading1.value = false;
       } catch (error) {
         loading1.value = false;
@@ -150,7 +152,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (!teste.value.email.length) {
-        router.push("/register");
+        router.push('/register');
       }
     });
 
