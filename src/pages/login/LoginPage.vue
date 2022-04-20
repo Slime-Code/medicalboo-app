@@ -30,8 +30,8 @@
                 (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
               ]"
             />
-            <PrimaryButtom class="q-my-md" label="acessar" type="submit" />
-            <SecondaryButtom label="criar conta gratuita" link="/register" />
+            <PrimaryButtom class="full-width q-my-md" label="acessar" type="submit" />
+            <SecondaryButtom :disable="$route.query.access==='admin'" label="criar conta gratuita" link="/register" />
           <br />
           <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
         </q-form>
@@ -44,7 +44,10 @@
 import { defineComponent, ref } from "vue";
 // import { mapActions } from 'vuex';
 import useAuthUser from "src/composebles/useAuthUser";
-import { useRouter } from "vue-router";
+
+import useApi from 'src/composebles/useApi'
+
+import { useRouter, useRoute } from "vue-router";
 import PrimaryButtom from "../../components/PrimaryButtom.vue";
 import SecondaryButtom from "../../components/SecondaryButtom.vue";
 import { message } from '../../composebles/messageAPI'
@@ -60,14 +63,31 @@ export default defineComponent({
     const loading = ref(false);
 
     const router = useRouter();
+    const $route = useRoute()
 
     const { login } = useAuthUser();
 
     const handleLogin = async () => {
       try {
+
+        let profile = []
+        if($route.query.access==='admin') {
+          const { getByField } = useApi()
+
+           profile = await getByField('perfil', 'email', form.value.email)
+          
+        }
+
         loading.value = true;
         await login(form.value);
-        router.push("/home");
+
+        if(profile[0]?.profile_type_id === 3) {
+        router.push({name: 'painel'});
+
+        } else {
+          router.push("/home");
+        }
+
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(message(error.message));
