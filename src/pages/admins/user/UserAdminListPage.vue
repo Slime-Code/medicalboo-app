@@ -32,7 +32,7 @@
           title="Lista de Usuários"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'perfil', 'options']"
+          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'perfil', 'email', 'telefone', 'options']"
           row-key="title"
           separator="cell"
         >
@@ -50,17 +50,14 @@
               <q-td key="nacionalidade" :props="props">
                   {{ props.row.nacionalidade }}
               </q-td>
-              <q-td key="ano-de-graduacao" :props="props">
-                  {{ props.row.ano_de_graduacao }}
-              </q-td>
-              <q-td key="area-de-ocupacao" :props="props">
-                  {{ props.row.area_de_ocupacao }}
-              </q-td>
-              <q-td key="data-cadastro" :props="props">
-                  {{ props.row.created_at }}
-              </q-td>
               <q-td key="perfil" :props="props">
                 <p>Admin</p>
+              </q-td>
+              <q-td key="email" :props="props">
+                  {{ props.row.email }}
+              </q-td>
+              <q-td key="telefone" :props="props">
+                  {{ props.row.phone }}
               </q-td>
               <q-td key="options" class="text-right" :props="props">
                 <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
@@ -87,7 +84,6 @@
               <div class="q-gutter-md colum">
                 <q-input
                   class="col"
-
                   dense
                   v-model="formUser.name"
                   outlined
@@ -100,7 +96,6 @@
                 />
                 <q-input
                   class="col"
-
                   dense
                   v-model="formUser.birthday"
                   outlined
@@ -114,11 +109,9 @@
                 />
                 <q-input
                   class="col"
-
                   dense
                   v-model="formUser.cpf"
                   outlined
-                  type="text"
                   label="CPF"
                   lazy-rules
                   :rules="[
@@ -127,7 +120,6 @@
                 />
                 <q-select
                   class="col"
-
                   dense
                   outlined
                   v-model="formUser.nationality"
@@ -193,7 +185,6 @@
                 />
                 <q-input
                   class="col"
-                  type="number"
                   dense
                   v-model="formUser.phone"
                   outlined
@@ -230,7 +221,7 @@
     </q-dialog>
 
     <q-inner-loading
-      :showing="loading"
+      v-if="loading"
       label="Atualizando..."
       label-class="text-primary"
       color="primary"
@@ -287,34 +278,26 @@ const columns = [
   },
 
   {
-    name: 'ano-de-graduacao',
-    align: 'left',
-    label: 'Ano de Graduação',
-    field: 'ano-de-graduacao',
-    sortable: true,
-  },
-
-  {
-    name: 'area-de-ocupacao',
-    align: 'left',
-    label: 'Área de Ocupação',
-    field: 'area-de-ocupacao',
-    sortable: true,
-  },
-
-  {
-    name: 'data-cadastro',
-    align: 'left',
-    label: 'Cadastrado Aos',
-    field: 'data',
-    sortable: true,
-  },
-
-  {
     name: 'perfil',
     align: 'left',
     label: 'Perfil',
     field: 'perfil',
+    sortable: true,
+  },
+
+  {
+    name: 'email',
+    align: 'left',
+    label: 'E-mail',
+    field: 'E-mail',
+    sortable: true,
+  },
+
+  {
+    name: 'telefone',
+    align: 'left',
+    label: 'Telefone',
+    field: 'telefone',
     sortable: true,
   },
 
@@ -325,11 +308,11 @@ const columns = [
 ];
 
 export default defineComponent({
-  name: 'UserAdminListPage',
-
   setup() {
     const loading = ref(true);
     const $q = useQuasar();
+
+    const dialogUser = ref(false);
 
     const {
       list, post, update, remove,
@@ -342,13 +325,11 @@ export default defineComponent({
     const topics = ref([]);
 
     const formData = reactive({
-      
       name: '',
       id: null,
     });
 
     const formUser = reactive({
-      // id: '',
       name: '',
       birthday: '',
       cpf: '',
@@ -358,14 +339,10 @@ export default defineComponent({
       password: '',
       confirm_email: '',
       confirm_password: '',
-      occupation_area: '',
-      graduation_year: '',
-      user_id: '',
-      phone: '',
-      premium: false,
+      user_id: null,
+      phone: null,
+      premium: true,
     });
-
-    const dialogUser = ref(false);
 
     const options = ref([]);
 
@@ -388,6 +365,8 @@ export default defineComponent({
       users.value = await list('users');
     };
 
+
+
     const listAll = async () => {
       try {
         loading.value = true;
@@ -398,13 +377,10 @@ export default defineComponent({
           data: item.birthday,
           cpf: item.cpf,
           perfil: item.profile_type_id,
-          area_de_ocupacao: item.occupation_area,
-          ano_de_graduacao: item.graduation_year,
           email: item.email,
-          created_at: item.created_at,
-          password: item.password,
           nacionalidade: item.nationality,
           user_id: item.user_id,
+          phone: item.phone,
         }));
         // filtrar todos os Admins -------------------------------
         for (let index = 0; index < rows.value.length; index++) {
@@ -419,6 +395,7 @@ export default defineComponent({
         alert(JSON.stringify(error));
       }
     };
+
     const deleteItem = async (id) => {
       try {
         loading.value = true;
@@ -443,7 +420,8 @@ export default defineComponent({
 
           await post('perfil', formUser);
         } else {
-          alert('atualizar');
+          delete formUser.confirm_email;
+          delete formUser.confirm_password;
           await update('perfil', formUser);
         }
         listAll();
@@ -453,7 +431,6 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         dialogUser.value = false;
-        alert(JSON.stringify(error));
         showErrorNotification(`houve uma falha ao carregar os dados para o banco: ${error}`);
       }
     };
@@ -464,7 +441,7 @@ export default defineComponent({
         options.value = aux.map((elem) => elem.name);
         loading.value = false;
       } catch (error) {
-        alert(error);
+        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${error}`);
       }
     };
 
@@ -481,36 +458,23 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      listOcupation();
-      listTopicsAproachs();
-      listAll();
-      getAllUsers();
-    });
-
-    const onItemClick = async () => {
-
-    };
-
     const newDialog = (data) => {
       if (data) {
         Object.keys(data).forEach((key) => {
           formData[key] = data[key];
         });
-        formUser.id = data.id;
+        // formUser.id = data.id;
         formUser.name = data.name;
         formUser.birthday = data.data;
         formUser.cpf = data.cpf;
-        formUser.graduation_year = data.ano_de_graduacao;
         formUser.nationality = data.nacionalidade;
         formUser.profile_type_id = 3;
         formUser.email = data.email;
         formUser.password = data.password;
-        formUser.occupation_area = data.area_de_ocupacao;
         formUser.confirm_email = data.email;
         formUser.confirm_password = data.password;
         formUser.user_id = data.user_id;
-        formUser.created_at = data.created_at;
+        // formUser.created_at = data.created_at;
       } else {
         formData.name = '';
         formUser.name = '';
@@ -520,7 +484,6 @@ export default defineComponent({
         formUser.nationality = '';
         formUser.email = '';
         formUser.password = '';
-        formUser.occupation_area = '';
         formUser.confirm_email = '';
         formUser.confirm_password = '';
         formUser.user_id = '';
@@ -544,7 +507,14 @@ export default defineComponent({
         .onDismiss(() => {
         // console.log('I am triggered on both OK and Cancel')
         });
-    }
+    };
+
+    onMounted(() => {
+      listOcupation();
+      listTopicsAproachs();
+      listAll();
+      getAllUsers();
+    });
 
     return {
       user,
@@ -560,7 +530,7 @@ export default defineComponent({
       deleteItem,
       dialogUser,
       saveItem,
-      onItemClick,
+      // onItemClick,
       columns,
       rows,
       listAll,

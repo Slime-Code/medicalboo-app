@@ -311,7 +311,7 @@ const columns = [
     sortable: true,
   },
 
-    {
+  {
     name: "area-de-ocupacao",
     align: "left",
     label: "Área de Ocupação",

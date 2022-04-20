@@ -13,7 +13,7 @@
             class="q-mx-md"
           />
 
-          <q-btn flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
+          <q-btn  :to='{ name: "inicio" }' flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
 
           <q-btn flat dense color="grey-8" no-caps label="Suporte" class="q-ml-sm q-px-md" />
 
@@ -96,9 +96,8 @@
 
               <q-expansion-item  :to="{name: 'users'}" switch-toggle-side dense-toggle label="Normal"/>
             </q-expansion-item><br>
-          </q-list><br>
-          <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
-          <br>
+          </q-list>
+          <q-btn flat class="full-widt" style="margin-left: 5px" icon="logout" label="Sair" @click="handleLogout"/>
         </q-list>
       </q-drawer>
 

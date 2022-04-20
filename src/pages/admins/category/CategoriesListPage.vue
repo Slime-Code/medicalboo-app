@@ -98,25 +98,28 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import { useQuasar } from "quasar";
-import useApi from "../../../composebles/useApi";
+import {
+  defineComponent, onMounted, reactive, ref,
+} from 'vue';
+import { useQuasar } from 'quasar';
+import { approach } from 'src/store/approach/getters';
+import useApi from '../../../composebles/useApi';
 
 const columns = [
   {
-    name: "title",
+    name: 'title',
     required: true,
-    label: "Titulo",
-    align: "center",
-    field: "title",
+    label: 'Titulo',
+    align: 'center',
+    field: 'title',
     sortable: true,
   },
 
   {
-    name: "options",
-    align: "center",
-    label: "Ação",
-    field: "options",
+    name: 'options',
+    align: 'center',
+    label: 'Ação',
+    field: 'options',
     sortable: true,
   },
 ];
@@ -126,34 +129,76 @@ export default defineComponent({
     const loading = ref(true);
     const $q = useQuasar();
 
-    const { list, post, update, remove, removeWhere, getByField } = useApi();
+    const {
+      list, post, update, remove, removeWhere, getByField,
+    } = useApi();
 
     const rows = ref([]);
 
     const topics = ref([]);
 
     const formData = reactive({
-      name: "",
+      name: '',
       id: null,
     });
 
     const listAll = async () => {
       try {
         loading.value = true;
-        rows.value = await list("categoria");
+        rows.value = await list('categoria');
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
+
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        await remove("categoria", id);
+        const idTopic = await getByField('topic', 'categoria_id', id);
+        idTopic.forEach(async (e) => {
+          const idAcessTopicUser = await getByField('access_topic_user', 'topic_id', e.id);
+          const approachId = await getByField('approach', 'topic_id', e.id);
+
+          idAcessTopicUser.forEach(async (el) => {
+            await remove('access_topic_user', el.id);
+          });
+
+          approachId.forEach(async (elem) => {
+            const exameId = await getByField('exameComplementar', 'approach_id', elem.id);
+            exameId.forEach(async (ment) => {
+              await remove('exameComplementar', ment.id);
+            });
+            const definicaoId = await getByField('definicao', 'approach_id', elem.id);
+            definicaoId.forEach(async (ment) => {
+              await remove('definicao', ment.id);
+            });
+            const contenteId = await getByField('approach_contents', 'id_approach', elem.id);
+            contenteId.forEach(async (ment) => {
+              await remove('approach_contents', ment.id);
+            });
+            const favritoId = await getByField('favorite_approach_user', 'approach_id', elem.id);
+            favritoId.forEach(async (ment) => {
+              await remove('favorite_approach_user', ment.id);
+            });
+
+            await remove('approach', elem.id);
+          });
+          await remove('topic', e.id);
+        });
+
+        // alert(JSON.stringify(idTopic));
+        // idTopic.forEach(async (element) => {
+        // alert('foiiiiiii');
+        // await remove('topic', element.id);
+        // });
+
+        await remove('categoria', id);
+      } catch (error) {
+        alert(JSON.stringify(error));
+      } finally {
         listAll();
         loading.value = false;
-      } catch (error) {
-        alert(error);
       }
     };
 
@@ -163,14 +208,15 @@ export default defineComponent({
         if (!formData.id) {
           delete formData.id;
 
-          await post("categoria", formData);
+          await post('categoria', formData);
         } else {
-          await update("categoria", formData);
+          await update('categoria', formData);
         }
         listAll();
-        loading.value = false;
       } catch (error) {
         alert(error);
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -187,17 +233,17 @@ export default defineComponent({
           formData[key] = data[key];
         });
       } else {
-        formData.name = "";
+        formData.name = '';
       }
       dialogCategory.value = true;
     };
 
     function confirmDelete(id) {
       $q.dialog({
-        title: "Eliminar registro",
-        message: "Gostaria de apagar este registro?",
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
         persistent: true,
-        cancel: "Cancelar",
+        cancel: 'Cancelar',
       })
         .onOk(() => {
           deleteItem(id);
@@ -213,7 +259,7 @@ export default defineComponent({
         });
     }
 
-    const filter = ref("");
+    const filter = ref('');
 
     return {
       filter,
