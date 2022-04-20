@@ -24,7 +24,7 @@
           title="Lista de Usuários"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'perfil', 'options']"
+          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'premium', 'perfil', 'options']"
           row-key="title"
           separator="cell"
         >
@@ -50,6 +50,10 @@
               </q-td>
               <q-td key="data-cadastro" :props="props">
                   {{ props.row.created_at }}
+              </q-td>
+              <q-td key="premium" :props="props">
+                  <p v-if="props.row.premium">SIM</p>
+                  <p v-else>NÃO</p>
               </q-td>
               <q-td key="perfil" :props="props">
                 <p v-if="props.row.perfil == 1">Estudante</p>
@@ -328,6 +332,14 @@ const columns = [
   },
 
   {
+    name: "premium",
+    align: "left",
+    label: "premium",
+    field: "premium",
+    sortable: true,
+  },
+
+  {
     name: "perfil",
     align: "left",
     label: "Perfil",
@@ -411,6 +423,7 @@ export default defineComponent({
           created_at: item.created_at,
           password: item.password,
           nacionalidade: item.nationality,
+          premium: item.premium,
         }));
         loading.value = false;
       } catch (error) {

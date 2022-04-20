@@ -17,7 +17,7 @@
         </q-toolbar-title>
 
         <div class="medium-screen-only">
-          <q-btn no-caps icon="perm_identity" flat label="Yuri José Rego"/>
+          <q-btn no-caps icon="perm_identity" flat :label="user.name"/>
           <q-btn to="/" icon="logout" flat label="sair"/>
         </div>
         <div class="non-medium-screen-only">
@@ -54,7 +54,7 @@
               <q-item-label
                 header
               >
-                <strong>Yuri José Rego</strong><br>
+                <strong>{{user.name}}</strong><br>
                 <span>Administrador</span>
               </q-item-label>
             </q-item-section>
@@ -103,23 +103,14 @@ const linksList = [
     icon: 'work',
     link: '/admin/occupation-areas',
   },
-  // {
-  //   title: 'Tipos de perfis',
-  //   icon: 'perm_identity',
-  //   link: '/admin/profile-types',
-  // },
-  // {
-  //   title: 'Usuarios',
-  //   icon: 'group',
-  //   link: '/admin/users',
-  // },
 ];
 import { defineComponent, ref } from 'vue';
 
-import {useQuasar } from 'quasar'
+import { useQuasar } from 'quasar';
 
-import useAuthUser from "../composebles/useAuthUser"
-import {useRouter} from "vue-router"
+import { useRouter } from 'vue-router';
+import useAuthUser from '../composebles/useAuthUser';
+
 export default defineComponent({
   name: 'AdminLayout',
   components: {
@@ -127,11 +118,11 @@ export default defineComponent({
   },
   setup() {
     const leftDrawerOpen = ref(false);
-    const { logout } = useAuthUser()
-    const $q = useQuasar()
-    const router = useRouter()
+    const { logout, user } = useAuthUser();
+    const $q = useQuasar();
+    const router = useRouter();
 
-     const handleLogout = async () => {
+    const handleLogout = async () => {
       $q.dialog({
         title: 'Logout',
         message: 'Quer realmente sair?',
@@ -144,6 +135,7 @@ export default defineComponent({
     };
 
     return {
+      user,
       handleLogout,
       principaisLinks: linksList,
       leftDrawerOpen,
