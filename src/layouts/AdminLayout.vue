@@ -13,7 +13,7 @@
             class="q-mx-md"
           />
 
-          <q-btn flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
+          <q-btn  :to='{ name: "inicio" }' flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
 
           <q-btn flat dense color="grey-8" no-caps label="Suporte" class="q-ml-sm q-px-md" />
 
@@ -70,7 +70,7 @@
                 <q-item-label
                   header
                 >
-                  <strong>Yuri José Rego</strong><br>
+                  <strong>{{user.user_metadata.name}}</strong><br>
                   <span>Administrador</span>
                 </q-item-label>
               </q-item-section>
@@ -92,25 +92,12 @@
               icon="person"
               label="Usuários"
             >
-              <q-expansion-item :to="{name: 'colaboradores'}" switch-toggle-side dense-toggle label="Admin"/>
+              <q-expansion-item :to="{name: 'admin'}" switch-toggle-side dense-toggle label="Admin"/>
 
               <q-expansion-item  :to="{name: 'users'}" switch-toggle-side dense-toggle label="Normal"/>
             </q-expansion-item><br>
-
-            <q-expansion-item
-              dense
-              dense-toggle
-              expand-separator
-              icon="group"
-              label="Colaboradores"
-            >
-              <q-expansion-item :to="{name: 'register'}" switch-toggle-side dense-toggle label="Admin"/>
-
-              <q-expansion-item  :to="{name: 'colaboradores'}" switch-toggle-side dense-toggle label="Liista de Colaboradores"/>
-            </q-expansion-item>
-          </q-list><br>
-          <q-btn flat icon="logout" label="Sair" @click="handleLogout"/>
-          <br>
+          </q-list>
+          <q-btn flat class="full-widt" style="margin-left: 5px" icon="logout" label="Sair" @click="handleLogout"/>
         </q-list>
       </q-drawer>
 
@@ -209,7 +196,7 @@ export default {
 
     const form = { valor: 0.0, id: 1 };
 
-    const { logout } = useAuthUser();
+    const { logout, user } = useAuthUser();
 
     const { list, update } = useApi();
 
@@ -251,6 +238,7 @@ export default {
     });
 
     return {
+      user,
       updatValuePremium,
       dilogPremi,
       leftDrawerOpen,

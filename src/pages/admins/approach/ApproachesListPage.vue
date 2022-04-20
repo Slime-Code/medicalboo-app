@@ -310,7 +310,7 @@
                     class="col-4"
                     label="Conteúdo hyperlink"
                   />
-                 
+
               </div>
             </div>
           </q-card-section>
@@ -345,48 +345,50 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import { useQuasar, copyToClipboard } from "quasar";
-import useApi from "../../../composebles/useApi";
+import {
+  defineComponent, onMounted, reactive, ref,
+} from 'vue';
+import { useQuasar, copyToClipboard } from 'quasar';
+import useApi from '../../../composebles/useApi';
 
 const columns = [
   {
-    name: "title",
+    name: 'title',
     required: true,
-    label: "Título",
-    align: "left",
-    field: "title",
+    label: 'Título',
+    align: 'left',
+    field: 'title',
     sortable: true,
   },
 
   {
-    name: "topic",
-    align: "left",
-    label: "Tópico",
-    field: "topic",
+    name: 'topic',
+    align: 'left',
+    label: 'Tópico',
+    field: 'topic',
     sortable: true,
   },
   {
-    name: "type_approach",
-    align: "left",
-    label: "Tipo de abordagem",
-    field: "type_approach",
-    sortable: true,
-  },
-
-  {
-    name: "criado",
-    align: "left",
-    label: "Criado Por",
-    field: "criado Por",
+    name: 'type_approach',
+    align: 'left',
+    label: 'Tipo de abordagem',
+    field: 'type_approach',
     sortable: true,
   },
 
   {
-    name: "options",
-    align: "left",
-    label: "Ação",
-    field: "options",
+    name: 'criado',
+    align: 'left',
+    label: 'Criado Por',
+    field: 'criado Por',
+    sortable: true,
+  },
+
+  {
+    name: 'options',
+    align: 'left',
+    label: 'Ação',
+    field: 'options',
     sortable: true,
   },
 ];
@@ -414,14 +416,14 @@ export default defineComponent({
 
     const showAddApproach = ref(false);
     const formData = reactive({
-      title: "",
+      title: '',
       topic_id: null,
       type_approach_id: null,
       link: false,
     });
     const getLists = async () => {
-      const auxAproach = await list("type_approach");
-      const auxTopic = await list("topic");
+      const auxAproach = await list('type_approach');
+      const auxTopic = await list('topic');
       optionsAproach.value = auxAproach.map((item) => ({
         label: item.type_approach,
         value: item.id,
@@ -435,16 +437,16 @@ export default defineComponent({
     const getAproaches = async () => {
       try {
         loadingTable.value = true;
-        const aux = await joinTables("approach", [
+        const aux = await joinTables('approach', [
           {
-            name: "topic",
-            foreign_key: "topic_id",
-            fields: "name",
+            name: 'topic',
+            foreign_key: 'topic_id',
+            fields: 'name',
           },
           {
-            name: "type_approach",
-            foreign_key: "type_approach_id",
-            fields: "type_approach",
+            name: 'type_approach',
+            foreign_key: 'type_approach_id',
+            fields: 'type_approach',
           },
         ]);
 
@@ -467,9 +469,12 @@ export default defineComponent({
     };
 
     const deleteItem = async (id) => {
-      await remove("favorite_approach_user", id);
-      await removeWhere("approach_contents", "id_approach", id);
-      await remove("approach", id);
+      // await remove('favorite_approach_user', id);
+      await removeWhere('approach_contents', 'id_approach', id);
+      await removeWhere('favorite_approach_user', 'approach_id', id);
+      await removeWhere('definicao', 'approach_id', id);
+      await removeWhere('exameComplementar', 'approach_id', id);
+      await remove('approach', id);
       getAproaches();
     };
 
@@ -482,8 +487,8 @@ export default defineComponent({
       if (data) {
         loadingForm.value = true;
 
-        const result = await getById("type_approach", data.type_approach_id);
-        const resultTopic = await getById("topic", data.topic_id);
+        const result = await getById('type_approach', data.type_approach_id);
+        const resultTopic = await getById('topic', data.topic_id);
 
         formData.title = data.title;
         formData.id = data.id;
@@ -502,7 +507,7 @@ export default defineComponent({
         };
       } else {
         contents.value = [];
-        formData.title = "";
+        formData.title = '';
         formData.topic_id = null;
         formData.type_approach_id = null;
       }
@@ -520,12 +525,12 @@ export default defineComponent({
           formData.topic_id = formData.topic_id.value;
           formData.type_approach_id = formData.type_approach_id.value;
 
-          const result = await post("approach", formData);
+          const result = await post('approach', formData);
           approach_id = result[0].id;
         } else {
           formData.topic_id = formData.topic_id.value;
           formData.type_approach_id = formData.type_approach_id.value;
-          await update("approach", formData);
+          await update('approach', formData);
         }
 
         getAproaches();
@@ -537,10 +542,10 @@ export default defineComponent({
 
     function confirmDelete(id) {
       $q.dialog({
-        title: "Eliminar registro",
-        message: "Gostaria de apagar este registro?",
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
         persistent: true,
-        cancel: "Cancelar",
+        cancel: 'Cancelar',
       })
         .onOk(() => {
           deleteItem(id);
@@ -556,14 +561,14 @@ export default defineComponent({
         });
     }
 
-    const filter = ref("");
+    const filter = ref('');
 
     const contents = ref([]);
 
     const addContent = () => {
       contents.value.push({
-        title: `Novo conteúdo`,
-        content: "",
+        title: 'Novo conteúdo',
+        content: '',
       });
     };
 
@@ -581,27 +586,27 @@ export default defineComponent({
         loadingContent.value = true;
 
         if (content.id) {
-          await update("approach_contents", data);
+          await update('approach_contents', data);
         } else {
           delete data.id;
-          await post("approach_contents", data);
+          await post('approach_contents', data);
         }
         loadingContent.value = false;
       });
     };
     const removeContent = (index) => {
       if (contents.value[index].id) {
-        const id = contents.value[index].id;
+        const { id } = contents.value[index];
 
         $q.dialog({
-          title: "Eliminar conteúdo",
+          title: 'Eliminar conteúdo',
           message: `Gostaria de apagar conteúdo ${contents.value[index].title} ?`,
           persistent: true,
-          cancel: "Cancelar",
+          cancel: 'Cancelar',
         }).onOk(async () => {
-          await remove("approach_contents", id);
+          await remove('approach_contents', id);
           $q.notify({
-            message: "Conteúdo apagado com sucesso!!",
+            message: 'Conteúdo apagado com sucesso!!',
           });
         });
       }
@@ -613,9 +618,9 @@ export default defineComponent({
       currentApproach.value = approach;
       loadingForm.value = true;
       contents.value = await getByField(
-        "approach_contents",
-        "id_approach",
-        currentApproach.value.id
+        'approach_contents',
+        'id_approach',
+        currentApproach.value.id,
       );
       loadingForm.value = false;
     };
@@ -625,7 +630,7 @@ export default defineComponent({
         .then(() => {
           // success!
           $q.notify({
-            message: "Conteúdo copiado",
+            message: 'Conteúdo copiado',
           });
         })
         .catch(() => {
