@@ -163,7 +163,6 @@ export default defineComponent({
           idAcessTopicUser.forEach(async (el) => {
             await remove('access_topic_user', el.id);
           });
-
           approachId.forEach(async (elem) => {
             const exameId = await getByField('exameComplementar', 'approach_id', elem.id);
             exameId.forEach(async (ment) => {
