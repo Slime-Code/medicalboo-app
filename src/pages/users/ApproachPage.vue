@@ -42,15 +42,15 @@
 </template>
 
 <script>
-import { showErrorNotification } from "src/functions/functionShowNotifications";
-import { defineComponent, ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import ApproachButtom from "../../components/ApproachButtom.vue";
-import useApi from "../../composebles/useApi";
-import useAuthUser from "../../composebles/useAuthUser";
+import { showErrorNotification } from 'src/functions/functionShowNotifications';
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import ApproachButtom from '../../components/ApproachButtom.vue';
+import useApi from '../../composebles/useApi';
+import useAuthUser from '../../composebles/useAuthUser';
 
 export default defineComponent({
-  name: "ProfilePage",
+  name: 'ProfilePage',
   components: {
     ApproachButtom,
   },
@@ -62,7 +62,9 @@ export default defineComponent({
 
     const loading1 = ref(true);
 
-    const { list, getById, post, getByField } = useApi();
+    const {
+      list, getById, post, getByField,
+    } = useApi();
     const { user } = useAuthUser();
 
     const approachs = ref([]);
@@ -71,7 +73,7 @@ export default defineComponent({
 
     const getTypeApproaches = async () => {
       try {
-        typeApproches.value = await list("type_approach");
+        typeApproches.value = await list('type_approach');
       } catch (error) {
         alert(error.message);
       }
@@ -80,7 +82,20 @@ export default defineComponent({
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        approachs.value = await getByField("approach", "topic_id", route.params.id);
+        approachs.value = await getByField('approach', 'topic_id', route.params.id);
+        const perfil = await getByField('perfil', 'user_id', user.value.id);
+
+        // Filtrar Conteúdo Premium.........................................
+        if (!perfil.premium) {
+          const teste = approachs.value.filter((element) => {
+            if (!element.premium) {
+              return element;
+            }
+          });
+
+          approachs.value = teste;
+        }
+
         loading.value = false;
         loading1.value = false;
       } catch (error) {
@@ -102,9 +117,9 @@ export default defineComponent({
         data1.user_id = user.value.id;
         data1.id = route.params.id;
         data1.access_date = new Date();
-        const data = await getById("access_topic_user", route.params.id);
+        const data = await getById('access_topic_user', route.params.id);
         if (!data) {
-          post("access_topic_user", data1);
+          post('access_topic_user', data1);
         }
       } catch (error) {
         showErrorNotification(error);
@@ -115,10 +130,10 @@ export default defineComponent({
       router.push(`/approach-detail/${id}`);
     };
 
-    const topic = ref({ name: "" });
+    const topic = ref({ name: '' });
 
     onMounted(async () => {
-      topic.value = await getById("topic", route.params.id);
+      topic.value = await getById('topic', route.params.id);
       await listTopicsAproachs();
 
       getTypeApproaches();
@@ -132,10 +147,10 @@ export default defineComponent({
       loading,
       typeApproches,
       loading1,
-      text: ref(""),
+      text: ref(''),
       approachs,
-      slide: ref("style"),
-      rota: "approach",
+      slide: ref('style'),
+      rota: 'approach',
     };
   },
 });
