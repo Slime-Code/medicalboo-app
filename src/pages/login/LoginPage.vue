@@ -47,6 +47,7 @@ import useAuthUser from "src/composebles/useAuthUser";
 
 import useApi from 'src/composebles/useApi'
 
+import {useQuasar} from 'quasar'
 import { useRouter, useRoute } from "vue-router";
 import PrimaryButtom from "../../components/PrimaryButtom.vue";
 import SecondaryButtom from "../../components/SecondaryButtom.vue";
@@ -70,23 +71,38 @@ export default defineComponent({
     const handleLogin = async () => {
       try {
 
+
+
+
         let profile = []
+
         if($route.query.access==='admin') {
           const { getByField } = useApi()
 
-           profile = await getByField('perfil', 'email', form.value.email)
-          
+           try {
+             profile = await getByField('perfil', 'email', form.value.email)
+           } catch (error) {
+             profile = [{profile_type_id: 0}]
+             console.error(error)
+           }
         }
 
         loading.value = true;
         await login(form.value);
 
+
         if(profile[0]?.profile_type_id === 3) {
+
         router.push({name: 'painel'});
 
+        } else if(profile[0]?.profile_type_id === 0) {
+          alert("Não é usuário do tipo admin")
         } else {
           router.push("/home");
+
         }
+
+
 
       } catch (error) {
         // eslint-disable-next-line no-alert

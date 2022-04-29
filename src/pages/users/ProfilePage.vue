@@ -9,7 +9,7 @@
             </q-btn>
         </div>
         <div class="col item">
-          <h6 style="margin:0"> {{user.user_metadata.name}} </h6>
+          <h6 style="margin:0" v-if="user"> {{user.user_metadata.name}} </h6>
           <span>Assinatura Gratis</span>
         </div>
         <div class="col item q-ma-md">
