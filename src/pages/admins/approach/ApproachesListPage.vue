@@ -310,6 +310,11 @@
                     class="col-4"
                     label="Conteúdo hyperlink"
                   />
+                  <q-checkbox
+                    v-model="formData.premium"
+                    class="col-4"
+                    label="Conteúdo Premium"
+                  />
 
               </div>
             </div>
@@ -420,6 +425,7 @@ export default defineComponent({
       topic_id: null,
       type_approach_id: null,
       link: false,
+      premium: false,
     });
     const getLists = async () => {
       const auxAproach = await list('type_approach');
@@ -433,7 +439,7 @@ export default defineComponent({
         value: item.id,
       }));
     };
-    const cat = [];
+    // const cat = [];
     const getAproaches = async () => {
       try {
         loadingTable.value = true;
@@ -459,6 +465,7 @@ export default defineComponent({
           topic: item.topic.name,
           type_approach: item.type_approach.type_approach,
           created_at: item.created_at,
+          premium: item.premium,
         }));
 
         loadingTable.value = false;
@@ -493,6 +500,7 @@ export default defineComponent({
         formData.title = data.title;
         formData.id = data.id;
         formData.link = data.link;
+        formData.premium = data.premium;
 
         loadingForm.value = false;
 
@@ -506,6 +514,7 @@ export default defineComponent({
           value: resultTopic.id,
         };
       } else {
+        formData.premium = false;
         contents.value = [];
         formData.title = '';
         formData.topic_id = null;
@@ -526,17 +535,21 @@ export default defineComponent({
           formData.type_approach_id = formData.type_approach_id.value;
 
           const result = await post('approach', formData);
+          alert('foiiiiiii');
           approach_id = result[0].id;
         } else {
           formData.topic_id = formData.topic_id.value;
           formData.type_approach_id = formData.type_approach_id.value;
+          alert('atualizar');
           await update('approach', formData);
+          delete formData.id;
         }
 
         getAproaches();
         loadingForm.value = false;
       } catch (error) {
-        alert(error);
+        alert(error.message);
+        loadingForm.value = false;
       }
     };
 

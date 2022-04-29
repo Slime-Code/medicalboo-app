@@ -6,7 +6,7 @@
         'absolute-center': ($q.screen.width) > 599
       }">
           <q-img class="q-mb-xl" src="img/logo-original.png" style="height:80%; width:80%"/>
-         
+
         <q-form @submit="handleLogin" class="q-mt-lg">
              <q-input
               dense
@@ -41,36 +41,50 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue';
 // import { mapActions } from 'vuex';
-import useAuthUser from "src/composebles/useAuthUser";
+import useAuthUser from 'src/composebles/useAuthUser';
 
-import useApi from 'src/composebles/useApi'
+import useApi from 'src/composebles/useApi';
 
+import { useRouter, useRoute } from 'vue-router';
+import PrimaryButtom from '../../components/PrimaryButtom.vue';
+import SecondaryButtom from '../../components/SecondaryButtom.vue';
+import { message } from '../../composebles/messageAPI';
+
+<<<<<<< HEAD
 import {useQuasar} from 'quasar'
 import { useRouter, useRoute } from "vue-router";
 import PrimaryButtom from "../../components/PrimaryButtom.vue";
 import SecondaryButtom from "../../components/SecondaryButtom.vue";
 import { message } from '../../composebles/messageAPI'
+=======
+>>>>>>> 5a23f6428200265cfad419b85cbed3ac6a2fee00
 export default defineComponent({
-  name: "LoginPage",
+  name: 'LoginPage',
   components: {
     PrimaryButtom,
     SecondaryButtom,
   },
   setup() {
-    const form = ref({ email: "", password: "" });
+    const form = ref({ email: '', password: '' });
 
     const loading = ref(false);
 
     const router = useRouter();
-    const $route = useRoute()
+    const $route = useRoute();
 
     const { login } = useAuthUser();
 
     const handleLogin = async () => {
       try {
+        // router.replace({ name: 'login', query: { access: 'admin' } });
+        let profile = [];
+        /*
+        if ($route.query.access === 'admin') {
+          const { getByField } = useApi();
 
+<<<<<<< HEAD
 
 
 
@@ -85,11 +99,19 @@ export default defineComponent({
              profile = [{profile_type_id: 0}]
              console.error(error)
            }
+=======
+          profile = await getByField('perfil', 'email', form.value.email);
+>>>>>>> 5a23f6428200265cfad419b85cbed3ac6a2fee00
         }
+        */
+        const { getByField } = useApi();
+
+        profile = await getByField('perfil', 'email', form.value.email);
 
         loading.value = true;
         await login(form.value);
 
+<<<<<<< HEAD
 
         if(profile[0]?.profile_type_id === 3) {
 
@@ -104,10 +126,17 @@ export default defineComponent({
 
 
 
+=======
+        if (profile[0]?.profile_type_id === 3) {
+          router.push({ name: 'painel' });
+        } else {
+          router.push('/home');
+        }
+>>>>>>> 5a23f6428200265cfad419b85cbed3ac6a2fee00
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(message(error.message));
-      }finally {
+      } finally {
         loading.value = false;
       }
     };
