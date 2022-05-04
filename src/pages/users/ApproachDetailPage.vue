@@ -22,9 +22,6 @@
           })
         }}
       </div>
-      <template v-slot:action>
-        <q-btn color="primary" label="Assinar" />
-      </template>
     </q-banner>
 
     <q-list  :class="{
@@ -35,12 +32,25 @@
         header-class="bg-grey-3 text-body1 text-bold"
       >
         <q-card>
-          <q-card-section class="text-justify" v-html="content.content"> 
+          <q-card-section class="pre" v-html="content.content"> 
             
           </q-card-section>
         </q-card>
       </q-expansion-item>
     </q-list>
+
+
+      <q-inner-loading
+        :showing="loading"
+        label="Carregando..."
+        color="primary"
+        label-class="text-primary"
+        label-style="font-size: 1.1em"
+      />
+
+     <div v-if="!contents.length && !loading" class="absolute-center text-h6">
+      Sem conteúdo
+    </div>
   </q-page>
 </template>
 <script>
@@ -61,17 +71,23 @@ export default defineComponent({
       created_at: "",
     });
 
+    const loading = ref(true)
+
     const contents = ref([]);
     onMounted(async () => {
+      loading.value=true
       approach.value = await getById("approach", route.params.id);
       contents.value = await getByField(
         "approach_contents",
         "id_approach",
         route.params.id
       );
+      loading.value=false
+
     });
 
     return {
+      loading,
       approach,
       contents,
     };
@@ -82,4 +98,7 @@ export default defineComponent({
 <style lang="sass" scoped>
 .explore
   width: 90vw
+.pre 
+  white-space: pre-wrap
+  word-break: break-all
 </style>

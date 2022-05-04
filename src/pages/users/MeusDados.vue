@@ -218,6 +218,7 @@ export default defineComponent({
         formData.value.profile_type_id = profile_type_id;
         loading.value = true;
         aux1.value = await getById('profile_type', profile_type_id);
+        formData.value = aux1.value
         profile_type.value = aux1.value.name;
         loading.value = false;
       } catch (error) {

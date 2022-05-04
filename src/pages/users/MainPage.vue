@@ -1,25 +1,31 @@
 <template>
-  <q-page class="q-pa-md constrain">
-    <q-tabs
-      v-model="tab"
-      inline-label
-      mobile-arrows
-      active-color="primary"
-      outline
-      indicator-color="transparent"
-    >
-      <q-tab
-        v-for="(category, index) in categorys"
-        :key="index"
-        :name="category.name"
-        :label="category.name"
-        @click="getTopicByCategory(category.id)"
-      />
-      <div>
-        <q-spinner v-if="loadingCategory" color="primary" size="3em" />
-      </div>
-    </q-tabs>
-    <q-separator v-if="!loadingTopic" />
+  <q-page class="q-pa-md constrain-2">
+    <q-card flat>
+      <q-card-section class="q-pa-sm">
+        <q-tabs
+          class="text-grey-6"
+          v-model="tab"
+          inline-label
+          active-color="white"
+          active-bg-color="primary"
+          dense
+          no-caps
+          indicator-color="transparent"
+        >
+          <q-tab
+            class="custom-border q-mx-xs"
+            v-for="(category, index) in categorys"
+            :key="index"
+            :name="category.name"
+            :label="category.name"
+            @click="getTopicByCategory(category.id)"
+          />
+          <div>
+            <q-spinner v-if="loadingCategory" color="primary" size="3em" />
+          </div>
+        </q-tabs>
+      </q-card-section>
+    </q-card>
 
     <div class="column justify-around" style="height: 100%">
       <q-tab-panels
@@ -43,7 +49,7 @@
             style="background-color: #f6f6f6"
             flat
             bordered
-            class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
+            class="q-my-sm col-sm-12 col-xs-12 col-md-4 col-lg-3"
           >
             <q-item clickable v-ripple @click="go(topic.id)">
               <q-item-section side>
@@ -214,6 +220,11 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.custom-border
+  border-style: solid
+  border-width: 1px
+  border-radius: 4px
+  border-color: $primary
 .category
   width: 90vw
 .category .q-tabs__arrows
@@ -235,4 +246,5 @@ export default defineComponent({
   border: 0.5px solid #f2f2f2
 .q-link:hover
   border: 0.5px solid #e0e0e0
+
 </style>

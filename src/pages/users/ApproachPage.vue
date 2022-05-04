@@ -1,25 +1,27 @@
 <template>
-  <q-page padding class="constrain">
+  <q-page padding class="constrain-4">
     <div class="column q-pa-sm q-gutter-y-md">
       <div class="text-h4">{{ topic.name }}</div>
 
-      <div>
-        <div class="text-h6 q-my-sm" v-for="type in typeApproches" :key="type.id">
+      <div class="q-pa-sm">
+        <div class="text-h6 q-my-md" v-for="type in typeApproches" :key="type.id">
           <div
             v-if="approachs.filter((ap) => type.id === ap.type_approach_id).length > 0"
+
           >
+          
             {{ type.type_approach }}
 
             <q-list
-              class="row justify-start q-gutter-sm q-mt-lg"
-              :class="{ 'no-wrap': $q.screen.width > 599 }"
+              class="row q-py-md justify-start q-gutter-y-sm"
+             
             >
               <div
-                class="col-xs-12 col-sm-12 col-md-6 col-xl-3 col-lg-6"
                 v-for="approach in approachs.filter(
                   (ap) => type.id === ap.type_approach_id
                 )"
                 :key="approach.id"
+                class="col-sm-6 col-xs-12 col-lg-6 col-md-6 col-xl-2"
               >
                 <ApproachButtom
                   class="rounded-borders full-width"
@@ -38,6 +40,9 @@
       </div>
     </div>
     <q-spinner v-if="loading" size="xl" color="primary" />
+    <div v-if="!approachs.length && !loading" class="absolute-center text-h6">
+      Sem abordagem
+    </div>
   </q-page>
 </template>
 

@@ -11,15 +11,6 @@
         dense
         @update:model-value="searchNote()"
       >
-        <template v-slot:append>
-          <q-icon
-            v-if="text !== ''"
-            name="close"
-            @click="text = ''"
-            class="cursor-pointer"
-          />
-          <q-icon name="search" />
-        </template>
       </q-input>
       <div class="q-row">
         <div v-for="(i, index) in notas" :key="index">
@@ -76,10 +67,10 @@
           color="green"
           icon="add"
           class="flax absolute-down"
-        />
+        />   <q-inner-loading :showing="loading" color="primary" />
       </q-page-sticky>
       <br />
-      <q-inner-loading :showing="loading" color="primary" />
+   
     </div>
   </q-page>
 </template>
@@ -186,6 +177,7 @@ export default defineComponent({
       try {
         loading.value = true;
         notas.value = await getByField("notas", "user_id", user.value.id);
+        lastNotes.value = [...notas.value]
       } catch (error) {
         alert(error.message);
       } finally {

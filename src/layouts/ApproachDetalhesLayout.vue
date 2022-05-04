@@ -2,10 +2,10 @@
     <q-layout >
     <q-header bordered class="bg-white" >
       <q-toolbar>
-        <q-btn :to="{name: 'home'}" flat text-color="grey" icon="arrow_back" />
+        <q-btn round dense :to="{name: 'home'}" flat text-color="grey" icon="arrow_back" />
         <q-space />
           <div class="q-gutter-x-sm">
-            <q-btn flat dense round color="grey" icon="edit"/>
+            <q-btn flat dense round color="grey" to="/note" icon="edit"/>
             <q-btn flat dense round color="grey" icon="message"/>
             <q-btn flat dense  round color="grey" icon="share"/>
           </div>

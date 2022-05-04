@@ -1,39 +1,151 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header reveal elevated>
-      <q-toolbar class="q-pa-md">
-        <q-btn
+     <q-header  v-if="$q.screen.width<=599" flat bordered class="small-screen-only ground  bg-primary">
+      <q-toolbar v-if="$router.currentRoute.value.fullPath==='/home'" class="constrain-2">
+        <q-toolbar-title>
+       <q-btn
           to="/profile"
           style="background: #ffffff; color: #1a4b9a"
           round
           icon="fas fa-user"
           size="20px"
         >
-          <q-badge class="pic" style="background: #49d16b" rounded>
-            <q-icon dense name="eva-camera-outline" color="white" />
+          <q-badge class="pic" align="bottom" style="background: #49d16b" rounded>
+            <q-icon dense name="eva-camera-outline" size="12px" color="white" />
           </q-badge>
         </q-btn>
 
-        <q-toolbar-title v-if="user">{{ user.user_metadata.name }}</q-toolbar-title>
-        <q-space />
+       
+        </q-toolbar-title>
+
+        <!-- <q-btn
+          v-for="tab in tabsLink"
+          :to="tab.to"
+          dense
+          :color="$router.currentRoute.value.fullPath === tab.to ? 'primary' : 'grey-8'"
+          no-caps
+          round
+          flat
+          :name="tab.name"
+          :icon="tab.icon"
+        /> -->
+
         <q-btn
           no-caps
           unelevated
           rounded
+          label="Mais acessados"
           @click="icon = true"
-          style="background: #ffffff; color: #1a4b9a"
+          
+          icon="widgets"
+          text-color="primary"
+          color="white"
         >
-          <div class="row">
-            <div class="col-2">
-              <q-icon left name="widgets" />
-            </div>
-            <div class="col-10 large-screen-only">
-              <div>Mais acessados</div>
-            </div>
-          </div>
+        </q-btn>
+        
+
+      </q-toolbar>
+      <q-toolbar v-if="$router.currentRoute.value.fullPath==='/home'" class="detail">
+        <q-toolbar-title class="text-caption">
+        Olá {{ user.user_metadata.name }}, bom te ver por aqui
+
+        </q-toolbar-title>
+        
+      </q-toolbar>
+       <q-toolbar v-else class="detail">
+        <q-toolbar-title class="absolute-center">
+        {{ title }}
+
+        </q-toolbar-title>
+        
+      </q-toolbar>
+    </q-header>
+
+      <q-header v-else reveal flat bordered class="bg-white large-screen-only">
+      <q-toolbar class="constrain-2">
+        <q-toolbar-title class="row jusitfy-between items-center">
+          <q-img
+            class="q-my-sm"
+            src="icone.png"
+            style="width: 20%; height: 20%; max-height: 50px"
+          >
+          </q-img>
+          <span class="text-primary"> edicalbook </span>
+          <q-input
+            v-model="generalSearch"
+            class="col-4 absolute-center"
+            debounce="600"
+            @update:model-value="showingGeneralSearch = true"
+            placeholder="Pesquisar categoria, tópico, abordagem..."
+            outlined
+            dense
+            rounded
+          >
+            <template v-slot:prepend>
+              <q-icon size="xs" name="eva-search-outline" />
+            </template>
+
+            <template v-slot:append>
+
+               <q-btn  v-if="generalSearch" icon="cancel" size="sm" round flat @click="generalSearch=''" dense/>
+
+            </template>
+            <q-menu v-if="showingGeneralSearch" v-model="showingGeneralSearch">
+              <q-list style="min-width: 365px">
+                <q-item clickable v-close-popup>
+                  <q-item-section>New tab</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>New incognito tab</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable v-close-popup>
+                  <q-item-section>Recent tabs</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>History</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>Downloads</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable v-close-popup>
+                  <q-item-section>Settings</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable v-close-popup>
+                  <q-item-section>Help &amp; Feedback</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-input>
+        </q-toolbar-title>
+
+        <!-- <q-btn
+          v-for="tab in tabsLink"
+          :to="tab.to"
+          dense
+          :color="$router.currentRoute.value.fullPath === tab.to ? 'primary' : 'grey-8'"
+          no-caps
+          round
+          flat
+          :name="tab.name"
+          :icon="tab.icon"
+        /> -->
+
+        <q-btn
+          no-caps
+          unelevated
+          rounded
+          label="Mais acessados"
+          @click="icon = true"
+          icon="widgets"
+          color="primary"
+        >
         </q-btn>
       </q-toolbar>
     </q-header>
+  
 
     <q-page-container>
       <router-view />
@@ -44,48 +156,20 @@
         v-model="tab"
         indicator-color="transparent"
         dense
+        active-color="primary"
         align="justify"
-        class="constrain-2"
+        class="constrain-4 q-pa-md text-grey-8"
       >
         <q-route-tab
-          to="/explore"
+          v-for="tab in tabsLink"
+          :key="tab.name"
+          :to="tab.to"
           dense
+
           no-caps
-          name="explorar"
-          icon="eva-search-outline"
-          label="Explorar"
-        />
-        <q-route-tab
-          to="/favorite"
-          dense
-          no-caps
-          name="favoritos"
-          icon="eva-heart-outline"
-          label="Favoritos"
-        />
-        <q-route-tab
-          to="/home"
-          dense
-          no-caps
-          name="inicio"
-          icon="eva-home-outline"
-          label="Inicio"
-        />
-        <q-route-tab
-          to="/note"
-          dense
-          no-caps
-          name="notas"
-          icon="far fa-sticky-note"
-          label="Notas"
-        />
-        <q-route-tab
-          to="/profile"
-          dense
-          no-caps
-          name="perfil"
-          icon="far fa-user"
-          label="Perfil"
+          :name="tab.name"
+          :icon="tab.icon"
+          :label="tab.label"
         />
       </q-tabs>
     </q-footer>
@@ -101,7 +185,7 @@
         <q-card-section>
           <div class="row">
             <div class="col-6" v-for="(topic, index) in topics" :key="index">
-              <TopicButtom :title="topic.name" :id="topic.id"/>
+              <TopicButtom :title="topic.name" :id="topic.id" />
             </div>
           </div>
         </q-card-section>
@@ -111,19 +195,59 @@
 </template>
 
 <script>
-import { showErrorNotification } from 'src/functions/functionShowNotifications';
-import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import TopicButtom from '../components/TopicButtom.vue';
-import useApi from '../composebles/useApi';
-import useAuthUser from '../composebles/useAuthUser';
+import { showErrorNotification } from "src/functions/functionShowNotifications";
+import { defineComponent, ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import TopicButtom from "../components/TopicButtom.vue";
+import useApi from "../composebles/useApi";
+import useAuthUser from "../composebles/useAuthUser";
+
 
 export default defineComponent({
-  name: 'PrincipalLayout',
+  name: "PrincipalLayout",
   components: {
     TopicButtom,
   },
   setup() {
+    const tabsLink = [
+        {
+        to: "/explore",
+
+        name: "explore",
+        icon: "search",
+        label: "Explorar",
+      },
+     
+      {
+        to: "/favorite",
+
+        name: "favoritos",
+        icon: "eva-heart-outline",
+        label: "Favoritos",
+      },
+
+      {
+        to: "/home",
+
+        name: "inicio",
+        icon: "eva-home-outline",
+        label: "Inicio",
+      },
+
+      {
+        to: "/note",
+        name: "notas",
+        icon: "far fa-sticky-note",
+        label: "Notas",
+      },
+      {
+        to: "/profile",
+
+        name: "perfil",
+        icon: "far fa-user",
+        label: "Perfil",
+      },
+    ];
     const loading = ref(true);
 
     const router = useRouter();
@@ -138,12 +262,12 @@ export default defineComponent({
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        const aux = await list('access_topic_user');
+        const aux = await list("access_topic_user");
         // eslint-disable-next-line no-plusplus
         for (let index = 0; index < aux.length; index++) {
           if (aux[index].user_id === user.value.id) {
             // eslint-disable-next-line no-await-in-loop
-            topics.value.push(await getById('topic', aux[index].topic_id));
+            topics.value.push(await getById("topic", aux[index].topic_id));
           }
         }
 
@@ -151,7 +275,7 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         showErrorNotification(
-          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`,
+          `A Resposta do banco Não Foi Bem Sucedida Pelo Seguinte Erro: ${error}`
         );
       }
     };
@@ -160,12 +284,32 @@ export default defineComponent({
       router.push(`/approach/${id}`);
     };
 
+    const showingGeneralSearch = ref(false);
+    const generalSearch = ref("");
+
+   
+    const title = computed(() =>  {
+
+      const current = router.currentRoute.value.fullPath
+
+        if (current === '/home') return 'Página Inicial'
+        else if(current === '/favorite') return 'Favoritos'
+        else if(current === '/note') return 'Minhas notas'
+        else if(current === '/profile') return 'Perfil'
+        else if(current === '/explore') return 'Exporar'
+        else  return 'Sobre'
+    } )
+
     onMounted(() => {
       listTopicsAproachs();
     });
     return {
+      title,
+      generalSearch,
+      showingGeneralSearch,
+      tabsLink,
       icon: ref(false),
-      tab: ref('inicio'),
+      tab: ref("inicio"),
       topics,
       user,
       go,
@@ -175,30 +319,5 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.q-tabs
-  color: #B2BBBB
-  height: 80px
-.q-tab
-  margin: 0
-  padding: 0
-.q-tab--active
-  color: #1A4B9A
-.q-tab__content
-    flex-direction: column
-    flex-wrap: nowrap
-.q-tab__content
-  .q-tab__label
-    font-size: .6em
-.q-header
-  width: 100vw
-  height: 209px
-  z-index: 1
-  background: url('../../public/img/BG-1.png') 0% 5% no-repeat padding-box
-  background-color: #0053ab
-  opacity: 1
 
-.pic
-  position: absolute
-  top: 35px
-  left: 30px
 </style>

@@ -1,8 +1,19 @@
 <template>
-  <q-page padding>
-    <div class="text-h5 q-pa-sm">
-      Explorar
-    </div>
+  <q-page padding class="constrain-2">
+    <div class="text-h5 q-pa-sm">Explorar</div>
+      <q-input
+          class="full-width"
+          outlined
+          rounded
+          dense
+          debounce="300"
+          v-model="filter"
+          placeholder="Pesquise uma abordagem"
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
     <q-table
       :rows="rows"
       :columns="columns"
@@ -18,35 +29,25 @@
       @row-click="go"
       separator="cell"
     >
-
-     <template v-slot:top-right>
-        <q-input class="full-width" outlined rounded dense debounce="300" v-model="filter" placeholder="Pesquise uma abordagem">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>
-
+    
       <template v-slot:no-data="{ icon, message, filter }">
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied" />
-          <span>
-            ... {{ message }}
-          </span>
+          <span> ... {{ message }} </span>
           <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
         </div>
       </template>
     </q-table>
+
+    <q-inner-loading :showing="loading" color="primary" />
   </q-page>
 </template>
 
 <script>
-import { ref } from 'vue';
-import {
-  showErrorNotification,
-} from 'src/functions/functionShowNotifications';
-import { useRouter } from 'vue-router';
-import useApi from '../../composebles/useApi';
+import { ref } from "vue";
+import { showErrorNotification } from "src/functions/functionShowNotifications";
+import { useRouter } from "vue-router";
+import useApi from "../../composebles/useApi";
 
 export default {
   setup() {
@@ -64,27 +65,31 @@ export default {
     const listTopics = async () => {
       try {
         loading.value = true;
-        const aux = await list('approach');
+        const aux = await list("approach");
         rows.value = aux;
         // rows.value.sort();
         loading.value = false;
       } catch (error) {
-        showErrorNotification(`verifique antes a conecção de rede... especificação do Erro: ${JSON.stringify(error)}`);
+        showErrorNotification(
+          `verifique antes a conecção de rede... especificação do Erro: ${JSON.stringify(
+            error
+          )}`
+        );
       }
     };
     return {
       listTopics,
-      filter: ref(''),
+      filter: ref(""),
       rows,
       loading,
       go,
-      explore: 'explore',
+      explore: "explore",
 
       columns: [
         {
-          name: 'title',
+          name: "title",
           required: true,
-          align: 'left',
+          align: "left",
           field: (row) => row.title,
           format: (val) => `${val}`,
           sortable: true,

@@ -12,7 +12,7 @@
                 max="1"
                 v-model="ratingModel"
                 name="quality"
-                size="2em"
+                size="1.5em"
                 color="yellow"
                 icon="star_border"
                 icon-selected="star"
