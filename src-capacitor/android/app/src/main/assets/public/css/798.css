@@ -1,0 +1,33 @@
+.pic[data-v-f920a0b2] {
+  position: absolute;
+  top: 85px;
+  left: 80px;
+}
+.item[data-v-f920a0b2] {
+  margin-bottom: 20px;
+}
+.btn-profile[data-v-f920a0b2] {
+  min-width: 150px;
+  width: 95%;
+  margin-right: 10px;
+}
+.btn-prime[data-v-f920a0b2] {
+  background: #FFAF00;
+}
+.btn-prime .q-icon[data-v-f920a0b2] {
+  font-size: 0.4em;
+}
+.btn-opcao[data-v-f920a0b2] {
+  border-bottom: 1px solid #CCCCCC;
+  width: 90%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.btn-opcao.q-btn__content[data-v-f920a0b2] {
+  min-width: 100%;
+}
+.btn-opcao.q-btn__content.block[data-v-f920a0b2] {
+  flex-grow: 3;
+}
+
+/*# sourceMappingURL=798.css.map*/

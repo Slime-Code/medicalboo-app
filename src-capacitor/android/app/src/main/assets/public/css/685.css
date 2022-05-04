@@ -1,0 +1,33 @@
+.pic[data-v-4d508999] {
+  position: absolute;
+  top: 85px;
+  left: 80px;
+}
+.item[data-v-4d508999] {
+  margin-bottom: 20px;
+}
+.btn-profile[data-v-4d508999] {
+  min-width: 150px;
+  width: 95%;
+  margin-right: 10px;
+}
+.btn-prime[data-v-4d508999] {
+  background: #FFAF00;
+}
+.btn-prime .q-icon[data-v-4d508999] {
+  font-size: 0.4em;
+}
+.btn-opcao[data-v-4d508999] {
+  border-bottom: 1px solid #CCCCCC;
+  width: 90%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.btn-opcao.q-btn__content[data-v-4d508999] {
+  min-width: 100%;
+}
+.btn-opcao.q-btn__content.block[data-v-4d508999] {
+  flex-grow: 3;
+}
+
+/*# sourceMappingURL=685.css.map*/
