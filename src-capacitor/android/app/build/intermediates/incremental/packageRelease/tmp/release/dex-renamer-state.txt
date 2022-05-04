@@ -1,0 +1,4 @@
+#Wed Apr 20 19:05:07 WAT 2022
+base.0=/Users/patriciopedro/Desktop/Programming/JavaScript/Projects/medicalboo-app/src-capacitor/android/app/build/intermediates/dex/release/out/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

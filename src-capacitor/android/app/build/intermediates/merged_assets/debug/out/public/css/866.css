@@ -1,0 +1,35 @@
+
+.login-content[data-v-67d3286e] {
+  margin-top: 40px;
+  margin-bottom: auto;
+  height: 100%;
+}
+.login-cab[data-v-67d3286e] {
+  padding: 0 10px;
+  margin-bottom: 30px;
+}
+.login-title[data-v-67d3286e] {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+.login-text-area .q-field[data-v-67d3286e] {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.login-btn-area[data-v-67d3286e] {
+  margin-top: 40px;
+}
+.login-content .q-btn[data-v-67d3286e] {
+  margin: 5px 0;
+}
+.q-btn[data-v-67d3286e] {
+  min-width: 100%;
+  border: 0.5px solid #49d166;
+  color: #ffff;
+  padding: 5px 30px;
+  margin-top: 5px;
+}
+
+
+/*# sourceMappingURL=866.css.map*/

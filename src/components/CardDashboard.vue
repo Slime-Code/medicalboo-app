@@ -1,5 +1,5 @@
 <template>
-    <div class="my_card">
+    <div style="margin-top: 20px; min-width: 100px" class="my_card">
       <div class="content_person top">
         <h6>{{ titulo }}</h6>
         <p class="percentagem"
@@ -26,8 +26,8 @@ export default defineComponent({
     },
 
     percentagem: {
-      type: String,
-      default: '7',
+      type: Number,
+      default: 1,
     },
 
     icon: {
@@ -36,8 +36,8 @@ export default defineComponent({
     },
 
     quantidade: {
-      type: String,
-      default: '9700',
+      type: Number,
+      default: 1,
     },
   },
 });

@@ -89,6 +89,7 @@ const routes = [
       { path: '/admin/colaboradores', name: 'admin', component: () => import('src/pages/admins/user/UserAdminListPage.vue') },
       { path: '/admin/tipos-De-Abordagens', name: 'tipos-De-Abordagens', component: () => import('src/pages/admins/approach-type/TiposDeAbordagensListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
+      { path: '/sobreApp', name: 'sobreApp', component: () => import('src/pages/admins/SobreAppPage.vue') },
     ],
     meta: {
       requaresAuth: true,

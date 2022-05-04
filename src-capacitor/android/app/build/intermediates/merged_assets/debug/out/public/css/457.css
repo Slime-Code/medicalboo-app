@@ -1,0 +1,53 @@
+.my_card[data-v-78724ab5] {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  background-color: #0053ab;
+  color: white;
+  padding: 0 10px;
+  border-radius: 10px;
+}
+.my_card .content_person[data-v-78724ab5] {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+@media (min-width: 1439.98px) {
+.my_card .content_person[data-v-78724ab5] {
+    font-size: 1.4em;
+    margin: 20px 0;
+}
+}
+.my_card p[data-v-78724ab5] {
+  font-size: 0.9em;
+}
+.my_card .top h6[data-v-78724ab5] {
+  margin: 0;
+}
+.my_card .top .percentagem[data-v-78724ab5] {
+  color: greenyellow;
+  font-weight: bold;
+}
+.my_card .footer[data-v-78724ab5] {
+  font-size: 0.9em;
+}
+.my_card .footer i[data-v-78724ab5] {
+  font-size: 30px;
+}
+@media (max-width: 1439.98px) {
+.my_card .footer .qtd[data-v-78724ab5] {
+    font-size: 20px;
+}
+}
+@media (max-width: 305px) {
+.my_card[data-v-78724ab5] {
+    font-size: 0.7em;
+}
+.my_card .content_person[data-v-78724ab5] {
+    margin: 5px 0;
+}
+}
+
+/*# sourceMappingURL=457.css.map*/

@@ -1,0 +1,1 @@
+{"version":3,"file":"css/938.css","mappings":"AACE;EACE;AAAJ;AACE;EACE;AAEJ,C","sources":["webpack://medicalbookapp/./src/pages/admins/occupation-area/OccupationAreasListPage.vue"],"sourcesContent":["\n  .q-header\n    background-color: #0053ab\n  .explore\n    width: 80vw\n"],"names":[],"sourceRoot":""}
