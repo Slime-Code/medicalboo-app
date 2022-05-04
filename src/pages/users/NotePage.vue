@@ -1,122 +1,220 @@
 <template>
-    <q-page class="flex flex-center">
-      <div class="column explore row items-center no-wrap">
-        <div class="col">
-          <q-input
-            outlined
-            rounded
-            bottom-slots
-            v-model="text"
-            label="Pesquise o seu tópico favorito"
-            dense>
-
-            <template v-slot:append>
-              <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
-              <q-icon name="search" />
-            </template>
-
-          </q-input>
-          <hr>
-        </div >
-        <div class="q-row">
-          <div v-for="(i, index) in notas" :key="index" >
-            <br>
-            <div class="q-pa-md" style="max-width: 400px">
-              <div class="textarea">
-                <q-input
-                  borderless
-                  v-model="i.content"
-                  filled
-                  clearable
-                  color="red-12"
-                  type="textarea"
-                  label="digite a sua nota aqui"
-                  size="2px"
-                />
-                <div class="textarea-color"></div>
-              </div>
-              <div class="textarea-rodape">
-                <strong>
-                  <span class="rodape-titulo"><input type="text" v-model="i.title"/></span>
-                </strong>
-                <br><span>{{ i.created_at }}</span>
-              </div>
+  <q-page
+    padding
+    class="row justify-center q-gutter-sm"
+  >
+    <div class="col-6 col-xs-12 col-md-6 col-lg-6 col-xl-6">
+      <q-input
+      class="q-mt-md"
+        outlined
+        rounded
+        bottom-slots
+        v-model="text"
+        placeholder="Pesquise uma nota"
+        dense
+        @update:model-value="searchNote()"
+      >
+        <template v-slot:append>
+          <q-icon
+            v-if="text !== ''"
+            name="close"
+            @click="text = ''"
+            class="cursor-pointer"
+          />
+          <q-icon name="search" />
+        </template>
+      </q-input>
+      <div class="q-row">
+        <div v-for="(i, index) in notas" :key="index">
+          <br />
+          <div class="q-pa-md">
+            <div>
+              <q-input
+                borderless
+                v-model="i.content"
+                filled
+                clearable
+                color="red-12"
+                type="textarea"
+                label="Nota"
+                @blur="updateNote(i)"
+              />
+              <div class="textarea-color"></div>
+            </div>
+            <div class="q-mt-sm textarea-rodape">
+              <strong class="row full-width">
+                <span class="col-8 rodape-titulo">
+                  <q-input
+                    outlined
+                    dense
+                    v-model="i.title"
+                    @blur="updateNote(i)"
+                    type="text"
+                  />
+                </span>
+                <q-btn
+                  class="col-1"
+                  flat
+                  round
+                  icon="delete"
+                  color="red-5"
+                  dense
+                  @click="removeNote(index, i.id)"
+                >
+                </q-btn>
+              </strong>
+              <br /><span v-if="i.created_at">
+                {{
+                  new Date(i.created_at).toLocaleString("pt-BR", { timeZone: "UTC" })
+                }}</span
+              >
             </div>
           </div>
         </div>
-        <q-btn
-            @click="add"
-            fab
-            color="green"
-            icon="add"
-            class="flax absolute-down"
-        /> <br>
-        <q-spinner
-          v-if="loading"
-          size="xl"
-          color="primary"
-        />
       </div>
-    </q-page>
+      <q-page-sticky position="bottom-left" :offset="[320, 18]">
+        <q-btn
+          @click="addDataBase"
+          fab
+          color="green"
+          icon="add"
+          class="flax absolute-down"
+        />
+      </q-page-sticky>
+      <br />
+      <q-inner-loading :showing="loading" color="primary" />
+    </div>
+  </q-page>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { useQuasar } from "quasar";
+import { getNote } from "src/store/note/actions";
+import { defineComponent, ref, onMounted } from "vue";
 // import TextArea from 'components/TextArea.vue';
-import useApi from '../../composebles/useApi';
-import useAuthUser from '../../composebles/useAuthUser';
+import useApi from "../../composebles/useApi";
+import useAuthUser from "../../composebles/useAuthUser";
 
 export default defineComponent({
-  name: 'NotePage',
+  name: "NotePage",
   setup() {
-    const loading = ref(true);
-
-    const cont = ref(1);
+    const loading = ref(false);
 
     const { user } = useAuthUser();
 
     const notas = ref([]);
 
     const form = ref({
-      content: '', title: '', date: null, user_id: user.value.id,
+      content: "",
+      title: "",
+      date: null,
+      user_id: user.value.id,
     });
 
-    const { post, list, update } = useApi();
+    const { post, getByField, update, remove } = useApi();
+    const $q = useQuasar();
 
-    const addDataBase = async () => {
+    const updateNote = async (note) => {
       try {
-        loading.value = true;
-        // alert(JSON.stringify(notas.value));
-        notas.value = await list('notas');
-        await update('notas', notas);
-        // notas.value = aux.map((elem) => elem);
-        loading.value = false;
+        await update("notas", note);
+
+        $q.notify({
+          type: "positive",
+          message: `${note.title} atualizada`,
+        });
       } catch (error) {
-        loading.value = false;
+        alert(error.message);
       }
     };
 
-    const add = async () => {
-      cont.value += 1;
-      await post('notas', form.value);
-      alert(JSON.stringify(form.value));
-      alert(JSON.stringify(notas.value));
-      await update('notas', notas.value);
-      // notas.value = await list('notas');
+    const addDataBase = async () => {
+      try {
+        const note = await post("notas", {
+          title: "Título da nota",
+          content: "Conteúdo",
+          user_id: user.value.id,
+        });
+
+   $q.notify({
+          type: "positive",
+          message: "Nota criada com sucesso!!",
+        });
+        notas.value.push(note[0]);
+
+     
+      } catch (error) {
+        alert(error.message);
+      }
+
+      lastNotes.value = [...notas.value];
     };
-    onMounted(async () => {
-      await addDataBase();
-      // await add();
+
+    const removeNote = async (index, id) => {
+      if (id) {
+        const isOk = confirm("Deseja realmente apagar essa nota?");
+
+        if (isOk) {
+          await remove("notas", id);
+          $q.notify({
+            type: "warning",
+            message: "Nota elimana com sucesso!!",
+          });
+          notas.value.splice(index, 1);
+        }
+      } else {
+        notas.value.splice(index, 1);
+      }
+      lastNotes.value = [...notas.value];
+    };
+
+    const text = ref("");
+
+    const lastNotes = ref([]);
+
+    const searchNote = () => {
+      if (!text.value.trim().length) {
+        notas.value = [...lastNotes.value];
+      } else {
+        const result = notas.value.filter((note) => {
+          const searchNoteTitle = note.title.trim().toLowerCase();
+          const searchNoteContent = note.content.trim().toLowerCase();
+          const textSearch = text.value.trim().toLowerCase();
+          return (
+            searchNoteTitle.includes(textSearch) || searchNoteContent.includes(textSearch)
+          );
+        });
+        notas.value = [...result];
+      }
+    };
+
+    const getNoteByUser = async () => {
+      try {
+         loading.value=true
+          notas.value = await getByField("notas", 'user_id', user.value.id);
+      } catch (error) {
+        alert(error.message)
+      } finally {
+      loading.value=false
+
+      }
+    }
+    onMounted(() => {
+      
+      getNoteByUser()
+
     });
+
     return {
+      updateNote,
+      searchNote,
+      removeNote,
+      addDataBase,
+      text,
       loading,
-      text: ref(''),
-      cont,
-      add,
       notas,
       color: {
         type: String,
-        default: 'red',
+        default: "red",
       },
     };
   },

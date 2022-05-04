@@ -1,14 +1,14 @@
 <template>
   <div>
-    <q-header elevated>
+    <q-header class="bg-primary" elevated>
       <q-toolbar>
         <q-toolbar-title class="text-center">
           Boas Vindas!
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <q-page class="flex flex-center container">
-        <div class="column explore">
+    <q-page padding class="row justify-center q-gutter-sm" :class="{'items-center': $q.screen.width > 599}">
+        <div class="explore" :class="{'col-4': $q.screen.width > 599}">
           <p>Aqui é onde você irá cadastrar a sua conte. É bem rápido.
           Para começar, informe para a gente os seus dados pessoais</p>
           <q-form @submit="nextStep">
@@ -45,8 +45,10 @@
                 type="text"
                 label="CPF"
                 lazy-rules
+                mask="###########"
                 :rules="[
-                  val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                  val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                  val => TestaCPF(val) || 'CPF inválido'
                 ]"
               />
               <div>
@@ -68,7 +70,7 @@
                 label="Nacionalidade"
               />
             <div class="login-btn-area">
-              <div class="row">
+              <div class="row q-mt-md">
                 <q-btn
                 label="próximo passo" rounded color="primary"
                 type="submit"
@@ -144,7 +146,32 @@ export default defineComponent({
       store.commit('user/setFormOne', formData);
       router.push('/second');
     };
+    
+    function TestaCPF(strCPF) {
+      var Soma;
+      var Resto;
+      Soma = 0;
+      if (strCPF == "00000000000") return false;
+
+      for (let i = 1; i <= 9; i++)
+        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+      Resto = (Soma * 10) % 11;
+
+      if (Resto == 10 || Resto == 11) Resto = 0;
+      if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+
+      Soma = 0;
+      for (let i = 1; i <= 10; i++)
+        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+      Resto = (Soma * 10) % 11;
+
+      if (Resto == 10 || Resto == 11) Resto = 0;
+      if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+      return true;
+    }
+
     return {
+      TestaCPF,
       formData,
       options,
       tipo,
@@ -155,39 +182,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .q-header {
-    background-color: #0053ab;
-  }
-  .explore {
-    width: 80vw;
-  }
-  .login-content {
-    margin-top: 40px;
-    margin-bottom: auto;
-    height: 100%;
-  }
-
-  .login-cab {
-    padding: 0 10px;
-    margin-bottom: 30px;
-  }
-
-  .login-title {
-    font-weight: bold;
-    margin: 0;
-    padding: 0;
-  }
-
-  .login-text-area .q-field {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  .login-btn-area {
-    margin-top: 40px;
-  }
-
-  .login-content .q-btn {
-    margin: 5px 0;
-  }
 </style>

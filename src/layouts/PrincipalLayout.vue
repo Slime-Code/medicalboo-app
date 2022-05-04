@@ -14,7 +14,7 @@
           </q-badge>
         </q-btn>
 
-        <q-toolbar-title>{{ user.user_metadata.name }}</q-toolbar-title>
+        <q-toolbar-title v-if="user">{{ user.user_metadata.name }}</q-toolbar-title>
         <q-space />
         <q-btn
           no-caps
@@ -191,7 +191,7 @@ export default defineComponent({
     font-size: .6em
 .q-header
   width: 100vw
-  height: 229px
+  height: 209px
   z-index: 1
   background: url('../../public/img/BG-1.png') 0% 5% no-repeat padding-box
   background-color: #0053ab

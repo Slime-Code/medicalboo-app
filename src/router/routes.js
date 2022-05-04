@@ -80,14 +80,16 @@ const routes = [
     path: '/admin',
     component: () => import('src/layouts/AdminLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/admins/DashboardPage.vue') },
+      { path: '', name: 'inicio', component: () => import('src/pages/admins/DashboardPage.vue') },
+      { path: 'painel', name: 'painel', component: () => import('src/pages/admins/DashboardPage.vue') },
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
       { path: '/admin/users', name: 'users', component: () => import('src/pages/admins/user/UsersListPage.vue') },
-      { path: '/admin/colaboradores', name: 'colaboradores', component: () => import('src/pages/admins/user/ColaboradoresListPage.vue') },
+      { path: '/admin/colaboradores', name: 'admin', component: () => import('src/pages/admins/user/UserAdminListPage.vue') },
       { path: '/admin/tipos-De-Abordagens', name: 'tipos-De-Abordagens', component: () => import('src/pages/admins/approach-type/TiposDeAbordagensListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
+      { path: '/sobreApp', name: 'sobreApp', component: () => import('src/pages/admins/SobreAppPage.vue') },
     ],
     meta: {
       requaresAuth: true,

@@ -36,7 +36,7 @@ export default function useAuthUser () {
             { email, password },
             {
                 data: meta,
-                redirectTo: 'https://maniacal-fairies.surge.sh/home?fromEmail=registrationConfirmation'
+                redirectTo: `${window.location.origin}/login`
             }
         )
         if (error) throw error

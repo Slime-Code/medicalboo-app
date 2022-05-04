@@ -124,7 +124,7 @@ export default defineComponent({
     const $q = useQuasar();
 
     const {
-      list, post, update, remove,
+      list, post, update, remove, getByField,
     } = useApi();
 
     const rows = ref([]);
@@ -146,18 +146,44 @@ export default defineComponent({
         loading.value = true;
         rows.value = await list('topic');
         const auxCategory = await list('categoria');
+        loading.value = false;
         optionsCategory.value = auxCategory.map((item) => ({
           label: item.name,
           id: item.id,
         }));
-        loading.value = false;
       } catch (error) {
+        loading.value = false;
         alert(error);
       }
     };
     const deleteItem = async (id) => {
       try {
         loading.value = true;
+        const approachId = await getByField('approach', 'topic_id', id);
+        approachId.forEach(async (elem) => {
+          const exameId = await getByField('exameComplementar', 'approach_id', elem.id);
+          exameId.forEach(async (ment) => {
+            await remove('exameComplementar', ment.id);
+          });
+          const definicaoId = await getByField('definicao', 'approach_id', elem.id);
+          definicaoId.forEach(async (ment) => {
+            await remove('definicao', ment.id);
+          });
+          const contenteId = await getByField('approach_contents', 'id_approach', elem.id);
+          contenteId.forEach(async (ment) => {
+            await remove('approach_contents', ment.id);
+          });
+          const favritoId = await getByField('favorite_approach_user', 'approach_id', elem.id);
+          favritoId.forEach(async (ment) => {
+            await remove('favorite_approach_user', ment.id);
+          });
+
+          await remove('approach', elem.id);
+        });
+        const idAcessTopicUser = await getByField('access_topic_user', 'topic_id', id);
+        idAcessTopicUser.forEach(async (element) => {
+          await remove('access_topic_user', element.id);
+        });
         await remove('topic', id);
         listAll();
         loading.value = false;
@@ -187,8 +213,8 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      listAll();
+    onMounted(async () => {
+      await listAll();
     });
 
     const onItemClick = async () => {

@@ -31,6 +31,11 @@ export default route((/* { store, ssrContext } */) => {
 
   // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
+
+
+    if (to.fullPath === '/admin') {
+      return {name: 'login', query:{access: 'admin'}}
+    }
     const { user } = useAuthUser();
     if (
       to.hash.includes('type=recovery')

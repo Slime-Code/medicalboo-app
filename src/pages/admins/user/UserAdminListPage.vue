@@ -32,7 +32,7 @@
           title="Lista de Usuários"
           :rows="rows"
           :columns="columns"
-          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'perfil', 'options']"
+          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'perfil', 'email', 'telefone', 'options']"
           row-key="title"
           separator="cell"
         >
@@ -50,17 +50,14 @@
               <q-td key="nacionalidade" :props="props">
                   {{ props.row.nacionalidade }}
               </q-td>
-              <q-td key="ano-de-graduacao" :props="props">
-                  {{ props.row.ano_de_graduacao }}
-              </q-td>
-              <q-td key="area-de-ocupacao" :props="props">
-                  {{ props.row.area_de_ocupacao }}
-              </q-td>
-              <q-td key="data-cadastro" :props="props">
-                  {{ props.row.created_at }}
-              </q-td>
               <q-td key="perfil" :props="props">
                 <p>Admin</p>
+              </q-td>
+              <q-td key="email" :props="props">
+                  {{ props.row.email }}
+              </q-td>
+              <q-td key="telefone" :props="props">
+                  {{ props.row.phone }}
               </q-td>
               <q-td key="options" class="text-right" :props="props">
                 <q-btn flat square icon="edit" @click="newDialog(props.row)" dense/>
@@ -78,19 +75,17 @@
       <q-card class="full-width">
         <q-form @submit="saveItem">
           <q-card-section class="q-py-sm">
-            <div class="text-h6">Novo Usuário</div>
+            <div class="text-h6">Novo Usuário Admin</div>
           </q-card-section>
           <q-separator />
 
           <q-card-section class="scroll" style="max-height: 77vh">
             <div class="q-pa-md">
-              <div class="q-gutter-md row items-start">
+              <div class="q-gutter-md colum">
                 <q-input
                   class="col"
-                  style="min-width: 250px"
                   dense
                   v-model="formUser.name"
-                  rounded
                   outlined
                   type="text"
                   label="Nome completo"
@@ -101,10 +96,8 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 120px"
                   dense
                   v-model="formUser.birthday"
-                  rounded
                   outlined
                   type="date"
                   label="Data de nascimento"
@@ -116,12 +109,9 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 250px"
                   dense
                   v-model="formUser.cpf"
-                  rounded
                   outlined
-                  type="text"
                   label="CPF"
                   lazy-rules
                   :rules="[
@@ -130,9 +120,7 @@
                 />
                 <q-select
                   class="col"
-                  style="min-width: 230px"
                   dense
-                  rounded
                   outlined
                   v-model="formUser.nationality"
                   :options="options"
@@ -142,11 +130,10 @@
                 <q-separator />
 
                 <q-input
-                  style="min-width: 30%"
+
                   class="col"
                   dense
                   v-model="formUser.email"
-                  rounded
                   outlined
                   type="email"
                   label="Email"
@@ -156,11 +143,10 @@
                   ]"
                 />
                 <q-input
-                  style="min-width: 50%"
+
                   dense
                   class="col"
                   v-model="formUser.confirm_email"
-                  rounded
                   outlined
                   type="email"
                   label="Confirme o email"
@@ -171,11 +157,10 @@
                   ]"
                 />
                 <q-input
-                  style="min-width: 30%; max-width: 50%"
+
                   class="col"
                   dense
                   v-model="formUser.password"
-                  rounded
                   outlined
                   type="password"
                   label="Senha"
@@ -186,10 +171,9 @@
                 />
                 <q-input
                   class="col"
-                  style="min-width: 50%; max-width: 50%"
+
                   dense
                   v-model="formUser.confirm_password"
-                  rounded
                   outlined
                   type="password"
                   label="Confirme a senha"
@@ -199,31 +183,21 @@
                     val => val.trim() === formUser.password.trim() || 'Senha não correspondente'
                   ]"
                 />
+                <q-input
+                  class="col"
+                  dense
+                  v-model="formUser.phone"
+                  outlined
+                  label="Telefone"
+                  mask="(##) #### - ####"
+                  hint="Mask: (##) #### - ####"
+                  lazy-rules
+                  :rules="[
+                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
+                  ]"
+                />
 
                 <q-separator />
-
-                <q-select
-                style="min-width: 30%; max-width: 50%"
-                dense
-                rounded
-                outlined
-                :loading='loading'
-                v-model="formUser.occupation_area"
-                :options="options2"
-                label="Área de actuação"
-                class="col"
-                />
-                <q-select
-                  style="min-width: 50%; max-width: 50%"
-                  :loading='loading'
-                  dense
-                  rounded
-                  outlined
-                  v-model="formUser.graduation_year"
-                  :options="options1"
-                  label="Ano de formatura"
-                  class="col"
-                /> <br>
 
                 <q-card-actions align="right">
                   <q-btn
@@ -247,7 +221,7 @@
     </q-dialog>
 
     <q-inner-loading
-      :showing="loading"
+      v-if="loading"
       label="Atualizando..."
       label-class="text-primary"
       color="primary"
@@ -260,7 +234,7 @@
 /* eslint-disable no-plusplus */
 import {
   showErrorNotification,
-  // showSuccessNotification,
+  showSuccessNotification,
 } from 'src/functions/functionShowNotifications';
 import {
   defineComponent, onMounted, reactive, ref,
@@ -304,34 +278,26 @@ const columns = [
   },
 
   {
-    name: 'ano-de-graduacao',
-    align: 'left',
-    label: 'Ano de Graduação',
-    field: 'ano-de-graduacao',
-    sortable: true,
-  },
-
-  {
-    name: 'area-de-ocupacao',
-    align: 'left',
-    label: 'Área de Ocupação',
-    field: 'area-de-ocupacao',
-    sortable: true,
-  },
-
-  {
-    name: 'data-cadastro',
-    align: 'left',
-    label: 'Cadastrado Aos',
-    field: 'data',
-    sortable: true,
-  },
-
-  {
     name: 'perfil',
     align: 'left',
     label: 'Perfil',
     field: 'perfil',
+    sortable: true,
+  },
+
+  {
+    name: 'email',
+    align: 'left',
+    label: 'E-mail',
+    field: 'E-mail',
+    sortable: true,
+  },
+
+  {
+    name: 'telefone',
+    align: 'left',
+    label: 'Telefone',
+    field: 'telefone',
     sortable: true,
   },
 
@@ -342,16 +308,17 @@ const columns = [
 ];
 
 export default defineComponent({
-
   setup() {
     const loading = ref(true);
     const $q = useQuasar();
+
+    const dialogUser = ref(false);
 
     const {
       list, post, update, remove,
     } = useApi();
 
-    const { user, register } = useAuthUser;
+    const { user, register } = useAuthUser();
 
     const rows = ref([]);
 
@@ -372,12 +339,10 @@ export default defineComponent({
       password: '',
       confirm_email: '',
       confirm_password: '',
-      occupation_area: '',
-      graduation_year: '',
-      user_id: '',
+      user_id: null,
+      phone: null,
+      premium: true,
     });
-
-    const dialogUser = ref(false);
 
     const options = ref([]);
 
@@ -400,6 +365,8 @@ export default defineComponent({
       users.value = await list('users');
     };
 
+
+
     const listAll = async () => {
       try {
         loading.value = true;
@@ -410,13 +377,10 @@ export default defineComponent({
           data: item.birthday,
           cpf: item.cpf,
           perfil: item.profile_type_id,
-          area_de_ocupacao: item.occupation_area,
-          ano_de_graduacao: item.graduation_year,
           email: item.email,
-          created_at: item.created_at,
-          password: item.password,
           nacionalidade: item.nationality,
           user_id: item.user_id,
+          phone: item.phone,
         }));
         // filtrar todos os Admins -------------------------------
         for (let index = 0; index < rows.value.length; index++) {
@@ -431,6 +395,7 @@ export default defineComponent({
         alert(JSON.stringify(error));
       }
     };
+
     const deleteItem = async (id) => {
       try {
         loading.value = true;
@@ -447,29 +412,25 @@ export default defineComponent({
       try {
         loading.value = true;
         if (!formUser.user_id) {
-          // delete formUser.value.id;
-          formUser.profile_type_id = 3;
-          delete formUser.user_id;
-          alert(JSON.stringify(formUser));
           const use = await register(formUser);
-          alert(use);
+          showSuccessNotification('Dados Cadastrados Com Sucesso!');
           formUser.user_id = use.id;
-          alert(JSON.stringify(formUser.user_id));
           delete formUser.confirm_email;
           delete formUser.confirm_password;
 
           await post('perfil', formUser);
         } else {
-          alert('atualizar');
+          delete formUser.confirm_email;
+          delete formUser.confirm_password;
           await update('perfil', formUser);
         }
         listAll();
+        showSuccessNotification('Dados Cadastrados Com Sucesso!');
         loading.value = false;
         dialogUser.value = false;
       } catch (error) {
         loading.value = false;
-        // dialogUser.value = false;
-        alert(error);
+        dialogUser.value = false;
         showErrorNotification(`houve uma falha ao carregar os dados para o banco: ${error}`);
       }
     };
@@ -480,7 +441,7 @@ export default defineComponent({
         options.value = aux.map((elem) => elem.name);
         loading.value = false;
       } catch (error) {
-        alert(error);
+        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${error}`);
       }
     };
 
@@ -497,36 +458,23 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      listOcupation();
-      listTopicsAproachs();
-      listAll();
-      getAllUsers();
-    });
-
-    const onItemClick = async () => {
-
-    };
-
     const newDialog = (data) => {
       if (data) {
         Object.keys(data).forEach((key) => {
           formData[key] = data[key];
         });
-        formUser.id = data.id;
+        // formUser.id = data.id;
         formUser.name = data.name;
         formUser.birthday = data.data;
         formUser.cpf = data.cpf;
-        formUser.graduation_year = data.ano_de_graduacao;
         formUser.nationality = data.nacionalidade;
         formUser.profile_type_id = 3;
         formUser.email = data.email;
         formUser.password = data.password;
-        formUser.occupation_area = data.area_de_ocupacao;
         formUser.confirm_email = data.email;
         formUser.confirm_password = data.password;
         formUser.user_id = data.user_id;
-        formUser.created_at = data.created_at;
+        // formUser.created_at = data.created_at;
       } else {
         formData.name = '';
         formUser.name = '';
@@ -536,7 +484,6 @@ export default defineComponent({
         formUser.nationality = '';
         formUser.email = '';
         formUser.password = '';
-        formUser.occupation_area = '';
         formUser.confirm_email = '';
         formUser.confirm_password = '';
         formUser.user_id = '';
@@ -560,7 +507,14 @@ export default defineComponent({
         .onDismiss(() => {
         // console.log('I am triggered on both OK and Cancel')
         });
-    }
+    };
+
+    onMounted(() => {
+      listOcupation();
+      listTopicsAproachs();
+      listAll();
+      getAllUsers();
+    });
 
     return {
       user,
@@ -576,7 +530,7 @@ export default defineComponent({
       deleteItem,
       dialogUser,
       saveItem,
-      onItemClick,
+      // onItemClick,
       columns,
       rows,
       listAll,
