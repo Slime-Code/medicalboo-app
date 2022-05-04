@@ -37,7 +37,6 @@
 </template>
 
 <script>
-
 import { defineComponent, onMounted, ref } from 'vue';
 import useApi from '../../composebles/useApi';
 import CardDashboard from '../../components/CardDashboard.vue';
@@ -93,7 +92,7 @@ export default defineComponent({
 
       contCategoria.value = categorias.length;
 
-      // Total De Usuários Premiums e Normais..................................................
+      // Total De Usuários Premiums e Normais.....................................................
 
       contes.forEach((element) => {
         if (element.premium) {
