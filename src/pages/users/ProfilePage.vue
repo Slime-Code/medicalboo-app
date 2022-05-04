@@ -98,6 +98,7 @@
               label="Sobre o app"
               icon-right="eva-arrow-ios-forward-outline"
               class="btn-opcao"
+              to="/about-app"
             />
             <q-btn
               @click="handleLogout"
