@@ -27,7 +27,7 @@ export default defineComponent({
 
     percentagem: {
       type: Number,
-      default: 1,
+      default: 0,
     },
 
     icon: {
@@ -37,7 +37,7 @@ export default defineComponent({
 
     quantidade: {
       type: Number,
-      default: 1,
+      default: 0,
     },
   },
 });
@@ -50,7 +50,7 @@ export default defineComponent({
     width: 90%;
     margin: 0 auto;
     margin-bottom: 10px;
-    background-color: #0053ab;
+    background-color: #E8B50F;
     color:white;
     padding: 0 10px;
     border-radius: 10px;

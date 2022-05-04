@@ -1,14 +1,10 @@
 <template>
     <div style="margin-top: 20px; min-width: 100px" class="my_card">
       <div class="content_person top">
-        <h6>{{ titulo }}</h6>
-        <p class="percentagem"
-        style="margin:auto 0;">
-          <i class="fa fa-arrow-up"></i> {{ percentagem}}%
-        </p>
+        <h6>Artigos Cadastrados Em {{ titulo }} Categorias</h6>
       </div>
       <div class="content_person footer">
-        <i :class="icon"></i>
+        <i :class="icon"><q-icon name="receipt"/></i>
         <p class="qtd">{{ quantidade }}</p>
       </div>
     </div>
@@ -21,8 +17,8 @@ export default defineComponent({
   name: 'CardDashboard',
   props: {
     titulo: {
-      type: String,
-      default: 'Clientes',
+      type: Number,
+      default: 0,
     },
 
     percentagem: {
@@ -32,7 +28,7 @@ export default defineComponent({
 
     icon: {
       type: String,
-      default: 'fa fa-users',
+      default: 'folder',
     },
 
     quantidade: {
@@ -50,7 +46,7 @@ export default defineComponent({
     width: 90%;
     margin: 0 auto;
     margin-bottom: 10px;
-    background-color: #0053ab;
+    background-color: #DC3545;
     color:white;
     padding: 0 10px;
     border-radius: 10px;

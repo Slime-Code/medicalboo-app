@@ -13,9 +13,9 @@
             class="q-mx-md"
           />
 
-          <q-btn  :to='{ name: "inicio" }' flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
+          <q-btn  :to='{ name: "painel" }' flat dense color="grey-8" no-caps label="Início" class="q-ml-sm q-px-md"/>
 
-          <q-btn flat dense color="grey-8" no-caps label="Suporte" class="q-ml-sm q-px-md" />
+          <q-btn :to='{ name: "sobreApp" }' flat dense color="grey-8" no-caps label="Suporte" class="q-ml-sm q-px-md" />
 
           <q-space/>
 
