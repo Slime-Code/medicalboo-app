@@ -1,19 +1,19 @@
 <template>
   <q-page padding class="constrain-2">
     <div class="text-h5 q-pa-sm">Explorar</div>
-      <q-input
-          class="full-width"
-          outlined
-          rounded
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Pesquise uma abordagem"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+    <q-input
+      class="full-width"
+      outlined
+      rounded
+      dense
+      debounce="300"
+      v-model="filter"
+      placeholder="Pesquise uma abordagem"
+    >
+      <template v-slot:append>
+        <q-icon name="search" />
+      </template>
+    </q-input>
     <q-table
       :rows="rows"
       :columns="columns"
@@ -28,8 +28,10 @@
       grid
       @row-click="go"
       separator="cell"
+      :pagination="{
+        rowsPerPage: 40
+      }"
     >
-    
       <template v-slot:no-data="{ icon, message, filter }">
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied" />

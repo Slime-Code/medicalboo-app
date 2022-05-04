@@ -3,19 +3,17 @@
     <div class="column">
       <div class="col">
         <div class="text-h5 q-pa-md">Lista de favoritos</div>
-
-        <div
-          class="row justify-center"
-        >
-          <ApproachButtom
-           class="col-5 col-sm-5 col-md-5 col-lg-4 col-xs-12"
-            v-for="(option, index) in top"
-            :title="option"
-            :key="index"
-          />
-        </div>
       </div>
-      <br /><br />
+      <div
+        class="col row q-col-gutter-sm"
+      >
+        <ApproachButtom
+          class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-12"
+          v-for="(option, index) in top"
+          :title="option"
+          :key="index"
+        />
+      </div>
       <q-spinner v-if="loading" class="absolute-center" size="xl" color="primary" />
     </div>
 
