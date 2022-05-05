@@ -68,43 +68,10 @@
       </q-tab-panels>
 
       <q-space vertical> </q-space>
-      <q-toolbar-title v-if="!loadingTopic" class="text-caption q-pa-sm">
-        Outras versões Medicalbook
-      </q-toolbar-title>
-      <q-card
-        flat
-        bordered
-        v-if="!loadingTopic"
-        class="q-mb-md row justify-center items-start"
-      >
-        <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'prime' }">
-              <img class="full-width" src="img/banner-premium.png" style="height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
-              <img src="img/Grátis@2x.png" style="width: 100%; height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
-              <img src="img/Grátis-2.png" style="width: 100%; height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-      </q-card>
+      <div v-if="!loadingTopic">
+        <Banner />
+      </div>
+      
     </div>
 
     <q-inner-loading
@@ -121,12 +88,14 @@
 import { showErrorNotification } from "src/functions/functionShowNotifications";
 import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import Banner from "../../components/Banner.vue"
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
 import useApi from "../../composebles/useApi";
 
 export default defineComponent({
   name: "MainPage",
+  components:{ Banner},
   setup() {
     const { list, getByField } = useApi();
 

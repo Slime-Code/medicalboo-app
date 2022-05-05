@@ -89,6 +89,7 @@
               label="Suporte"
               icon-right="eva-arrow-ios-forward-outline"
               class="btn-opcao"
+              @click="goToWhats"
             />
             <q-btn
               align="left"
@@ -98,6 +99,7 @@
               label="Sobre o app"
               icon-right="eva-arrow-ios-forward-outline"
               class="btn-opcao"
+              to="/about-app"
             />
             <q-btn
               @click="handleLogout"
@@ -181,7 +183,7 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const { post, getByField, update } = useApi();
+    const { post, getByField, update, list } = useApi();
 
     const route = useRoute();
 
@@ -329,8 +331,19 @@ export default defineComponent({
     };
     onMounted(async () => {
       listTable();
+      loadInfo()
     });
 
+    const aboutApp = ref({
+      title: "",
+      conteudo: ""
+    })
+
+    async function loadInfo() {
+      const data = await list('sobreApp')
+      aboutApp.value = data[0]
+    }
+    
     function show(grid) {
       $q.bottomSheet({
         message: "Convidar seus amigos",
@@ -388,11 +401,16 @@ export default defineComponent({
           // console.log('Dismissed')
         })
         .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
+          // console.log('I am triggered on both OK andtitle Cancel')
         });
     }
 
+    function goToWhats() {
+      const title = '5541999960483'
+      window.open(`https://api.whatsapp.com/send?phone=${aboutApp.value.title}&text=&source=&data=&app_absent=`)
+    }
     return {
+      goToWhats,
       show,
       porcento: "%",
       user,

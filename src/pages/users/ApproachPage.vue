@@ -13,7 +13,7 @@
             {{ type.type_approach }}
 
             <q-list
-              class="row q-py-md justify-start q-gutter-y-sm"
+              class="row q-py-md justify-start q-col-gutter-sm"
              
             >
               <div
@@ -21,7 +21,7 @@
                   (ap) => type.id === ap.type_approach_id
                 )"
                 :key="approach.id"
-                class="col-sm-6 col-xs-12 col-lg-6 col-md-6 col-xl-2"
+                class="col-sm-6 col-xs-12 col-lg-6 col-md-6"
               >
                 <ApproachButtom
                   class="rounded-borders full-width"
