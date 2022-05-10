@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import useSupabase from 'boot/supabase';
 // import useAuthUser from './useAuthUser';
 import { v4 as uuidv4 } from 'uuid';

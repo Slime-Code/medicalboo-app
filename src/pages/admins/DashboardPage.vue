@@ -243,16 +243,16 @@ export default defineComponent({
 
       const notAdmin = (await getNotByField("perfil", "profile_type_id", 3)).length;
 
-      pieAdmin.series[1] = notAdmin
+      // pieAdmin.series[1] = notAdmin
       pieAdmin.series[1] = notAdmin
       pieAdmin.series[0] = (await getByField("perfil", "profile_type_id", 3)).length
       cards.users.qtd = notAdmin
 
-      pieUsers.series[0] = (await getNotByField("perfil", "premium", true)).length;
-      pieUsers.series[1] = (await getNotByField("perfil", "premium", false)).length;
+      pieUsers.series[1] = (await getNotByField("perfil", "premium", true)).length;
+      pieUsers.series[0] = (await getNotByField("perfil", "premium", false)).length;
 
-      pieContents.series[0] = (await getNotByField("approach", "premium", true)).length;
-      pieContents.series[1] = (await getNotByField("approach", "premium", false)).length;
+      pieContents.series[1] = (await getNotByField("approach", "premium", true)).length;
+      pieContents.series[0] = (await getNotByField("approach", "premium", false)).length;
       const currentDate = new Date(Date.now());
 
       const date = `${currentDate.getFullYear()}/${

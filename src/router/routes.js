@@ -83,6 +83,7 @@ const routes = [
     children: [
       { path: '', name: 'inicio', component: () => import('src/pages/admins/DashboardPage.vue') },
       { path: 'painel', name: 'painel', component: () => import('src/pages/admins/DashboardPage.vue') },
+      { path: '/galeria', name: 'galeria', component: () => import('src/pages/admins/GaleriaPage.vue') },
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },
@@ -91,6 +92,7 @@ const routes = [
       { path: '/admin/tipos-De-Abordagens', name: 'tipos-De-Abordagens', component: () => import('src/pages/admins/approach-type/TiposDeAbordagensListPage.vue') },
       { path: '/admin/occupation-areas', name: 'occupation-areas', component: () => import('src/pages/admins/occupation-area/OccupationAreasListPage.vue') },
       { path: '/sobreApp', name: 'sobreApp', component: () => import('src/pages/admins/SobreAppPage.vue') },
+      { path: '/perfil', name: 'perfil', component: () => import('src/pages/admins/PerfilPage.vue') },
     ],
     meta: {
       requaresAuth: true,

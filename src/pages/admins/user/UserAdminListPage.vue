@@ -76,7 +76,7 @@
       <q-card class="full-width">
         <q-form @submit="saveItem">
           <q-card-section class="q-py-sm">
-            <div class="text-h6">Novo Usuário Admin</div>
+            <div class="text-h6">Usuário Admin</div>
           </q-card-section>
           <q-separator />
 
@@ -191,11 +191,10 @@
                   v-model="formUser.phone"
                   outlined
                   label="Telefone"
-                  mask="(##) #### - ####"
+                  mask="(##) #########"
                   lazy-rules
                   :rules="[
                     (val) => !!val || 'Campo não pode estar vazio',
-                    (val) => val.length < 10 || 'Deve conter 10 digitos',
                   ]"
                 />
 
@@ -245,7 +244,7 @@ import {
   showSuccessNotification,
 } from "src/functions/functionShowNotifications";
 import { defineComponent, onMounted, reactive, ref } from "vue";
-import { useQuasar } from "quasar";
+import { date, useQuasar } from "quasar";
 import useAuthUser from "src/composebles/useAuthUser";
 import useApi from "../../../composebles/useApi";
 
@@ -337,8 +336,9 @@ export default defineComponent({
     });
 
     const formUser = reactive({
+      id: null,
       name: "",
-      birthday: "",
+      birthday: date,
       cpf: "",
       nationality: "",
       profile_type_id: 3,
@@ -416,17 +416,22 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        if (!formUser.user_id) {
-          const use = await register(formUser);
+        alert(JSON.stringify(formUser))
+        if (!formUser.id) {
+          alert(formUser.id)
+          const aux = formUser;
+          delete aux.id;
+          const use = await register(aux);
           showSuccessNotification("Dados Cadastrados Com Sucesso!");
           formUser.user_id = use.id;
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-
+          alert('fuiiiiiiii')
           await post("perfil", formUser);
         } else {
           delete formUser.confirm_email;
           delete formUser.confirm_password;
+          alert('atualizar')
           await update("perfil", formUser);
         }
         listAll();
@@ -436,6 +441,7 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         dialogUser.value = false;
+        alert(error.message)
         showErrorNotification(
           `houve uma falha ao carregar os dados para o banco: ${error}`
         );
@@ -472,8 +478,9 @@ export default defineComponent({
         Object.keys(data).forEach((key) => {
           formData[key] = data[key];
         });
-        // formUser.id = data.id;
+        formUser.id = data.id;
         formUser.name = data.name;
+        formUser.phone = data.phone;
         formUser.birthday = data.data;
         formUser.cpf = data.cpf;
         formUser.nationality = data.nacionalidade;
@@ -485,17 +492,17 @@ export default defineComponent({
         formUser.user_id = data.user_id;
         // formUser.created_at = data.created_at;
       } else {
+        formUser.id = null;
         formData.name = "";
         formUser.name = "";
         formUser.birthday = "";
         formUser.cpf = "";
-        formUser.graduation_year = "";
         formUser.nationality = "";
         formUser.email = "";
         formUser.password = "";
         formUser.confirm_email = "";
         formUser.confirm_password = "";
-        formUser.user_id = "";
+        formUser.user_id = null;
       }
       dialogUser.value = true;
     };

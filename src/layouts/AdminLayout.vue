@@ -51,14 +51,12 @@
         <q-list>
           <div class="flex flex-center">
             <div class="column" align="center">
-              <div class="col item q-pt-lg">
-                  <q-btn style="background: #1A4B9A; color: #1378B3"
-                    round icon="fas fa-user"
-                    size="40px">
-                    <q-badge class="pic" style="background: #49D16B" rounded>
-                      <q-icon dense name="camera" color="white" size="30px"/>
-                    </q-badge>
-                  </q-btn>
+              <div to class="col item q-pt-lg">
+                <q-btn flat dense :to="{ name: 'perfil' }">
+                  <q-avatar size="80px">
+                    <img :src="img.img_url">
+                  </q-avatar>
+                </q-btn>
               </div>
             </div>
           </div>
@@ -162,6 +160,11 @@ const linksList = [
     icon: 'folder',
     link: '/admin/tipos-De-Abordagens',
   },
+  {
+    title: 'Galeria',
+    icon: 'photo',
+    link: '/admin/galeria/',
+  },
 ];
 
 import { ref, onMounted } from 'vue';
@@ -183,6 +186,7 @@ export default {
     const leftDrawerOpen = ref(false);
     const search = ref('');
     const storage = ref(0.26);
+    const img = ref({});
 
     const $q = useQuasar();
 
@@ -198,7 +202,7 @@ export default {
 
     const { logout, user } = useAuthUser();
 
-    const { list, update } = useApi();
+    const { list, update, getByField } = useApi();
 
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -224,9 +228,16 @@ export default {
     };
 
     const getValuePremium = async () => {
+      loading.value = true;
       const aux = await list('valorPremium');
       money.value = aux.map((e) => e.valor);
     };
+
+    const getImg = async () => {
+      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      img.value = auxImg[0];
+      loading.value = false;
+    }
 
     const updatValuePremium = async () => {
       form.valor = money.value;
@@ -234,6 +245,7 @@ export default {
     };
 
     onMounted(() => {
+      getImg();
       getValuePremium();
     });
 
@@ -250,6 +262,7 @@ export default {
       miniState: ref(true),
       handleLogout,
       money,
+      img,
     };
 
   },
