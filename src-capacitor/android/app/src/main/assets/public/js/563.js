@@ -43,6 +43,15 @@ function useApi() {
     return data;
   };
 
+  const getNotByField = async (table, field, value) => {
+    const {
+      data,
+      error
+    } = await supabase.from(table).select('*').neq(field, value);
+    if (error) throw error;
+    return data;
+  };
+
   const joinTables = async (origin, tables) => {
     const fields = tables.reduce((previousValue, currentValue, index) => {
       return `${previousValue.name}:${previousValue.foreign_key}(${previousValue.fields})` + ',' + `${currentValue.name}:${currentValue.foreign_key}(${currentValue.fields})`;
@@ -103,6 +112,7 @@ function useApi() {
 
   return {
     getByField,
+    getNotByField,
     list,
     getById,
     post,

@@ -12,14 +12,16 @@
           no-caps
           indicator-color="transparent"
         >
-          <q-tab
-            class="custom-border q-mx-xs"
-            v-for="(category, index) in categorys"
-            :key="index"
-            :name="category.name"
-            :label="category.name"
-            @click="getTopicByCategory(category.id)"
-          />
+          <div v-for="(category, index) in categorys" :key="index">
+            <q-tab
+              class="custom-border q-mx-xs"
+              :name="category.name"
+              :label="category.name"
+              @click="getTopicByCategory(category.id)"
+              v-if="category.premium === false || (category.premium && perfil)"
+            />
+          </div>
+
           <div>
             <q-spinner v-if="loadingCategory" color="primary" size="3em" />
           </div>
@@ -43,35 +45,35 @@
           :key="index"
           :name="category.name"
         >
-          <q-card
-            v-for="(topic, index) in topics"
-            :key="index"
-            style="background-color: #f6f6f6"
-            flat
-            bordered
-            class="q-my-sm col-sm-12 col-xs-12 col-md-4 col-lg-3"
-          >
-            <q-item clickable v-ripple @click="go(topic.id)">
-              <q-item-section side>
-                <q-avatar :color="color_icon" text-color="white" :icon="icon" />
-              </q-item-section>
+          <template v-for="(topic, index) in topics" :key="index">
+            <q-card
+              style="background-color: #f6f6f6"
+              flat
+              bordered
+              v-if="topic.premium === false || (topic.premium && perfil)"
+              class="q-my-sm col-sm-12 col-xs-12 col-md-4 col-lg-3"
+            >
+              <q-item clickable v-ripple @click="go(topic.id)">
+                <q-item-section side>
+                  <q-avatar :color="color_icon" text-color="white" :icon="icon" />
+                </q-item-section>
 
-              <q-item-section>
-                {{ topic.name }}
-              </q-item-section>
-            </q-item>
-          </q-card>
+                <q-item-section>
+                  {{ topic.name }}
+                </q-item-section>
+              </q-item>
+            </q-card>
+          </template>
+
           <span v-if="!topics.length && !loadingTopic" class="text-center text-body1">
             Nenhum tópico para esta categória
           </span>
         </q-tab-panel>
       </q-tab-panels>
 
-      <q-space vertical> </q-space>
       <div v-if="!loadingTopic">
         <Banner />
       </div>
-      
     </div>
 
     <q-inner-loading
@@ -85,19 +87,21 @@
 </template>
 
 <script>
+import useAuthUser from "src/composebles/useAuthUser";
 import { showErrorNotification } from "src/functions/functionShowNotifications";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import Banner from "../../components/Banner.vue"
+import Banner from "../../components/Banner.vue";
+
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
 import useApi from "../../composebles/useApi";
-
 export default defineComponent({
   name: "MainPage",
-  components:{ Banner},
+  components: { Banner },
   setup() {
     const { list, getByField } = useApi();
+    const { user } = useAuthUser();
 
     const router = useRouter();
 
@@ -135,7 +139,7 @@ export default defineComponent({
         categorys.value.sort();
         loadingCategory.value = false;
         // // eslint-disable-next-line prefer-destructuring
-        tab.value = categorys.value[0].name;
+        tab.value = categorys.value.find((c) => c.premium === false).name;
 
         await getTopicByCategory(categorys.value[0].id);
       } catch (error) {
@@ -157,14 +161,18 @@ export default defineComponent({
       chave: null,
       valo: null,
     });
+    const perfil = ref();
+
     const foi = async () => {
-      console.log(topicAcessado.value);
+      perfil.value = (await getByField("perfil", "user_id", user.value.id))[0].premium;
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+      foi();
       listTopics();
     });
     return {
+      perfil,
       go,
       getTopicByCategory,
       todos,
@@ -215,5 +223,4 @@ export default defineComponent({
   border: 0.5px solid #f2f2f2
 .q-link:hover
   border: 0.5px solid #e0e0e0
-
 </style>

@@ -6,8 +6,12 @@
         <q-toolbar-title class="text-center"> Dados de acesso </q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <q-page padding class="row justify-center q-gutter-sm" :class="{'items-center': $q.screen.width > 599}">
-      <div  :class="{'col-4': $q.screen.width > 599}">
+    <q-page
+      padding
+      class="row justify-center q-gutter-sm"
+      :class="{ 'items-center': $q.screen.width > 599 }"
+    >
+      <div :class="{ 'col-4': $q.screen.width > 599 }">
         <p>
           Aqui é onde você irá cadastrar a sua conte. É bem rápido. Para começar, informe
           para a gente os seus dados pessoais
@@ -22,7 +26,7 @@
             :options="options"
             label="Área de actuação"
             class="q-mb-md"
-            :rules="[val => !!val || 'Campo obrigatório']"
+            :rules="[(val) => !!val || 'Campo obrigatório']"
           />
           <q-select
             :loading="loading"
@@ -32,7 +36,7 @@
             v-model="formData.graduation_year"
             :options="options1"
             label="Ano de formatura"
-            :rules="[val => !!val || 'Campo obrigatório']"
+            :rules="[(val) => !!val || 'Campo obrigatório']"
           />
           <div class="login-btn-area">
             <div class="row">
@@ -68,21 +72,19 @@
 import {
   showErrorNotification,
   // showSuccessNotification,
-} from 'src/functions/functionShowNotifications';
-import {
-  defineComponent, reactive, ref, computed, onMounted,
-} from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import useAuthUser from 'src/composebles/useAuthUser';
-import useApi from '../../composebles/useApi';
-import { message } from '../../composebles/messageAPI';
+} from "src/functions/functionShowNotifications";
+import { defineComponent, reactive, ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
+import useAuthUser from "src/composebles/useAuthUser";
+import useApi from "../../composebles/useApi";
+import { message } from "../../composebles/messageAPI";
 // import user from '../../api/User';
 /* eslint-disable no-alert */
 
 export default defineComponent({
-  name: 'ThirdStepPage',
+  name: "ThirdStepPage",
 
   setup() {
     const { register } = useAuthUser();
@@ -99,11 +101,11 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const teste = computed(() => store.getters['user/getData']);
+    const teste = computed(() => store.getters["user/getData"]);
 
     const formData = reactive({
-      occupation_area: '',
-      graduation_year: '',
+      occupation_area: "",
+      graduation_year: "",
     });
 
     const options = ref([]);
@@ -112,9 +114,9 @@ export default defineComponent({
     const listTopicsAproachs = async () => {
       try {
         loading.value = true;
-        const aux1 = await list('occupation_area');
+        const aux1 = await list("occupation_area");
         options.value = aux1.map((elem) => elem.occupation_area);
-        const aux = await list('graduation_year');
+        const aux = await list("graduation_year");
 
         for (let index = 1922; index <= new Date().getFullYear(); index++) {
           options1.value.push(index);
@@ -123,7 +125,7 @@ export default defineComponent({
         loading.value = false;
       } catch (error) {
         showErrorNotification(
-          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`,
+          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`
         );
       }
     };
@@ -135,14 +137,18 @@ export default defineComponent({
     const nextStep = async () => {
       try {
         loading1.value = true;
-        store.commit('user/setFormThird', formData);
-        const form = { ...store.state.user.formData };
+        store.commit("user/setFormThird", formData);
+        const form = {
+          ...store.state.user.formData,
+          month: new Date(Date.now()).getMonth(),
+          year: new Date(Date.now()).getFullYear(),
+        };
         const user = await register(form);
         // delete form.email;
         // delete form.password;
         form.user_id = user.id;
-        await post('perfil', form);
-        router.replace({ name: 'concluido' });
+        await post("perfil", form);
+        router.replace({ name: "concluido" });
         loading1.value = false;
       } catch (error) {
         loading1.value = false;
@@ -152,7 +158,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (!teste.value.email.length) {
-        router.push('/register');
+        router.push("/register");
       }
     });
 

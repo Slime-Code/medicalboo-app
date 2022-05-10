@@ -58,25 +58,29 @@ const routes = [{
 }, {
   path: '/login',
   name: 'login',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(26)]).then(__webpack_require__.bind(__webpack_require__, 8026))
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(159)]).then(__webpack_require__.bind(__webpack_require__, 8159))
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(544)]).then(__webpack_require__.bind(__webpack_require__, 4544)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(849)]).then(__webpack_require__.bind(__webpack_require__, 4849)),
   children: [{
     path: 'home',
     name: 'home',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(703)]).then(__webpack_require__.bind(__webpack_require__, 2703))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(381)]).then(__webpack_require__.bind(__webpack_require__, 6381))
   }],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(544)]).then(__webpack_require__.bind(__webpack_require__, 4544)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(849)]).then(__webpack_require__.bind(__webpack_require__, 4849)),
   children: [{
     path: 'profile',
     name: 'profile',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(642)]).then(__webpack_require__.bind(__webpack_require__, 642))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(458)]).then(__webpack_require__.bind(__webpack_require__, 9458))
+  }, {
+    path: 'about-app',
+    name: 'about-app',
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 4395))
   }, {
     path: 'content/:key',
     name: 'content',
@@ -88,23 +92,23 @@ const routes = [{
   }, {
     path: 'meus-dados',
     name: 'meus-dados',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(685)]).then(__webpack_require__.bind(__webpack_require__, 7685))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(939)]).then(__webpack_require__.bind(__webpack_require__, 8939))
   }, {
     path: 'explore',
     name: 'explore',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(766)]).then(__webpack_require__.bind(__webpack_require__, 6766))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(758)]).then(__webpack_require__.bind(__webpack_require__, 7758))
   }, {
     path: 'favorite',
     name: 'favorite',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(668)]).then(__webpack_require__.bind(__webpack_require__, 2668))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(919)]).then(__webpack_require__.bind(__webpack_require__, 6919))
   }, {
     path: '/approach/:id',
     name: 'approach',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(946)]).then(__webpack_require__.bind(__webpack_require__, 1946))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(294)]).then(__webpack_require__.bind(__webpack_require__, 3294))
   }, {
     path: 'note',
     name: 'note',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(254)]).then(__webpack_require__.bind(__webpack_require__, 8254))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(76)]).then(__webpack_require__.bind(__webpack_require__, 4076))
   }, {
     path: 'accesso-por-capitulo',
     name: 'accesso-por-capitulo',
@@ -115,11 +119,11 @@ const routes = [{
   }
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(448)]).then(__webpack_require__.bind(__webpack_require__, 4946)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(48)]).then(__webpack_require__.bind(__webpack_require__, 7048)),
   children: [{
     path: '/approach-detail/:id',
     name: 'approach-detail',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(541)]).then(__webpack_require__.bind(__webpack_require__, 5541))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(702)]).then(__webpack_require__.bind(__webpack_require__, 7702))
   }],
   meta: {
     requaresAuth: true
@@ -127,13 +131,13 @@ const routes = [{
 }, {
   path: '/codigo-acesso',
   name: 'codigo-acesso',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(914)]).then(__webpack_require__.bind(__webpack_require__, 3914)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(342)]).then(__webpack_require__.bind(__webpack_require__, 4342)),
   meta: {
     requaresAuth: true
   }
 }, {
   path: '/register',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(159)]).then(__webpack_require__.bind(__webpack_require__, 6159)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(569)]).then(__webpack_require__.bind(__webpack_require__, 6159)),
   children: [{
     path: '',
     name: 'register',
@@ -145,7 +149,7 @@ const routes = [{
   }, {
     path: '/third',
     name: 'third',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(238)]).then(__webpack_require__.bind(__webpack_require__, 2238))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(498)]).then(__webpack_require__.bind(__webpack_require__, 7498))
   }, {
     path: '/concluido',
     name: 'concluido',
@@ -161,30 +165,30 @@ const routes = [{
   }]
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(109)]).then(__webpack_require__.bind(__webpack_require__, 5109)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(689)]).then(__webpack_require__.bind(__webpack_require__, 5689)),
   children: [{
     path: '',
     name: 'prime',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(881)]).then(__webpack_require__.bind(__webpack_require__, 9881))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(357)]).then(__webpack_require__.bind(__webpack_require__, 1357))
   }],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/admin',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(724)]).then(__webpack_require__.bind(__webpack_require__, 6724)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(321)]).then(__webpack_require__.bind(__webpack_require__, 3321)),
   children: [{
     path: '',
     name: 'inicio',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(457)]).then(__webpack_require__.bind(__webpack_require__, 1457))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(485)]).then(__webpack_require__.bind(__webpack_require__, 3485))
   }, {
     path: 'painel',
     name: 'painel',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(457)]).then(__webpack_require__.bind(__webpack_require__, 1457))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(485)]).then(__webpack_require__.bind(__webpack_require__, 3485))
   }, {
     path: '/admin/approaches',
     name: 'approaches',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(383)]).then(__webpack_require__.bind(__webpack_require__, 8383))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(595)]).then(__webpack_require__.bind(__webpack_require__, 6611))
   }, {
     path: '/admin/categories',
     name: 'categories',
@@ -209,6 +213,10 @@ const routes = [{
     path: '/admin/occupation-areas',
     name: 'occupation-areas',
     component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(938)]).then(__webpack_require__.bind(__webpack_require__, 8938))
+  }, {
+    path: '/sobreApp',
+    name: 'sobreApp',
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(66)]).then(__webpack_require__.bind(__webpack_require__, 4066))
   }],
   meta: {
     requaresAuth: true
@@ -358,8 +366,10 @@ var LocalStorage = __webpack_require__(6395);
 var Loading = __webpack_require__(6249);
 // EXTERNAL MODULE: ./node_modules/quasar/src/plugins/Notify.js
 var Notify = __webpack_require__(4434);
-// EXTERNAL MODULE: ./node_modules/quasar/src/plugins/Dialog.js + 2 modules
-var Dialog = __webpack_require__(1417);
+// EXTERNAL MODULE: ./node_modules/quasar/src/plugins/Dialog.js + 1 modules
+var Dialog = __webpack_require__(9454);
+// EXTERNAL MODULE: ./node_modules/quasar/src/plugins/BottomSheet.js + 1 modules
+var BottomSheet = __webpack_require__(2139);
 ;// CONCATENATED MODULE: ./.quasar/quasar-user-options.js
 /**
  * THIS FILE IS GENERATED AUTOMATICALLY.
@@ -384,7 +394,8 @@ var Dialog = __webpack_require__(1417);
     LocalStorage: LocalStorage/* default */.Z,
     Loading: Loading/* default */.Z,
     Notify: Notify/* default */.Z,
-    Dialog: Dialog/* default */.Z
+    Dialog: Dialog/* default */.Z,
+    BottomSheet: BottomSheet/* default */.Z
   }
 });
 ;// CONCATENATED MODULE: ./.quasar/client-entry.js
@@ -402,6 +413,7 @@ var Dialog = __webpack_require__(1417);
  *
  * Boot files are your "main.js"
  **/
+
 
 
 
@@ -509,8 +521,8 @@ const Api = axios__WEBPACK_IMPORTED_MODULE_0___default().create({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "api": () => (/* binding */ api),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "api": () => (/* binding */ api)
 /* harmony export */ });
 /* harmony import */ var quasar_wrappers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7083);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(52);
@@ -548,7 +560,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ useSupabase)
 /* harmony export */ });
-/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4436);
+/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7281);
 /* harmony import */ var src_composebles_useAuthUser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4958);
 /* eslint-disable */
 
@@ -690,8 +702,8 @@ function useAuthUser() {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "L": () => (/* binding */ showSuccessNotification),
-/* harmony export */   "s": () => (/* binding */ showErrorNotification)
+/* harmony export */   "s": () => (/* binding */ showErrorNotification),
+/* harmony export */   "L": () => (/* binding */ showSuccessNotification)
 /* harmony export */ });
 /* harmony import */ var quasar_src_plugins_Loading_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6249);
 /* harmony import */ var quasar_src_plugins_Notify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4434);
@@ -2518,7 +2530,7 @@ function deleteNote({
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.miniCss = (chunkId, promises) => {
-/******/ 			var cssChunks = {"8":1,"26":1,"109":1,"185":1,"238":1,"317":1,"457":1,"541":1,"544":1,"571":1,"642":1,"668":1,"685":1,"703":1,"798":1,"866":1,"914":1,"938":1,"946":1};
+/******/ 			var cssChunks = {"8":1,"159":1,"185":1,"294":1,"317":1,"342":1,"381":1,"458":1,"498":1,"571":1,"689":1,"702":1,"798":1,"849":1,"866":1,"919":1,"938":1,"939":1};
 /******/ 			if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 			else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 				promises.push(installedCssChunks[chunkId] = loadStylesheet(chunkId).then(() => {

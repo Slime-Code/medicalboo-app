@@ -43,6 +43,15 @@ function useApi() {
     return data;
   };
 
+  const getNotByField = async (table, field, value) => {
+    const {
+      data,
+      error
+    } = await supabase.from(table).select('*').neq(field, value);
+    if (error) throw error;
+    return data;
+  };
+
   const joinTables = async (origin, tables) => {
     const fields = tables.reduce((previousValue, currentValue, index) => {
       return `${previousValue.name}:${previousValue.foreign_key}(${previousValue.fields})` + ',' + `${currentValue.name}:${currentValue.foreign_key}(${currentValue.fields})`;
@@ -103,6 +112,7 @@ function useApi() {
 
   return {
     getByField,
+    getNotByField,
     list,
     getById,
     post,
@@ -115,7 +125,7 @@ function useApi() {
 
 /***/ }),
 
-/***/ 6804:
+/***/ 6286:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
@@ -130,27 +140,27 @@ var web_dom_collections_iterator = __webpack_require__(71);
 var runtime_core_esm_bundler = __webpack_require__(3673);
 // EXTERNAL MODULE: ./node_modules/@vue/shared/dist/shared.esm-bundler.js
 var shared_esm_bundler = __webpack_require__(2323);
-;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/components/ApproachButtom.vue?vue&type=template&id=ac079208&scoped=true
+;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/components/ApproachButtom.vue?vue&type=template&id=1371cc8a&scoped=true
 
 
 
-const _withScopeId = n => ((0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-ac079208"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n);
+const _withScopeId = n => ((0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-1371cc8a"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n);
 
 const _hoisted_1 = {
-  class: "q-link cursor-pointer q-ma-xs"
+  class: "q-link cursor-pointer"
 };
 const _hoisted_2 = {
   class: "row"
 };
 const _hoisted_3 = {
-  class: "col-grow-1 q-pa-xs"
+  class: "col-1"
 };
 const _hoisted_4 = {
   class: "column"
 };
 
 const _hoisted_5 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
-  class: "col-grow-1"
+  class: "col-1"
 }, [/*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
   class: "q-approach-bar"
 })], -1));
@@ -166,14 +176,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_2, [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
       onClick: _cache[0] || (_cache[0] = (...args) => _ctx.go && _ctx.go(...args)),
-      class: "col q-py-xs"
+      class: "col"
     }, (0,shared_esm_bundler/* toDisplayString */.zw)(_ctx.title.title), 1), (0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_3, [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_4, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_rating, {
       onClick: _ctx.addFavorit,
       max: "1",
       modelValue: _ctx.ratingModel,
       "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => _ctx.ratingModel = $event),
       name: "quality",
-      size: "2em",
+      size: "1.5em",
       color: "yellow",
       icon: "star_border",
       "icon-selected": "star",
@@ -182,7 +192,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   })]);
 }
-;// CONCATENATED MODULE: ./src/components/ApproachButtom.vue?vue&type=template&id=ac079208&scoped=true
+;// CONCATENATED MODULE: ./src/components/ApproachButtom.vue?vue&type=template&id=1371cc8a&scoped=true
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.json.stringify.js
 var es_json_stringify = __webpack_require__(2100);
@@ -204,19 +214,19 @@ var useAuthUser = __webpack_require__(4958);
 
 
 /* harmony default export */ const ApproachButtomvue_type_script_lang_js = ((0,runtime_core_esm_bundler/* defineComponent */.aZ)({
-  name: 'ApproachButtom',
+  name: "ApproachButtom",
   props: {
     title: {
       type: Object,
-      required: 'Sem titulo'
+      required: "Sem titulo"
     },
     icon: {
       type: String,
-      default: 'img:img/feto.png'
+      default: "img:img/feto.png"
     },
     color: {
       type: String,
-      default: ''
+      default: ""
     },
     accessCap: {
       type: Boolean,
@@ -236,8 +246,8 @@ var useAuthUser = __webpack_require__(4958);
       getByField
     } = (0,useApi/* default */.Z)();
     const formData = {
-      user_id: '',
-      approach_id: ''
+      user_id: "",
+      approach_id: ""
     };
 
     const go = async (evt, index) => {
@@ -249,7 +259,7 @@ var useAuthUser = __webpack_require__(4958);
 
     const initFavorit = async () => {
       try {
-        const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
+        const idFavorit = await getByField("favorite_approach_user", "approach_id", props.title.id);
 
         if (idFavorit.length > 0) {
           ratingModel.value = 1;
@@ -267,15 +277,15 @@ var useAuthUser = __webpack_require__(4958);
     const addFavorit = async () => {
       try {
         if (ratingModel.value !== 1) {
-          const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
-          await remove('favorite_approach_user', idFavorit[0].id);
+          const idFavorit = await getByField("favorite_approach_user", "approach_id", props.title.id);
+          await remove("favorite_approach_user", idFavorit[0].id);
         } else {
           formData.user_id = user.value.id;
           formData.approach_id = props.title.id;
           loading.value = true;
-          await post('favorite_approach_user', formData);
+          await post("favorite_approach_user", formData);
           loading.value = false;
-          (0,functionShowNotifications/* showSuccessNotification */.L)(' Adicionado aos favoritos com sucesso !!!');
+          (0,functionShowNotifications/* showSuccessNotification */.L)(" Adicionado aos favoritos com sucesso !!!");
         }
       } catch (error) {
         (0,functionShowNotifications/* showErrorNotification */.s)(JSON.stringify(error));
@@ -312,7 +322,7 @@ var runtime_auto_import_default = /*#__PURE__*/__webpack_require__.n(runtime_aut
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(ApproachButtomvue_type_script_lang_js, [['render',render],['__scopeId',"data-v-ac079208"]])
+const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(ApproachButtomvue_type_script_lang_js, [['render',render],['__scopeId',"data-v-1371cc8a"]])
 
 /* harmony default export */ const ApproachButtom = (__exports__);
 ;
@@ -415,7 +425,7 @@ var Notify = __webpack_require__(4434);
 // EXTERNAL MODULE: ./node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
 var reactivity_esm_bundler = __webpack_require__(1959);
 // EXTERNAL MODULE: ./src/components/ApproachButtom.vue + 4 modules
-var ApproachButtom = __webpack_require__(6804);
+var ApproachButtom = __webpack_require__(6286);
 // EXTERNAL MODULE: ./src/composebles/useApi.js
 var useApi = __webpack_require__(811);
 ;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/pages/users/AccessoPorCapituloPage.vue?vue&type=script&lang=js
