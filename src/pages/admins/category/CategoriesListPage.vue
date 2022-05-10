@@ -215,7 +215,6 @@ export default defineComponent({
           await remove('topic', e.id);
         });
 
-
         for await (let topi of idTopic.value) {
           await remove('topic', topi.id);
         }
