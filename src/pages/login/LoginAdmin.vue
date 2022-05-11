@@ -43,6 +43,7 @@
             <div class="login-btn-area">
               <PrimaryButtom label="acessar" type="submit" />
             </div>
+            <q-btn :to="{ name: 'resetPassword' }" label="Recoperar Palavra Passe" class="full-width q-my-md text-primary text-center text-h9" flat/>
             <br>
             <q-spinner
               class="absolute-center"

@@ -14,7 +14,7 @@
         <q-btn
           class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
           color="primary"
-          label="Nova tipo"
+          label="Nova foto"
           @click="newDialog()"
           no-caps
           rounded
@@ -38,21 +38,21 @@
       bordered
       :rows="rows"
       :columns="columns"
-      :visible-columns="['img', 'descricao']"
-      row-key="title"
+      :visible-columns="['title', 'definition' ,'options']"
+      row-key="definition"
       :filter="filter"
+      filter-method="getCellValue"
       separator="cell"
     >
       <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="title" class="text-center" :props="props">
-            {{ props.row.name }}
-          </q-td>
+        <q-tr :props="props" class="text-center">
+        <q-avatar class="q-ml-sm" size="60px">
+          <q-img :src="props.row.img_url" />
+        </q-avatar>
           <q-td key="definition" :props="props">
-            {{ props.row.definition }}
+            {{ props.row.descricao }}
           </q-td>
           <q-td key="options" class="text-center" :props="props">
-            <q-btn flat square icon="edit" @click="newDialog(props.row)" dense />
             <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense />
           </q-td>
         </q-tr>
@@ -62,21 +62,20 @@
 
   <div class="column" style="min-width: 99.9%">
     <q-dialog v-model="dialogCategory" persistent>
-      <q-card style="min-width: 350px">
+      <q-card class="q-ml-ms" style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Nova categoria</div>
+          <div class="text-h6">Nova Foto</div>
         </q-card-section>
-        <q-form @submit="saveItem">
-          <q-card-section class="q-pa-sm">
-            <q-input dense v-model.trim="formData.name" autofocus />
-            <q-checkbox
-              class="q-ma-sm"
-              dense
-              v-model="formData.premium"
-              autofocus
-              label="Premium"
-            />
-          </q-card-section>
+        <q-form @submit="saveImg">
+          <q-input class="q-ml-sm" dense v-model.trim="formData.descricao" label="Descrição" autofocus />
+          <q-input
+            label="Carregar Imagem"
+            stack-label
+            type="file"
+            v-model="imgs"
+            accept="image/*"
+            class="q-ml-sm"
+          />
 
           <q-card-actions align="right" class="text-primary">
             <q-btn label="Cancelar" color="primary" v-ripple no-caps v-close-popup />
@@ -108,22 +107,24 @@ import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useQuasar } from "quasar";
 // import { approach } from "src/store/approach/getters";
 import useApi from "src/composebles/useApi";
+import useAuthUser from 'src/composebles/useAuthUser';
 
 const columns = [
   {
-    name: "img",
+    name: "title",
     required: true,
-    label: "Titulo",
+    label: "Imagem",
     align: "center",
     field: "title",
     sortable: true,
   },
 
   {
-    name: "Descricao",
+    name: "definition",
+    required: true,
+    label: "descrição",
     align: "center",
-    label: "Ação",
-    field: "options",
+    field: "title",
     sortable: true,
   },
 
@@ -141,49 +142,37 @@ export default defineComponent({
     const loading = ref(true);
     const $q = useQuasar();
 
-    const { list, post, update, remove, removeWhere, getByField } = useApi();
+    const { user } = useAuthUser();
+
+    const { update, post, uplodImg, remove, removeWhere, getByField } = useApi();
 
     const rows = ref([]);
 
+    const imgs = ref([]);
+
     const topics = ref([]);
 
-    const formData = reactive({
-      name: "",
-      premium: false,
+     const formData = ref({
       id: null,
+      img_url: '',
+      user_id: null,
+      descricao: ''
     });
 
     const listAll = async () => {
       try {
         loading.value = true;
-        rows.value = await list("categoria");
+        rows.value = await getByField("img", 'user_id', user.value.id);
         loading.value = false;
       } catch (error) {
         alert(error);
       }
     };
-    const idTopic = [];
+  
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-
-        const allIdsTOpic = await getByField("topic", "categoria_id", id);
-
-        for await (const t of allIdsTOpic) {
-          await removeWhere("access_topic_user", "topic_id", t.id);
-
-          const app = await getByField("approach", "topic_id", t.id);
-
-          for await (const a of app) {
-            await removeWhere("favorite_approach_user", "approach_id", a.id);
-            await removeWhere("approach_contents", "id_approach", a.id);
-          }
-          await removeWhere("approach", "topic_id", t.id);
-        }
-
-        await removeWhere("topic", "categoria_id", Number(id));
-
-        await remove("categoria", id);
+        await remove("img", id);
       } catch (error) {
         alert(JSON.stringify(error));
       } finally {
@@ -192,15 +181,18 @@ export default defineComponent({
       }
     };
 
-    const saveItem = async () => {
+    const saveImg = async () => {
       try {
         loading.value = true;
-        if (!formData.id) {
-          delete formData.id;
-
-          await post("categoria", formData);
+        if (imgs.value.length > 0 && !formData.value.id) {
+          formData.value.user_id = user.value.id;
+          const imgUrl = await uplodImg(imgs.value[0], 'perfil');
+          formData.value.img_url = imgUrl;
+          const auxForm = formData;
+          delete auxForm.value.id;
+          await post('img', auxForm.value);
         } else {
-          await update("categoria", formData);
+          await update('img', formData.value); 
         }
         listAll();
       } catch (error) {
@@ -211,6 +203,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      // alert(imgs.value);
       listAll();
     });
 
@@ -219,11 +212,17 @@ export default defineComponent({
     const dialogCategory = ref(false);
     const newDialog = (data) => {
       if (data) {
-        Object.keys(data).forEach((key) => {
-          formData[key] = data[key];
-        });
+        formData.value.id = data.id;
+        formData.value.descricao = data.descricao;
+        formData.value.img_url = data.img_url;
+        formData.value.user_id = data.id;
+        // imgs.value = data.img_url;
+        alert(JSON.stringify(formData.value))
       } else {
-        formData.name = "";
+        formData.value.id = null;
+        formData.value.descricao = "";
+        formData.value.img_url = "";
+        
       }
       dialogCategory.value = true;
     };
@@ -252,6 +251,7 @@ export default defineComponent({
     const filter = ref("");
 
     return {
+      imgs,
       filter,
       confirmDelete,
       newDialog,
@@ -259,7 +259,7 @@ export default defineComponent({
       loading,
       deleteItem,
       dialogCategory,
-      saveItem,
+      saveImg,
       onItemClick,
       columns,
       rows,

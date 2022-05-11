@@ -18,6 +18,7 @@ function setFormOne(state, payload) {
   state.formData.cpf = payload.cpf
   state.formData.nationality = payload.nationality
   state.formData.profile_type_id = payload.profile_type_id
+  state.formData.phone = payload.phone
 }
 function setFormSecond(state, payload) {
   state.formData.email = payload.email

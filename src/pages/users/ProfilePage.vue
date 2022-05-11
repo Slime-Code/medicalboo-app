@@ -2,16 +2,11 @@
   <q-page class="flex flex-center">
     <div class="column" align="center">
       <div class="col item">
-        <q-btn
-          style="background: #1a4b9a; color: #1378b3"
-          round
-          icon="fas fa-user"
-          size="40px"
-        >
-          <q-badge class="pic" style="background: #49d16b" rounded>
-            <q-icon dense name="eva-camera-outline" color="white" size="30px" />
-          </q-badge>
-        </q-btn>
+         <q-btn flat dense :to="{ name: 'perfil' }">
+            <q-avatar size="80px">
+              <img :src="img.img_url">
+            </q-avatar>
+          </q-btn>
       </div>
       <div class="col item">
         <h6 style="margin: 0" v-if="user">{{ user.user_metadata.name }}</h6>
@@ -164,8 +159,6 @@
 </template>
 
 <script>
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-restricted-syntax */
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -196,6 +189,8 @@ export default defineComponent({
     const dialogAvaliarApp = ref(false);
 
     const loading = ref(false);
+
+    const img = ref({});
 
     const quality = ref(0);
 
@@ -329,7 +324,15 @@ export default defineComponent({
       }
       /// loading.value = false;
     };
+
+    const getImg = async () => {
+      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      img.value = auxImg[0];
+      loading.value = false;
+    };
+
     onMounted(async () => {
+      getImg();
       listTable();
       loadInfo()
     });
@@ -423,7 +426,7 @@ export default defineComponent({
       handleLogout,
       updatClassification,
       slide: ref("style"),
-
+      img,
       quality,
       submitResult,
 
