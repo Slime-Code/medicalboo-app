@@ -192,7 +192,6 @@ export default defineComponent({
 
         if (img.value.length > 0) {
             const imgUrl = await uplodImg(img.value[0], 'perfil');
-            alert(imgUrl)
             formData.value.img_url = imgUrl;
         }
         await update('perfil', formData.value);

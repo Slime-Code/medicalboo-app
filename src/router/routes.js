@@ -83,7 +83,7 @@ const routes = [
     children: [
       { path: '', name: 'inicio', component: () => import('src/pages/admins/DashboardPage.vue') },
       { path: 'painel', name: 'painel', component: () => import('src/pages/admins/DashboardPage.vue') },
-      { path: '/galeria', name: 'galeria', component: () => import('src/pages/admins/GaleriaPage.vue') },
+      { path: '/admin/topicscopy', name: 'topicscopytopicscopy', component: () => import('src/pages/admins/topic/GaleriaPage.vue') },
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
       { path: '/admin/categories', name: 'categories', component: () => import('src/pages/admins/category/CategoriesListPage.vue') },
       { path: '/admin/topics', name: 'topics', component: () => import('src/pages/admins/topic/TopicsListPage.vue') },

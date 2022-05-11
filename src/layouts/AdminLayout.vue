@@ -163,7 +163,7 @@ const linksList = [
   {
     title: 'Galeria',
     icon: 'photo',
-    link: '/admin/galeria/',
+    link: '/admin/topicscopy',
   },
 ];
 
