@@ -23,6 +23,7 @@
             lazy-rules
             :rules="[
               (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+              (val) => (val.length > 5) || 'O número de dígitos deve ser maior que 5'
             ]"
           />
 
@@ -46,7 +47,6 @@
           <br />
           <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
         </q-form>
-        <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
       </div>
     </q-page>
   </q-layout>
@@ -54,15 +54,12 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-// import { mapActions } from 'vuex';
 import useAuthUser from "src/composebles/useAuthUser";
 import { useQuasar } from "quasar";
-// import useApi from "src/composebles/useApi";
 import { useRouter, useRoute } from "vue-router";
 import PrimaryButtom from "../../components/PrimaryButtom.vue";
 import SecondaryButtom from "../../components/SecondaryButtom.vue";
 import { message } from "../../composebles/messageAPI";
-// import { route } from "quasar/wrappers";
 
 export default defineComponent({
   name: "LoginPage",
@@ -88,9 +85,7 @@ export default defineComponent({
       try {
 
         loading.value = true;
-        alert(JSON.stringify(token))
         await resetPassword(token, password.value);
-        // await sendPasswordRestEmail(email.value);
         $q.notify({
           type: "positive",
           message: 'senha Alterada com sucesso!!',

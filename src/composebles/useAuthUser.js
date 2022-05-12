@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { ref } from 'vue'
 import useSupabase from 'boot/supabase'
 

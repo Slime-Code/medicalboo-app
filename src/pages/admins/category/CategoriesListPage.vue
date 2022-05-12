@@ -107,7 +107,7 @@
 <script>
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useQuasar } from "quasar";
-import { approach } from "src/store/approach/getters";
+// import { approach } from "src/store/approach/getters";
 import useApi from "../../../composebles/useApi";
 
 const columns = [

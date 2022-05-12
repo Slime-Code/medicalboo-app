@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="column" align="center">
       <div class="col item">
-         <q-btn flat dense :to="{ name: 'perfil' }">
+         <q-btn flat dense :to="{ name: 'meus-dados' }">
             <q-avatar size="80px">
               <img :src="img.img_url">
             </q-avatar>

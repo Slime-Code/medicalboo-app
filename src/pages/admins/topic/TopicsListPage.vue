@@ -255,7 +255,7 @@ export default defineComponent({
         });
       } else {
         formData.name = "";
-        formData.categoria = null;
+        formData.categoria_id = null;
       }
       dialogCategory.value = true;
     };
