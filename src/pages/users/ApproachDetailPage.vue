@@ -4,13 +4,6 @@
       <div class="text-h4 col">
         {{ approach.title }}
       </div>
-      <q-rating
-        class="col q-ma-sm"
-        size="1.9em"
-        color="amber"
-        icon="star_border"
-        icon-selected="star"
-      />
 
       <div class="q-ml-sm text-subtitle22 col">
         Atualizado em
@@ -47,9 +40,8 @@
               overflow-wrap: break-word !important;
             "
             class="pre"
+            v-html="content.content"
           >
-           {{ content.content }}
-          
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -99,7 +91,6 @@ export default defineComponent({
       );
       loading.value = false;
     });
-
 
     return {
       loading,
