@@ -2,6 +2,8 @@ const routes = [
   { path: '', name: 'Init', component: () => import('pages/login/InitPage.vue') },
 
   { path: '/login', name: 'login', component: () => import('pages/login/LoginPage.vue') },
+  { path: '/resetPasswordEmail', name: 'resetPassword', component: () => import('pages/login/ResetPasswordPage.vue') },
+  { path: '/reset-password', name: 'reset-password', component: () => import('pages/login/NewPasswordPage.vue') },
 
   {
     path: '/',
@@ -21,7 +23,7 @@ const routes = [
       { path: 'about-app', name: 'about-app', component: () => import('pages/AboutApp.vue') },
       { path: 'content/:key', name: 'content', component: () => import('pages/users/contentsPage.vue') },
       { path: 'editar-senha', name: 'editar-senha', component: () => import('pages/users/EditarSenha.vue') },
-      { path: 'meus-dados', name: 'meus-dados', component: () => import('pages/users/MeusDados.vue') },
+      { path: 'meus-dados', name: 'meus-dados', component: () => import('pages/users/MeusDadosPage.vue') },
       { path: 'explore', name: 'explore', component: () => import('pages/users/ExplorePage.vue') },
       { path: 'favorite', name: 'favorite', component: () => import('pages/users/FavoritePage.vue') },
       { path: '/approach/:id', name: 'approach', component: () => import('pages/users/ApproachPage.vue') },

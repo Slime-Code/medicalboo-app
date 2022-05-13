@@ -3462,6 +3462,13 @@
     "path-type" "^4.0.0"
     "yaml" "^1.10.0"
 
+"coupon-code@^0.4.5":
+  "integrity" "sha1-6L4FZxJcjIer0dqILC+KL5AFEyo="
+  "resolved" "https://registry.npmjs.org/coupon-code/-/coupon-code-0.4.5.tgz"
+  "version" "0.4.5"
+  dependencies:
+    "xtend" "~4.0.0"
+
 "crc-32@^1.2.0":
   "integrity" "sha512-1uBwHxF+Y/4yF5G48fwnKq6QsIXheor3ZLPT80yGBV1oEUwpPojlEhQbWKVw1VwcTQyMGHK1/XMmTjmlsmTTGA=="
   "resolved" "https://registry.npmjs.org/crc-32/-/crc-32-1.2.0.tgz"
@@ -10659,7 +10666,7 @@
   "resolved" "https://registry.npmjs.org/xmlhttprequest-ssl/-/xmlhttprequest-ssl-2.0.0.tgz"
   "version" "2.0.0"
 
-"xtend@^4.0.0":
+"xtend@^4.0.0", "xtend@~4.0.0":
   "integrity" "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ=="
   "resolved" "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz"
   "version" "4.0.2"

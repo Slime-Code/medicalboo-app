@@ -3,13 +3,11 @@
      <q-header  v-if="$q.screen.width<=599" flat bordered class="small-screen-only ground  bg-primary">
       <q-toolbar v-if="$router.currentRoute.value.fullPath==='/home'" class="constrain-2">
         <q-toolbar-title>
-       <q-btn
-          to="/profile"
-          style="background: #ffffff; color: #1a4b9a"
-          round
-          icon="fas fa-user"
-          size="20px"
-        >
+       <q-btn flat dense :to="{ name: 'meus-dados' }">
+          <q-avatar size="80px">
+            <img :src="img.img_url">
+          </q-avatar>
+
           <q-badge class="pic" align="bottom" style="background: #49d16b" rounded>
             <q-icon dense name="eva-camera-outline" size="12px" color="white" />
           </q-badge>
@@ -61,7 +59,7 @@
       </q-toolbar>
     </q-header>
 
-      <q-header v-else reveal flat bordered class="bg-white large-screen-only">
+    <q-header v-else reveal flat bordered class="bg-white large-screen-only">
       <q-toolbar class="constrain-2">
         <q-toolbar-title class="row jusitfy-between items-center">
           <q-img
@@ -70,7 +68,7 @@
             style="width: 20%; height: 20%; max-height: 50px"
           >
           </q-img>
-          <span class="text-primary"> edicalbook </span>
+          <span class="text-primary"> Medicalbook </span>
           <q-input
             v-model="generalSearch"
             class="col-4 absolute-center"
@@ -248,13 +246,16 @@ export default defineComponent({
         label: "Perfil",
       },
     ];
+
+    const img = ref({});
+
     const loading = ref(true);
 
     const router = useRouter();
 
     const { user } = useAuthUser();
 
-    const { list, getById } = useApi();
+    const { list, getById, getByField } = useApi();
 
     const topics = ref([]);
 
@@ -300,10 +301,18 @@ export default defineComponent({
         else  return 'Sobre'
     } )
 
+    const getImg = async () => {
+      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      img.value = auxImg[0];
+      loading.value = false;
+    };
+
     onMounted(() => {
+      getImg();
       listTopicsAproachs();
     });
     return {
+      img,
       title,
       generalSearch,
       showingGeneralSearch,

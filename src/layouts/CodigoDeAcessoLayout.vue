@@ -26,9 +26,9 @@
               Se você possui um cupom, insira o código abaixo.
             </div>
 
-            <q-form class="col q-mt-md">
+            <q-form class="col q-mt-md" @submit.prevent="validarCupom">
               <div class="full-width">
-                <q-input rounded outlined label="Código do cupom" />
+                <q-input rounded outlined label="Código do cupom" v-model="formData.cod_cupom" />
               </div>
               <div class="full-width q-mt-md">
                 <q-btn
@@ -38,6 +38,7 @@
                   color="yellow-7"
                   rounded
                   label="Validar Cupom"
+                  type="submit"
                 />
               </div>
             </q-form>
@@ -51,12 +52,41 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-// <q-icon class="col" style="color: #ffc300" name="fas fa-crown" size="21px" />
+import useAuthUser from "src/composebles/useAuthUser";
+import useApi from "src/composebles/useApi";
+
 export default defineComponent({
   name: "CodigoDeAcessoLayout",
   setup() {
+    const { remove, getByField, update } = useApi();
+
+    const { user } = useAuthUser();
+
+    const formData = {
+      id: null,
+      cod_cupom: '',
+    };
+
+    const validarCupom = async () => {
+      const isCupom = await getByField('cupom', 'cod_cupom', formData.cod_cupom);
+      if (isCupom.length > 0) {
+        if (isCupom[0].user_id === user.value.id) {
+          alert(`Parabéns você ganhou um desconto de ${isCupom[0].percentagem}%`);
+          // isCupom[0].cod_cupom = '';
+          // await update('cupom', isCupom[0]);
+          await remove('cupom', isCupom[0].id);
+        } else {
+          alert('Cupom inválido!!!');
+        }
+      } else {
+        alert('Cupom inválido!!!');
+      }
+    }
+
     return {
+      formData,
       tab: ref("inicio"),
+      validarCupom
     };
   },
 });

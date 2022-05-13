@@ -37,12 +37,20 @@
               (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
             ]"
           />
+          <q-checkbox
+              class="q-ma-sm"
+              dense
+              v-model="conectado"
+              autofocus
+              label="Permanecer conectado"
+            />
           <PrimaryButtom class="full-width q-my-md" label="acessar" type="submit" />
           <SecondaryButtom
             :disable="$route.query.access === 'admin'"
             label="criar conta gratuita"
             link="/register"
           />
+          <q-btn :to="{ name: 'resetPassword' }" label="Recoperar Senha" class="full-width q-my-md text-primary text-center text-h9" flat/>
           <br />
           <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
         </q-form>
@@ -71,6 +79,8 @@ export default defineComponent({
   },
   setup() {
     const form = ref({ email: "", password: "" });
+
+    const conectado = ref(false);
 
     const loading = ref(false);
 
@@ -113,6 +123,7 @@ export default defineComponent({
       handleLogin,
       form,
       loading,
+      conectado
     };
   },
   /* methods: {
