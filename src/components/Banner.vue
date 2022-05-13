@@ -10,7 +10,7 @@
       >
         <q-item clickable :to="{ name: n.name }">
           <q-item-section>
-            <img class="fit" :src="n.path"/>
+            <q-img class="fit" :src="n.img_url" />
           </q-item-section>
         </q-item>
       </q-banner>
@@ -18,24 +18,20 @@
   </q-card>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
+
+import useApi from "../composebles/useApi";
 
 export default defineComponent({
   setup() {
-    const data = ref([
-      {
-        name: "prime",
-        path: "img/banner-premium.png",
-      },
-      {
-        name: "accesso-por-capitulo",
-        path: "img/Grátis@2x.png",
-      },
-      {
-        name: "accesso-por-capitulo",
-        path: "img/Grátis-2@2x.png",
-      },
-    ]);
+    const { list } = useApi();
+
+    const data = ref([]);
+
+    onMounted(async () => {
+      data.value = await list("img");
+    });
+
     return {
       data,
     };
