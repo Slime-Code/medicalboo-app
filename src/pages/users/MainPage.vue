@@ -168,16 +168,19 @@ export default defineComponent({
       try {
         const pegarPerfil = await getByField("perfil", "user_id", user.value.id)
         const prazoPremium = await getByField('prazo_premium', 'user_id', user.value.id);
-        if (((!prazoPremium[0].expirou && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias) || prazoPremium[0].dias === 0)) {
+        if (prazoPremium.length > 0) {
+          if ((!(prazoPremium[0].expirou) && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias)) {
           prazoPremium[0].expirou = true;
           prazoPremium[0].dias = 0;
           pegarPerfil[0].premium = false;
           await update('perfil', pegarPerfil[0]);
           await update('prazo_premium', prazoPremium[0]);
-        }
-        perfil.value = pegarPerfil[0].premium;        
+        }   
+        }     
       } catch (error) {
         alert(error.message)
+      } finally {
+        perfil.value = pegarPerfil[0].premium;
       }
       
     };
