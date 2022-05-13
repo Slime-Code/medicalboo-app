@@ -168,7 +168,7 @@ export default defineComponent({
       try {
         const pegarPerfil = await getByField("perfil", "user_id", user.value.id)
         const prazoPremium = await getByField('prazo_premium', 'user_id', user.value.id);
-        if (!((!prazoPremium[0].expirou && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias) || prazoPremium[0].dias === 0)) {
+        if (((!prazoPremium[0].expirou && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias) || prazoPremium[0].dias === 0)) {
           prazoPremium[0].expirou = true;
           prazoPremium[0].dias = 0;
           pegarPerfil[0].premium = false;
