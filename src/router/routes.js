@@ -72,7 +72,7 @@ const routes = [
     path: '/',
     component: () => import('src/layouts/PrimeLayout.vue'),
     children: [
-      { path: '', name: 'prime', component: () => import('src/pages/users/PrimePage.vue') },
+      { path: '/prime', name: 'prime', component: () => import('src/pages/users/PrimePage.vue') },
     ],
     meta: {
       requiresAuth: true,

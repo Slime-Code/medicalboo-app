@@ -15,7 +15,7 @@
         <q-btn
           class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
           color="primary"
-          label="Nova tipo"
+          label="Novo tipo"
           @click="newDialog()"
           no-caps
           rounded
@@ -166,13 +166,13 @@ export default defineComponent({
 
           await post('type_approach', formData);
         } else {
-          alert(JSON.stringify(formData.id));
           await update('type_approach', formData);
         }
         listAll();
-        loading.value = false;
       } catch (error) {
         alert(error);
+      } finally {
+        loading.value = false;
       }
     };
 

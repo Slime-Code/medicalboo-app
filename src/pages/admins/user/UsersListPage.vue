@@ -16,6 +16,7 @@
       </div>
       <div class="q-mt-md">
         <q-table
+          :filter="filter"
           color="primary"
           :dense="$q.screen.lt.sm"
           flat
@@ -28,6 +29,13 @@
           row-key="title"
           separator="cell"
         >
+          <template v-slot:top-right>
+            <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+          </template>
           <template v-slot:body="props">
             <q-tr :props="props" v-if="props.row.perfil !== 3">
               <q-td key="title" :props="props">
@@ -59,7 +67,7 @@
                 <p v-if="props.row.perfil == 1">Estudante</p>
                 <p v-else-if="props.row.perfil == 2">Proficional</p>
               </q-td>
-              <q-td key="options" class="text-right" :props="props">
+              <q-td key="options" class="text-center" :props="props">
                 <q-btn flat color="red" square icon="delete" @click="confirmDelete(props.row.id)" dense/>
                 <q-btn label="cupom" color="primary" flat square icon="money" @click="newDialog(props.row.id)" dense/>
               </q-td>
@@ -370,7 +378,7 @@ const columns = [
   },
 
   {
-    name: 'options', align: 'right', label: 'Ação', field: 'options', sortable: true,
+    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
   },
 
 ];
@@ -596,6 +604,7 @@ export default defineComponent({
       rows,
       listAll,
       topics,
+      filter: ref(''),
       varDialogPassword: ref(false),
     };
   },

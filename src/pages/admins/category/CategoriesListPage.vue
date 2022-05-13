@@ -14,7 +14,7 @@
         <q-btn
           class="col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2"
           color="primary"
-          label="Nova tipo"
+          label="Novo tipo"
           @click="newDialog()"
           no-caps
           rounded

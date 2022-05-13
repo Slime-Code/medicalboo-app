@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { post } from "@supabase/gotrue-js/dist/module/lib/fetch";
 import useAuthUser from "src/composebles/useAuthUser";
 import { showErrorNotification } from "src/functions/functionShowNotifications";
 import { defineComponent, onMounted, ref, computed } from "vue";
@@ -100,7 +101,7 @@ export default defineComponent({
   name: "MainPage",
   components: { Banner },
   setup() {
-    const { list, getByField } = useApi();
+    const { list, getByField, update } = useApi();
     const { user } = useAuthUser();
 
     const router = useRouter();
@@ -164,7 +165,21 @@ export default defineComponent({
     const perfil = ref();
 
     const foi = async () => {
-      perfil.value = (await getByField("perfil", "user_id", user.value.id))[0].premium;
+      try {
+        const pegarPerfil = await getByField("perfil", "user_id", user.value.id)
+        const prazoPremium = await getByField('prazo_premium', 'user_id', user.value.id);
+        if (!((!prazoPremium[0].expirou && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias) || prazoPremium[0].dias === 0)) {
+          prazoPremium[0].expirou = true;
+          prazoPremium[0].dias = 0;
+          pegarPerfil[0].premium = false;
+          await update('perfil', pegarPerfil[0]);
+          await update('prazo_premium', prazoPremium[0]);
+        }
+        perfil.value = pegarPerfil[0].premium;        
+      } catch (error) {
+        alert(error.message)
+      }
+      
     };
 
     onMounted(async () => {
