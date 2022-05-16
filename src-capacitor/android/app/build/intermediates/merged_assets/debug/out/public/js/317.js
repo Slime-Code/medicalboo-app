@@ -8,8 +8,9 @@
 /* harmony export */   "Z": () => (/* binding */ useApi)
 /* harmony export */ });
 /* harmony import */ var boot_supabase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2421);
-/* eslint-disable linebreak-style */
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4259);
  // import useAuthUser from './useAuthUser';
+
 
 function useApi() {
   const {
@@ -110,7 +111,73 @@ function useApi() {
     return data;
   };
 
+  const uplodImg = async (file, storage) => {
+    const fileName = (0,uuid__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)();
+    const {
+      error
+    } = await supabase.storage.from(storage).upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+    if (error) throw error;
+    const url = await getUrl(fileName, storage);
+    return url;
+  };
+
+  const getUrl = async (fileName, storage) => {
+    const {
+      publicURL,
+      error
+    } = await supabase.storage.from(storage).getPublicUrl(fileName);
+    if (error) throw error;
+    return publicURL;
+  };
+
+  const setPremim = async value => {
+    return new Promise(async (reject, resolve) => {
+      try {
+        const perfil = await getByField("perfil", "user_id", user.value.id);
+        perfil[0].premium = value;
+        await update("perfil", perfil[0]);
+        resolve("done");
+      } catch (error) {
+        reject;
+      }
+    });
+  };
+
+  const setPremimPlan = async (free_period, days, formData, user) => {
+    try {
+      const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+
+      if (user_grates.length === 0) {
+        formData.user_id = user.value.id;
+        formData.created_at = new Date();
+        formData.free_period = free_period;
+        formData.dias = days;
+        formData.expirou = false;
+        await post("prazo_premium", formData);
+        await setPremim(true);
+        $q.notify({
+          type: "positive",
+          message: `Está como usuário premium!!`
+        });
+        router.push({
+          name: "home"
+        });
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
+    setPremimPlan,
+    uplodImg,
+    setPremim,
+    getUrl,
     getByField,
     getNotByField,
     list,

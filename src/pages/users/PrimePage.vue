@@ -5,25 +5,17 @@
         swipeable
         animated
         v-model="slide"
-        :autoplay="autoplay"
+        :autoplay="true"
         ref="carousel"
         infinite
       >
-        <q-carousel-slide :name="1" img-src="img/prescrição.png" />
-        <q-carousel-slide :name="2" img-src="img/calculadoras.png" />
-        <q-carousel-slide :name="3" img-src="img/prescrição.png" />
-        <q-carousel-slide :name="4" img-src="img/BG-FULL.png" />
+        <q-carousel-slide
+          v-for="(img, index) in data"
+          :name="index"
+          :img-src="img.img_url"
+        />
 
         <template v-slot:control>
-          <q-carousel-control
-            position="top-right"
-            :offset="[18, 18]"
-            class="text-white rounded-borders"
-            style="background: rgba(0, 0, 0, 0.3); padding: 4px 8px"
-          >
-            <q-toggle dense dark color="orange" v-model="autoplay" label="Play & stop" />
-          </q-carousel-control>
-
           <q-carousel-control
             position="bottom-right"
             :offset="[18, 18]"
@@ -58,16 +50,41 @@
         notáveis do mundo
       </p>
       <div class="col column flex q-gutter-sm">
-        <q-btn class="col" color="green-5" rounded label="Experimente 7 Dias Gratis" @click="seteDiasGrates" />
+        <q-btn
+          v-if="!just"
+          class="col"
+          color="green-5"
+          rounded
+          label="Experimente 7 Dias Gratis"
+          @click="seteDiasGrates"
+        />
+
+        <q-btn
+          v-else="just"
+          class="col"
+          color="green-5"
+          rounded
+          label="Quero Ser Premium"
+          @click="seteDiasGrates"
+        />
+
         <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
-        <q-btn class="col" color="grey-5" rounded unelevated dense label="agora Não" :to="{ name: 'home' }" />
+        <q-btn
+          class="col"
+          color="grey-5"
+          rounded
+          unelevated
+          dense
+          label="agora Não"
+          :to="{ name: 'home' }"
+        />
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import useAuthUser from "src/composebles/useAuthUser";
@@ -79,10 +96,10 @@ export default {
       user_id: null,
       created_at: null,
       dias: 7,
-      expirou: true
+      expirou: true,
     };
 
-    const { getByField, post, update } = useApi();
+    const { getByField, post, update, list } = useApi();
 
     const { user } = useAuthUser();
 
@@ -92,37 +109,43 @@ export default {
 
     const loading = ref(false);
 
+    const data = ref([]);
+
+    const just = ref(null);
+
+    onMounted(async () => {
+      data.value = await list("img");
+      const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+      if (user_grates.length > 0) just.value = true;
+    });
+
     const seteDiasGrates = async () => {
       try {
         loading.value = true;
-        const user_grates = await getByField('prazo_premium', 'user_id', user.value.id);
+        const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
         if (user_grates.length === 0) {
-          const perfil = await getByField('perfil', 'user_id', user.value.id);
+          const perfil = await getByField("perfil", "user_id", user.value.id);
           formData.user_id = user.value.id;
           formData.created_at = new Date();
           formData.expirou = false;
-          await post('prazo_premium', formData);
+          await post("prazo_premium", formData);
           perfil[0].premium = true;
-          await update('perfil', perfil[0])
+          await update("perfil", perfil[0]);
           $q.notify({
             type: "positive",
-            message: `Parabéns ${perfil[0].name}... Disfrute desses 7 dias grates como um Cliente Premium!`,
+            message: `Parabéns ${perfil[0].name}... Agora é Cliente Premium!`,
           });
-          router.push({ name: 'home' });
-        } else {
-          $q.notify({
-            type: "warning",
-            message: `Lamentamos, mas já Consumiu os 7 dias grates!!`,
-          });
+          router.push({ name: "home" });
         }
       } catch (error) {
-        alert(error)
+        alert(error);
       } finally {
         loading.value = false;
       }
-      
-    }
+    };
     return {
+      just,
+      data,
       loading,
       slide: ref(1),
       autoplay: ref(true),

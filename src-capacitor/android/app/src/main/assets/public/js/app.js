@@ -58,25 +58,33 @@ const routes = [{
 }, {
   path: '/login',
   name: 'login',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(159)]).then(__webpack_require__.bind(__webpack_require__, 8159))
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(55)]).then(__webpack_require__.bind(__webpack_require__, 9055))
+}, {
+  path: '/resetPasswordEmail',
+  name: 'resetPassword',
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(244)]).then(__webpack_require__.bind(__webpack_require__, 2022))
+}, {
+  path: '/reset-password',
+  name: 'reset-password',
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(105)]).then(__webpack_require__.bind(__webpack_require__, 4105))
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(849)]).then(__webpack_require__.bind(__webpack_require__, 4849)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(655)]).then(__webpack_require__.bind(__webpack_require__, 4655)),
   children: [{
     path: 'home',
     name: 'home',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(381)]).then(__webpack_require__.bind(__webpack_require__, 6381))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(673)]).then(__webpack_require__.bind(__webpack_require__, 5673))
   }],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(849)]).then(__webpack_require__.bind(__webpack_require__, 4849)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(655)]).then(__webpack_require__.bind(__webpack_require__, 4655)),
   children: [{
     path: 'profile',
     name: 'profile',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(458)]).then(__webpack_require__.bind(__webpack_require__, 9458))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(763)]).then(__webpack_require__.bind(__webpack_require__, 6827))
   }, {
     path: 'about-app',
     name: 'about-app',
@@ -92,7 +100,7 @@ const routes = [{
   }, {
     path: 'meus-dados',
     name: 'meus-dados',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(939)]).then(__webpack_require__.bind(__webpack_require__, 8939))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(22)]).then(__webpack_require__.bind(__webpack_require__, 22))
   }, {
     path: 'explore',
     name: 'explore',
@@ -104,7 +112,7 @@ const routes = [{
   }, {
     path: '/approach/:id',
     name: 'approach',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(294)]).then(__webpack_require__.bind(__webpack_require__, 3294))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(161)]).then(__webpack_require__.bind(__webpack_require__, 2161))
   }, {
     path: 'note',
     name: 'note',
@@ -119,11 +127,11 @@ const routes = [{
   }
 }, {
   path: '/',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(48)]).then(__webpack_require__.bind(__webpack_require__, 7048)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(441)]).then(__webpack_require__.bind(__webpack_require__, 4441)),
   children: [{
     path: '/approach-detail/:id',
     name: 'approach-detail',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(702)]).then(__webpack_require__.bind(__webpack_require__, 7702))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(837)]).then(__webpack_require__.bind(__webpack_require__, 6837))
   }],
   meta: {
     requaresAuth: true
@@ -131,17 +139,17 @@ const routes = [{
 }, {
   path: '/codigo-acesso',
   name: 'codigo-acesso',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(342)]).then(__webpack_require__.bind(__webpack_require__, 4342)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(537)]).then(__webpack_require__.bind(__webpack_require__, 1537)),
   meta: {
     requaresAuth: true
   }
 }, {
   path: '/register',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(569)]).then(__webpack_require__.bind(__webpack_require__, 6159)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(159)]).then(__webpack_require__.bind(__webpack_require__, 6159)),
   children: [{
     path: '',
     name: 'register',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(503)]).then(__webpack_require__.bind(__webpack_require__, 503))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(360)]).then(__webpack_require__.bind(__webpack_require__, 1360))
   }, {
     path: '/second',
     name: 'second',
@@ -167,56 +175,64 @@ const routes = [{
   path: '/',
   component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(689)]).then(__webpack_require__.bind(__webpack_require__, 5689)),
   children: [{
-    path: '',
+    path: '/prime',
     name: 'prime',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(357)]).then(__webpack_require__.bind(__webpack_require__, 1357))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(352)]).then(__webpack_require__.bind(__webpack_require__, 352))
   }],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/admin',
-  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(321)]).then(__webpack_require__.bind(__webpack_require__, 3321)),
+  component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(964)]).then(__webpack_require__.bind(__webpack_require__, 2964)),
   children: [{
     path: '',
     name: 'inicio',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(485)]).then(__webpack_require__.bind(__webpack_require__, 3485))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(265)]).then(__webpack_require__.bind(__webpack_require__, 7265))
   }, {
     path: 'painel',
     name: 'painel',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(485)]).then(__webpack_require__.bind(__webpack_require__, 3485))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(265)]).then(__webpack_require__.bind(__webpack_require__, 7265))
+  }, {
+    path: '/admin/topicscopy',
+    name: 'topicscopytopicscopy',
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(701)]).then(__webpack_require__.bind(__webpack_require__, 3893))
   }, {
     path: '/admin/approaches',
     name: 'approaches',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(595)]).then(__webpack_require__.bind(__webpack_require__, 6611))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(610)]).then(__webpack_require__.bind(__webpack_require__, 2610))
   }, {
     path: '/admin/categories',
     name: 'categories',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(455)]).then(__webpack_require__.bind(__webpack_require__, 7455))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(820)]).then(__webpack_require__.bind(__webpack_require__, 820))
   }, {
     path: '/admin/topics',
     name: 'topics',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(1)]).then(__webpack_require__.bind(__webpack_require__, 5001))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(369)]).then(__webpack_require__.bind(__webpack_require__, 2369))
   }, {
     path: '/admin/users',
     name: 'users',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(505)]).then(__webpack_require__.bind(__webpack_require__, 6505))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(443)]).then(__webpack_require__.bind(__webpack_require__, 4443))
   }, {
     path: '/admin/colaboradores',
     name: 'admin',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(563)]).then(__webpack_require__.bind(__webpack_require__, 6563))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(827)]).then(__webpack_require__.bind(__webpack_require__, 3827))
   }, {
     path: '/admin/tipos-De-Abordagens',
     name: 'tipos-De-Abordagens',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(106)]).then(__webpack_require__.bind(__webpack_require__, 4106))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(467)]).then(__webpack_require__.bind(__webpack_require__, 2467))
   }, {
     path: '/admin/occupation-areas',
     name: 'occupation-areas',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(938)]).then(__webpack_require__.bind(__webpack_require__, 8938))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(668)]).then(__webpack_require__.bind(__webpack_require__, 668))
   }, {
     path: '/sobreApp',
     name: 'sobreApp',
     component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(66)]).then(__webpack_require__.bind(__webpack_require__, 4066))
+  }, {
+    path: '/perfil',
+    name: 'perfil',
+    component: () => Promise.all(/* import() */[__webpack_require__.e(736), __webpack_require__.e(572)]).then(__webpack_require__.bind(__webpack_require__, 6572))
   }],
   meta: {
     requaresAuth: true
@@ -255,29 +271,28 @@ const routes = [{
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory( false ? 0 : "")
-  }); // eslint-disable-next-line consistent-return
-
+  });
   Router.beforeEach(to => {
-    if (to.fullPath === '/admin') {
-      return {
-        name: 'login',
-        query: {
-          access: 'admin'
-        }
-      };
-    }
-
     const {
       user
     } = (0,useAuthUser/* default */.Z)();
 
     if (to.hash.includes('type=recovery') && to.name !== 'reset-password') {
       const accessToken = to.hash.split('&')[0];
-      const token = accessToken.replace('#acess_token=', '');
+      const token = accessToken.replace('#access_token=', '');
       return {
         name: 'reset-password',
         query: {
           token
+        }
+      };
+    }
+
+    if (to.fullPath === '/admin') {
+      return {
+        name: 'login',
+        query: {
+          access: 'admin'
         }
       };
     }
@@ -560,7 +575,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ useSupabase)
 /* harmony export */ });
-/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7281);
+/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3304);
 /* harmony import */ var src_composebles_useAuthUser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4958);
 /* eslint-disable */
 
@@ -591,7 +606,6 @@ function useSupabase() {
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1959);
 /* harmony import */ var boot_supabase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2421);
-/* eslint-disable */
 
 
 const user = (0,vue__WEBPACK_IMPORTED_MODULE_1__/* .ref */ .iH)(null);
@@ -667,7 +681,7 @@ function useAuthUser() {
     const {
       user,
       error
-    } = await supabase.auth.api.sendPasswordRestEmail(email);
+    } = await supabase.auth.api.resetPasswordForEmail(email);
     if (error) throw error;
     return user;
   };
@@ -1090,6 +1104,7 @@ function setFormOne(state, payload) {
   state.formData.cpf = payload.cpf;
   state.formData.nationality = payload.nationality;
   state.formData.profile_type_id = payload.profile_type_id;
+  state.formData.phone = payload.phone;
 }
 
 function setFormSecond(state, payload) {
@@ -2530,7 +2545,7 @@ function deleteNote({
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.miniCss = (chunkId, promises) => {
-/******/ 			var cssChunks = {"8":1,"159":1,"185":1,"294":1,"317":1,"342":1,"381":1,"458":1,"498":1,"571":1,"689":1,"702":1,"798":1,"849":1,"866":1,"919":1,"938":1,"939":1};
+/******/ 			var cssChunks = {"8":1,"22":1,"55":1,"105":1,"161":1,"185":1,"244":1,"317":1,"498":1,"537":1,"571":1,"572":1,"655":1,"668":1,"673":1,"689":1,"763":1,"798":1,"837":1,"866":1,"919":1};
 /******/ 			if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 			else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 				promises.push(installedCssChunks[chunkId] = loadStylesheet(chunkId).then(() => {

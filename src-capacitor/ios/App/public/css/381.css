@@ -1,0 +1,32 @@
+.custom-border[data-v-7545f4a1] {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  border-color: #1976D2;
+}
+.category[data-v-7545f4a1] {
+  width: 90vw;
+}
+.category .q-tabs__arrows[data-v-7545f4a1] {
+  color: #f4f4f4;
+  background: #f4f4f4;
+}
+.category .q-tab[data-v-7545f4a1] {
+  color: #c6cfe1;
+  margin: 0 10px;
+  border: 2px solid #c6cfe1;
+  border-radius: 4px;
+}
+.category .q-tab--active[data-v-7545f4a1] {
+  background: #0053ab;
+  color: white;
+  border: none;
+  text-decoration: none;
+  color: black;
+  border: 0.5px solid #f2f2f2;
+}
+.q-link[data-v-7545f4a1]:hover {
+  border: 0.5px solid #e0e0e0;
+}
+
+/*# sourceMappingURL=381.css.map*/

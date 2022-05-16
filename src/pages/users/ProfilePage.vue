@@ -2,11 +2,11 @@
   <q-page class="flex flex-center">
     <div class="column" align="center">
       <div class="col item">
-         <q-btn flat dense :to="{ name: 'meus-dados' }">
-            <q-avatar size="80px">
-              <img :src="img.img_url">
-            </q-avatar>
-          </q-btn>
+        <q-btn flat dense :to="{ name: 'meus-dados' }">
+          <q-avatar size="120px">
+            <q-img :src="img.img_url" />
+          </q-avatar>
+        </q-btn>
       </div>
       <div class="col item">
         <h6 style="margin: 0" v-if="user">{{ user.user_metadata.name }}</h6>
@@ -67,7 +67,6 @@
               class="btn-opcao"
             />
             <q-btn
-              to="/codigo-acesso"
               align="left"
               flat
               no-caps
@@ -75,6 +74,7 @@
               label="Código de acesso"
               icon-right="eva-arrow-ios-forward-outline"
               class="btn-opcao"
+              @click="copyTo(cupom[0].cod_cupom)"
             />
             <q-btn
               align="left"
@@ -167,7 +167,7 @@ import { defineComponent, ref, onMounted } from "vue";
 import useAuthUser from "src/composebles/useAuthUser";
 import useApi from "src/composebles/useApi";
 import { useRouter, useRoute } from "vue-router";
-import { useQuasar } from "quasar";
+import { useQuasar, copyToClipboard } from "quasar";
 
 export default defineComponent({
   name: "ProfilePage",
@@ -326,7 +326,7 @@ export default defineComponent({
     };
 
     const getImg = async () => {
-      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      const auxImg = await getByField("perfil", "user_id", user.value.id);
       img.value = auxImg[0];
       loading.value = false;
     };
@@ -334,19 +334,19 @@ export default defineComponent({
     onMounted(async () => {
       getImg();
       listTable();
-      loadInfo()
+      loadInfo();
     });
 
     const aboutApp = ref({
       title: "",
-      conteudo: ""
-    })
+      conteudo: "",
+    });
 
     async function loadInfo() {
-      const data = await list('sobreApp')
-      aboutApp.value = data[0]
+      const data = await list("sobreApp");
+      aboutApp.value = data[0];
     }
-    
+
     function show(grid) {
       $q.bottomSheet({
         message: "Convidar seus amigos",
@@ -393,7 +393,7 @@ export default defineComponent({
               link = `https://telegram.me/share/?url=${register}`;
             case "whatsapp":
               link = `https://telegram.me/share/?url=${register}`;
-              break
+              break;
             default:
               break;
           }
@@ -409,10 +409,39 @@ export default defineComponent({
     }
 
     function goToWhats() {
-      const title = '5541999960483'
-      window.open(`https://api.whatsapp.com/send?phone=${aboutApp.value.title}&text=&source=&data=&app_absent=`)
+      const title = "5541999960483";
+      window.open(
+        `https://api.whatsapp.com/send?phone=${aboutApp.value.title}&text=&source=&data=&app_absent=`
+      );
     }
+
+    const cupom = ref([]);
+
+    const copyTo = (cp) => {
+      if (cp) {
+        copyToClipboard(cp)
+          .then(() => {
+            $q.notify({
+              message: "Cumpom copiado para área de transfêrencia",
+            });
+
+            router.push("/codigo-acesso");
+          })
+          .catch(() => {
+            // fail
+          });
+      } else {
+        $q.notify({
+          message: "Sem Cumpom disponível",
+        });
+      }
+    };
+    onMounted(async () => {
+      cupom.value = await getByField("cupom", "user_id", user.value.id);
+    });
     return {
+      copyTo,
+      cupom,
       goToWhats,
       show,
       porcento: "%",

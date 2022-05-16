@@ -137,10 +137,48 @@ export default function useApi() {
 
   }
 
+  const setPremim = async (value) => {
+    return new Promise(async (reject, resolve) => {
+      try {
+        const perfil = await getByField("perfil", "user_id", user.value.id);
+        perfil[0].premium = value;
+        await update("perfil", perfil[0]);
+        resolve("done");
+      } catch (error) {
+        reject;
+      }
+    });
+  };
+
+  const setPremimPlan = async (free_period, days, formData, user) => {
+    try {
+      const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+      if (user_grates.length === 0) {
+        formData.user_id = user.value.id;
+        formData.created_at = new Date();
+        formData.free_period = free_period;
+        formData.dias = days
+        formData.expirou = false;
+        await post("prazo_premium", formData);
+        await setPremim(true);
+        $q.notify({
+          type: "positive",
+          message: `Está como usuário premium!!`,
+        });
+        router.push({ name: "home" });
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
 
   return {
+    setPremimPlan,
     uplodImg,
-
+    setPremim,
     getUrl,
     getByField,
     getNotByField,

@@ -1,0 +1,33 @@
+.pic[data-v-67b43e71] {
+  position: absolute;
+  top: 85px;
+  left: 80px;
+}
+.item[data-v-67b43e71] {
+  margin-bottom: 20px;
+}
+.btn-profile[data-v-67b43e71] {
+  min-width: 150px;
+  width: 95%;
+  margin-right: 10px;
+}
+.btn-prime[data-v-67b43e71] {
+  background: #FFAF00;
+}
+.btn-prime .q-icon[data-v-67b43e71] {
+  font-size: 0.4em;
+}
+.btn-opcao[data-v-67b43e71] {
+  border-bottom: 1px solid #CCCCCC;
+  width: 90%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.btn-opcao.q-btn__content[data-v-67b43e71] {
+  min-width: 100%;
+}
+.btn-opcao.q-btn__content.block[data-v-67b43e71] {
+  flex-grow: 3;
+}
+
+/*# sourceMappingURL=939.css.map*/

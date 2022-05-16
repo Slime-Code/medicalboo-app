@@ -1,0 +1,1 @@
+{"version":3,"file":"css/849.css","mappings":"AACE;EACE;EACA;EACA;AAAJ;AACE;EACE;AAEJ,C","sources":["webpack://medicalbookapp/./src/components/TopicButtom.vue"],"sourcesContent":["\n  .q-link\n    text-decoration: none\n    color: black\n    border: 0.5px solid #f2f2f2\n  .q-link:hover\n    border: 0.5px solid #e0e0e0\n"],"names":[],"sourceRoot":""}

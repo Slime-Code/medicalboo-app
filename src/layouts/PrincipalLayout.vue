@@ -1,19 +1,21 @@
 <template>
   <q-layout view="lHh lpr lFf">
-     <q-header  v-if="$q.screen.width<=599" flat bordered class="small-screen-only ground  bg-primary">
-      <q-toolbar v-if="$router.currentRoute.value.fullPath==='/home'" class="constrain-2">
+    <q-header
+      v-if="$q.screen.width <= 599"
+      flat
+      bordered
+      class="small-screen-only ground bg-primary"
+    >
+      <q-toolbar
+        v-if="$router.currentRoute.value.fullPath === '/home'"
+        class="constrain-2"
+      >
         <q-toolbar-title>
-       <q-btn flat dense :to="{ name: 'meus-dados' }">
-          <q-avatar size="80px">
-            <img :src="img.img_url">
-          </q-avatar>
-
-          <q-badge class="pic" align="bottom" style="background: #49d16b" rounded>
-            <q-icon dense name="eva-camera-outline" size="12px" color="white" />
-          </q-badge>
-        </q-btn>
-
-       
+          <q-btn flat dense :to="{ name: 'meus-dados' }">
+            <q-avatar size="80px">
+              <img :src="img.img_url" />
+            </q-avatar>
+          </q-btn>
         </q-toolbar-title>
 
         <!-- <q-btn
@@ -27,6 +29,7 @@
           :name="tab.name"
           :icon="tab.icon"
         /> -->
+        <q-space />
 
         <q-btn
           no-caps
@@ -34,28 +37,21 @@
           rounded
           label="Mais acessados"
           @click="icon = true"
-          
           icon="widgets"
           text-color="primary"
           color="white"
         >
         </q-btn>
-        
-
       </q-toolbar>
-      <q-toolbar v-if="$router.currentRoute.value.fullPath==='/home'" class="detail">
+      <q-toolbar v-if="$router.currentRoute.value.fullPath === '/home'" class="detail">
         <q-toolbar-title class="text-caption">
-        Olá {{ user.user_metadata.name }}, bom te ver por aqui
-
+          Olá {{ user.user_metadata.name }}, bom te ver por aqui
         </q-toolbar-title>
-        
       </q-toolbar>
-       <q-toolbar v-else class="detail">
+      <q-toolbar v-else class="detail">
         <q-toolbar-title class="absolute-center">
-        {{ title }}
-
+          {{ title }}
         </q-toolbar-title>
-        
       </q-toolbar>
     </q-header>
 
@@ -84,9 +80,15 @@
             </template>
 
             <template v-slot:append>
-
-               <q-btn  v-if="generalSearch" icon="cancel" size="sm" round flat @click="generalSearch=''" dense/>
-
+              <q-btn
+                v-if="generalSearch"
+                icon="cancel"
+                size="sm"
+                round
+                flat
+                @click="generalSearch = ''"
+                dense
+              />
             </template>
             <q-menu v-if="showingGeneralSearch" v-model="showingGeneralSearch">
               <q-list style="min-width: 365px">
@@ -143,27 +145,25 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-  
 
     <q-page-container>
       <router-view />
     </q-page-container>
 
-    <q-footer style="background-color: #f6f6f6" bordered>
+    <q-footer style="background-color: #f6f6f6; width: 100vw" bordered>
       <q-tabs
         v-model="tab"
         indicator-color="transparent"
         dense
         active-color="primary"
         align="justify"
-        class="constrain-4 q-pa-md text-grey-8"
+        class="constrain-4 q-pa-sm text-grey-8"
       >
         <q-route-tab
           v-for="tab in tabsLink"
           :key="tab.name"
           :to="tab.to"
           dense
-
           no-caps
           :name="tab.name"
           :icon="tab.icon"
@@ -200,7 +200,6 @@ import TopicButtom from "../components/TopicButtom.vue";
 import useApi from "../composebles/useApi";
 import useAuthUser from "../composebles/useAuthUser";
 
-
 export default defineComponent({
   name: "PrincipalLayout",
   components: {
@@ -208,14 +207,14 @@ export default defineComponent({
   },
   setup() {
     const tabsLink = [
-        {
+      {
         to: "/explore",
 
         name: "explore",
         icon: "search",
         label: "Explorar",
       },
-     
+
       {
         to: "/favorite",
 
@@ -288,21 +287,19 @@ export default defineComponent({
     const showingGeneralSearch = ref(false);
     const generalSearch = ref("");
 
-   
-    const title = computed(() =>  {
+    const title = computed(() => {
+      const current = router.currentRoute.value.fullPath;
 
-      const current = router.currentRoute.value.fullPath
-
-        if (current === '/home') return 'Página Inicial'
-        else if(current === '/favorite') return 'Favoritos'
-        else if(current === '/note') return 'Minhas notas'
-        else if(current === '/profile') return 'Perfil'
-        else if(current === '/explore') return 'Exporar'
-        else  return 'Sobre'
-    } )
+      if (current === "/home") return "Página Inicial";
+      else if (current === "/favorite") return "Favoritos";
+      else if (current === "/note") return "Minhas notas";
+      else if (current === "/profile") return "Perfil";
+      else if (current === "/explore") return "Exporar";
+      else return "Sobre";
+    });
 
     const getImg = async () => {
-      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      const auxImg = await getByField("perfil", "user_id", user.value.id);
       img.value = auxImg[0];
       loading.value = false;
     };
@@ -327,6 +324,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="sass" scoped>
-
-</style>
+<style lang="sass" scoped></style>

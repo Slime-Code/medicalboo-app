@@ -101,7 +101,7 @@ export default defineComponent({
   name: "MainPage",
   components: { Banner },
   setup() {
-    const { list, getByField, update } = useApi();
+    const { list, getByField, update, removeWhere } = useApi();
     const { user } = useAuthUser();
 
     const router = useRouter();
@@ -166,27 +166,38 @@ export default defineComponent({
 
     const foi = async () => {
       try {
-        const pegarPerfil = await getByField("perfil", "user_id", user.value.id)
-        const prazoPremium = await getByField('prazo_premium', 'user_id', user.value.id);
+        const pegarPerfil = await getByField("perfil", "user_id", user.value.id);
+        const prazoPremium = await getByField("prazo_premium", "user_id", user.value.id);
+
+        // alert(TotalDays);
+
         if (prazoPremium.length > 0) {
-          if ((!(prazoPremium[0].expirou) && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias)) {
-          prazoPremium[0].expirou = true;
-          prazoPremium[0].dias = 0;
-          pegarPerfil[0].premium = false;
-          await update('perfil', pegarPerfil[0]);
-          await update('prazo_premium', prazoPremium[0]);
-        }   
-        }     
+          const dataAtual = new Date(Date.now());
+          const dataPremium = new Date(prazoPremium[0].created_at);
+
+          const daysPay = dataPremium.getTime();
+          const currentDay = dataAtual.getTime();
+
+          const diference = currentDay - daysPay;
+          let TotalDays = Math.ceil(diference / (1000 * 3600 * 24)) - 1;
+          if (TotalDays > prazoPremium[0].dias) {
+            prazoPremium[0].sevenDayFree = true;
+            pegarPerfil[0].premium = false;
+            await update("perfil", pegarPerfil[0]);
+            await removeWhere("prazo_premium", "user_id", user.value.id);
+            perfil.value = pegarPerfil[0].premium;
+
+            alert("O prazo do periodo premium expirou");
+          }
+        }
       } catch (error) {
-        alert(error.message)
-      } finally {
-        perfil.value = pegarPerfil[0].premium;
+        alert(error.message);
       }
-      
     };
 
     onMounted(async () => {
       foi();
+      perfil.value = (await getByField("perfil", "user_id", user.value.id))[0].premium;
       listTopics();
     });
     return {

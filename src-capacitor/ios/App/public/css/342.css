@@ -1,0 +1,26 @@
+.q-header[data-v-62d28e32] {
+  background-color: #0053ab;
+}
+.q-tabs[data-v-62d28e32] {
+  color: #B2BBBB;
+  height: 80px;
+}
+.q-tab[data-v-62d28e32] {
+  margin: 0;
+  padding: 0;
+}
+.q-tab--active[data-v-62d28e32] {
+  color: #1A4B9A;
+}
+.q-tab__content[data-v-62d28e32] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+.q-tab__content .q-tab__label[data-v-62d28e32] {
+  font-size: 0.6em;
+}
+.q-toolbar__title[data-v-62d28e32] {
+  text-align: center;
+}
+
+/*# sourceMappingURL=342.css.map*/
