@@ -7,7 +7,6 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
 /* eslint-env node */
-const ESLintPlugin = require('eslint-webpack-plugin');
 /* eslint func-names: 0 */
 /* eslint global-require: 0 */
 const { configure } = require('quasar/wrappers');
@@ -35,7 +34,7 @@ module.exports = configure((ctx) => ({
   // https://github.com/quasarframework/quasar/tree/dev/extras
   extras: [
     // 'ionicons-v4',
-    // 'mdi-v5',
+    'mdi-v5',
     'fontawesome-v5',
     'eva-icons',
     // 'themify',
@@ -91,7 +90,7 @@ module.exports = configure((ctx) => ({
     config: {},
 
     // iconSet: 'material-icons', // Quasar icon set
-     lang: 'pt', // Quasar language pack
+    lang: 'pt', // Quasar language pack
 
     // For special cases outside of where the auto-import strategy can have an impact
     // (like functional components as one of the examples),
@@ -103,7 +102,7 @@ module.exports = configure((ctx) => ({
     // directives: [],
 
     // Quasar plugins
-    plugins: ['LocalStorage', 'Loading', 'Notify', 'Dialog'],
+    plugins: ['LocalStorage', 'Loading', 'Notify', 'Dialog', 'BottomSheet'],
   },
 
   // animations: 'all', // --- includes all animations
@@ -122,12 +121,6 @@ module.exports = configure((ctx) => ({
 
     maxAge: 1000 * 60 * 60 * 24 * 30,
     // Tell browser when a file from the server should expire from cache (in ms)
-
-    chainWebpackWebserver(chain) {
-      chain.plugin('eslint-webpack-plugin')
-        .use(ESLintPlugin, [{ extensions: ['js'] }]);
-    },
-
     middlewares: [
       ctx.prod ? 'compression' : '',
       'render', // keep this as last one
@@ -141,11 +134,6 @@ module.exports = configure((ctx) => ({
 
     // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
     // if using workbox in InjectManifest mode
-    chainWebpackCustomSW(chain) {
-      chain.plugin('eslint-webpack-plugin')
-        .use(ESLintPlugin, [{ extensions: ['js'] }]);
-    },
-
     manifest: {
       name: 'Medical Book Front End App',
       short_name: 'Medical Book Front End App',

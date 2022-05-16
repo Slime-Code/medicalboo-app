@@ -1,23 +1,24 @@
 <template>
-  <q-page padding>
+  <q-page padding class="constrain-2">
     <div class="column">
       <div class="col">
-        <div class="text-h5">Meus conteúdos favoritos</div>
-
-        <q-list
-          class="row justify-center q-pl-sm q-gutter-sm q-mt-lg"
-          :class="{ 'no-wrap': $q.screen.width > 599 }"
-        >
-          <ApproachButtom
-            class="col-xs-12 col-sm-12 col-md-6 col-xl-3 col-lg-6"
-            v-for="(option, index) in top"
-            :title="option"
-            :key="index"
-          />
-        </q-list>
+        <div class="text-h5 q-pa-md">Lista de favoritos</div>
       </div>
-      <br /><br />
+      <div
+        class="col row q-col-gutter-sm"
+      >
+        <ApproachButtom
+          class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-12"
+          v-for="(option, index) in top"
+          :title="option"
+          :key="index"
+        />
+      </div>
       <q-spinner v-if="loading" class="absolute-center" size="xl" color="primary" />
+    </div>
+
+    <div v-if="!top.length && !loading" class="absolute-center text-h6">
+      Sem favoritos
     </div>
   </q-page>
 </template>

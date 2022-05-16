@@ -1,179 +1,182 @@
 <template>
-    <q-page class="flex flex-center">
-      <div class="column" align="center">
-        <div class="col item">
-            <q-btn style="background: #1A4B9A; color: #1378B3" round icon="fas fa-user" size="40px">
-              <q-badge class="pic" style="background: #49D16B" rounded>
-                <q-icon dense name="eva-camera-outline" color="white" size="30px"/>
-              </q-badge>
-            </q-btn>
-        </div>
-        <div class="col item">
-          <h6 style="margin:0"> {{user.user_metadata.name}} </h6>
-          <span>Assinatura Gratis</span>
-        </div>
-        <div class="col item q-ma-md">
-          <div class="row">
-            <div class="col">
-              <q-btn
-                to="meus-dados"
-                no-caps
-                outline
-                unelevated
-                rounded
-                label="Meus dados"
-                class="btn-profile btn-sec"
-                />
-            </div>
-            <div class="col">
-              <q-btn
-                :to="{name: 'prime'}"
-                no-caps
-                no-wrap
-                unelevated
-                rounded
-                text-color="black"
-                icon="fas fa-crown"
-                label="Quero ser Prime"
-                class="btn-profile btn-prime"
-                />
-            </div>
+  <q-page class="flex flex-center">
+    <div class="column" align="center">
+      <div class="col item">
+         <q-btn flat dense :to="{ name: 'meus-dados' }">
+            <q-avatar size="80px">
+              <img :src="img.img_url">
+            </q-avatar>
+          </q-btn>
+      </div>
+      <div class="col item">
+        <h6 style="margin: 0" v-if="user">{{ user.user_metadata.name }}</h6>
+        <span>Assinatura Gratis</span>
+      </div>
+      <div class="col item q-ma-md">
+        <div class="row">
+          <div class="col">
+            <q-btn
+              to="meus-dados"
+              no-caps
+              outline
+              unelevated
+              rounded
+              label="Meus dados"
+              class="btn-profile btn-sec"
+            />
           </div>
-        </div>
-
-        <q-spinner
-          class="absolute-center"
-          v-if="loading"
-          size="xl"
-          color="primary"
-        />
-
-        <div class="col item">
-          <div class="column q-ma-md">
-            <div class="col">
-              <q-btn
-                @click="dialogAvaliarApp=true"
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Avalie o app"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Convide amigos"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
-                to="/codigo-acesso"
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Código de acesso"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Suporte"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Sobre o app"
-                icon-right="eva-arrow-ios-forward-outline"
-                class="btn-opcao"/>
-              <q-btn
-                @click="handleLogout"
-                align="left"
-                flat
-                no-caps
-                style="color: black"
-                label="Sair"
-                class="btn-opcao"/>
-            </div>
+          <div class="col">
+            <q-btn
+              :to="{ name: 'prime' }"
+              no-caps
+              no-wrap
+              unelevated
+              rounded
+              text-color="black"
+              icon="fas fa-crown"
+              label="Quero ser Prime"
+              class="btn-profile btn-prime"
+            />
           </div>
         </div>
       </div>
-  
 
-       <q-dialog v-model="dialogAvaliarApp">
-        <q-card style="min-width: 350px">
-          <q-card-section class="q-pb-none">
-            <div class="text-h6 row items-center q-pb-none">
-              <div>Avalie o App</div>
-              <q-space/>
-              <q-btn icon="close" flat round dense v-close-popup />
+      <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
+
+      <div class="col item">
+        <div class="column q-ma-md">
+          <div class="col">
+            <q-btn
+              @click="dialogAvaliarApp = true"
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Avalie o app"
+              icon-right="eva-arrow-ios-forward-outline"
+              class="btn-opcao"
+            />
+            <q-btn
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Convide amigos"
+              icon-right="eva-arrow-ios-forward-outline"
+              @click="show(true)"
+              class="btn-opcao"
+            />
+            <q-btn
+              to="/codigo-acesso"
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Código de acesso"
+              icon-right="eva-arrow-ios-forward-outline"
+              class="btn-opcao"
+            />
+            <q-btn
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Suporte"
+              icon-right="eva-arrow-ios-forward-outline"
+              class="btn-opcao"
+              @click="goToWhats"
+            />
+            <q-btn
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Sobre o app"
+              icon-right="eva-arrow-ios-forward-outline"
+              class="btn-opcao"
+              to="/about-app"
+            />
+            <q-btn
+              @click="handleLogout"
+              align="left"
+              flat
+              no-caps
+              style="color: black"
+              label="Sair"
+              class="btn-opcao"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <q-dialog v-model="dialogAvaliarApp">
+      <q-card style="min-width: 350px">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 row items-center q-pb-none">
+            <div>Avalie o App</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </div>
+        </q-card-section>
+        <div class="q-pa-md">
+          <q-form @submit="onSubmit" class="q-gutter-md">
+            <q-rating
+              name="Qualidade"
+              v-model="quality"
+              max="5"
+              size="3.5em"
+              color="yellow"
+              icon="star_border"
+              icon-selected="star"
+              no-dimming
+            />
+
+            <div>
+              <q-btn label="Classificar" type="submit" color="primary" />
             </div>
-          </q-card-section>
-            <div class="q-pa-md">
-              <q-form @submit="onSubmit" class="q-gutter-md">
-                <q-rating
-                  name="Qualidade"
-                  v-model="quality"
-                  max="5"
-                  size="3.5em"
-                  color="yellow"
-                  icon="star_border"
-                  icon-selected="star"
-                  no-dimming
-                />
+          </q-form>
 
-                <div>
-                  <q-btn label="Classificar" type="submit" color="primary"/>
-                </div>
-              </q-form>
-
-              <q-card v-if="submitResult.length > 0" flat bordered class="q-mt-md bg-grey-2">
-                <q-card-section>Obrigado pela sua classificação, ajudar-nos-a a melhorar o App:
-                </q-card-section>
-                <q-separator />
-                <q-card-section class="row q-gutter-sm items-center">
-                  <div
-                    v-for="(item, index) in submitResult"
-                    :key="index"
-                    class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders
-                     text-center text-no-wrap"
-                  >{{ item.name }} = {{ item.value * 20}}{{porcento}}</div>
-                </q-card-section>
-              </q-card>
-            </div>
-        </q-card>
-      </q-dialog>
-    </q-page>
+          <q-card v-if="submitResult.length > 0" flat bordered class="q-mt-md bg-grey-2">
+            <q-card-section
+              >Obrigado pela sua classificação, ajudar-nos-a a melhorar o App:
+            </q-card-section>
+            <q-separator />
+            <q-card-section class="row q-gutter-sm items-center">
+              <div
+                v-for="(item, index) in submitResult"
+                :key="index"
+                class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap"
+              >
+                {{ item.name }} = {{ item.value * 20 }}{{ porcento }}
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </q-card>
+    </q-dialog>
+  </q-page>
 </template>
 
 <script>
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-restricted-syntax */
 import {
   showErrorNotification,
   showSuccessNotification,
-} from 'src/functions/functionShowNotifications';
-import { defineComponent, ref, onMounted } from 'vue';
-import useAuthUser from 'src/composebles/useAuthUser';
-import useApi from 'src/composebles/useApi';
-import { useRouter, useRoute } from 'vue-router';
-import { useQuasar } from 'quasar';
+} from "src/functions/functionShowNotifications";
+import { defineComponent, ref, onMounted } from "vue";
+import useAuthUser from "src/composebles/useAuthUser";
+import useApi from "src/composebles/useApi";
+import { useRouter, useRoute } from "vue-router";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
-  name: 'ProfilePage',
+  name: "ProfilePage",
   setup() {
     const $q = useQuasar();
 
     const router = useRouter();
 
-    const { post, getByField, update } = useApi();
+    const { post, getByField, update, list } = useApi();
 
     const route = useRoute();
 
@@ -187,21 +190,23 @@ export default defineComponent({
 
     const loading = ref(false);
 
+    const img = ref({});
+
     const quality = ref(0);
 
     const submitResult = ref([]);
 
     const formData = ref({
-      password: '',
-      password1: '',
-      antigo: '',
+      password: "",
+      password1: "",
+      antigo: "",
     });
 
     // ---- Classificação do APP -----------------
     const table = ref({
       id: null,
       valor: 0,
-      user_id: '',
+      user_id: "",
     });
 
     const updatClassification = async () => {
@@ -211,18 +216,22 @@ export default defineComponent({
           delete tabela.id;
           table.value.user_id = user.value.id;
           loading.value = true;
-          await post('classification', tabela);
+          await post("classification", tabela);
           loading.value = false;
         } else {
           table.value.user_id = user.value.id;
           table.value.valor = quality.value;
           loading.value = true;
-          await update('classification', table.value);
+          await update("classification", table.value);
           loading.value = false;
         }
       } catch (error) {
         loading.value = false;
-        showErrorNotification(`Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+        showErrorNotification(
+          `Classificação Não Foi Bem Sucedida Pelo Seguinte Erro: ${JSON.stringify(
+            error
+          )}`
+        );
       }
     };
     // ---- Fim Classificação do APP -----------------
@@ -234,8 +243,8 @@ export default defineComponent({
       if (formData.value.password !== formData.value.password1) {
         // alert(JSON.stringify(user.value));
         $q.dialog({
-          title: 'Falhou!',
-          message: 'Senha Errada... Pretendes Repetir ?',
+          title: "Falhou!",
+          message: "Senha Errada... Pretendes Repetir ?",
           cancel: true,
           persistent: true,
         }).onOk(async () => {
@@ -243,8 +252,8 @@ export default defineComponent({
         });
       } else {
         $q.dialog({
-          title: 'Alterar Senha:',
-          message: 'Tens a certeza que queres alterar a Senha ?',
+          title: "Alterar Senha:",
+          message: "Tens a certeza que queres alterar a Senha ?",
           cancel: true,
           persistent: true,
         }).onOk(async () => {
@@ -254,10 +263,16 @@ export default defineComponent({
 
             await resetPassword(token, formData.value.password);
             loading.value = false;
-            showSuccessNotification(`Alteração Feita Com sucesso : ${formData.value.password1}`);
+            showSuccessNotification(
+              `Alteração Feita Com sucesso : ${formData.value.password1}`
+            );
           } catch (error) {
             loading.value = false;
-            showErrorNotification(`Alteração Não Foi Bem Sucedido Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+            showErrorNotification(
+              `Alteração Não Foi Bem Sucedido Pelo Seguinte Erro: ${JSON.stringify(
+                error
+              )}`
+            );
           }
         });
       }
@@ -268,8 +283,8 @@ export default defineComponent({
 
     const handleLogout = async () => {
       $q.dialog({
-        title: 'Sair',
-        message: 'Tens a certeza que queres Sair ?',
+        title: "Sair",
+        message: "Tens a certeza que queres Sair ?",
         cancel: true,
         persistent: true,
       }).onOk(async () => {
@@ -277,10 +292,12 @@ export default defineComponent({
           loading.value = true;
           await logout();
           loading.value = false;
-          router.replace({ name: 'login' });
+          router.replace({ name: "login" });
         } catch (error) {
           loading.value = false;
-          showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+          showErrorNotification(
+            `A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`
+          );
         }
       });
     };
@@ -291,7 +308,7 @@ export default defineComponent({
       // loading.value = true;
       try {
         const valor = 0;
-        const aux = await getByField('classification', table.value.user_id, valor);
+        const aux = await getByField("classification", table.value.user_id, valor);
         if (aux.length > 0) {
           const qualquer = aux.map((e) => e.id);
           // eslint-disable-next-line prefer-destructuring
@@ -301,16 +318,104 @@ export default defineComponent({
           quality.value = 0;
         }
       } catch (error) {
-        showErrorNotification(`A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`);
+        showErrorNotification(
+          `A Sessão Não Pode Ser Terminada Pelo Seguinte Erro: ${JSON.stringify(error)}`
+        );
       }
       /// loading.value = false;
     };
+
+    const getImg = async () => {
+      const auxImg = await getByField('perfil', 'user_id', user.value.id);
+      img.value = auxImg[0];
+      loading.value = false;
+    };
+
     onMounted(async () => {
+      getImg();
       listTable();
+      loadInfo()
     });
 
+    const aboutApp = ref({
+      title: "",
+      conteudo: ""
+    })
+
+    async function loadInfo() {
+      const data = await list('sobreApp')
+      aboutApp.value = data[0]
+    }
+    
+    function show(grid) {
+      $q.bottomSheet({
+        message: "Convidar seus amigos",
+        actions: [
+          {
+            label: "Facebook",
+            icon: "mdi-facebook",
+            color: "blue",
+            id: "facebook",
+          },
+          {
+            label: "Telegram",
+            icon: "mdi-telegram",
+            color: "primary",
+            id: "telegram",
+          },
+          {
+            label: "Linkedin",
+            icon: "mdi-linkedin",
+            color: "blue-6",
+            id: "linkedin",
+          },
+          {
+            label: "Whatsapp",
+            icon: "mdi-whatsapp",
+            color: "green",
+            id: "whatsapp",
+          },
+        ],
+      })
+        .onOk((action) => {
+          let link = "";
+
+          const register = `medicalbook.surge.sh`;
+
+          switch (action.id) {
+            case "facebook":
+              link = `https://www.facebook.com/sharer/sharer.php?u=${register}`;
+              break;
+            case "linkedin":
+              link = `https://www.linkedin.com/sharing/share-offsite/?url=${register}`;
+              break;
+            case "telegram":
+              link = `https://telegram.me/share/?url=${register}`;
+            case "whatsapp":
+              link = `https://telegram.me/share/?url=${register}`;
+              break
+            default:
+              break;
+          }
+
+          window.open(link, "_blank").focus();
+        })
+        .onCancel(() => {
+          // console.log('Dismissed')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK andtitle Cancel')
+        });
+    }
+
+    function goToWhats() {
+      const title = '5541999960483'
+      window.open(`https://api.whatsapp.com/send?phone=${aboutApp.value.title}&text=&source=&data=&app_absent=`)
+    }
     return {
-      porcento: '%',
+      goToWhats,
+      show,
+      porcento: "%",
       user,
       table,
       dialogAvaliarApp,
@@ -320,8 +425,8 @@ export default defineComponent({
       updatPassword,
       handleLogout,
       updatClassification,
-      slide: ref('style'),
-
+      slide: ref("style"),
+      img,
       quality,
       submitResult,
 
@@ -346,27 +451,27 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-  .pic
-    position: absolute
-    top: 85px
-    left: 80px
-  .item
-    margin-bottom: 20px
-  .btn-profile
-    min-width: 150px
-    width: 95%
-    margin-right: 10px
-  .btn-prime
-    background: #FFAF00
-  .btn-prime .q-icon
-    font-size: .4em
-  .btn-opcao
-    border-bottom: 1px solid #CCCCCC
-    width: 90%
-    text-align: left
-    margin-bottom: 10px
-  .btn-opcao.q-btn__content
-    min-width: 100%
-  .btn-opcao.q-btn__content.block
-    flex-grow: 3
+.pic
+  position: absolute
+  top: 85px
+  left: 80px
+.item
+  margin-bottom: 20px
+.btn-profile
+  min-width: 150px
+  width: 95%
+  margin-right: 10px
+.btn-prime
+  background: #FFAF00
+.btn-prime .q-icon
+  font-size: .4em
+.btn-opcao
+  border-bottom: 1px solid #CCCCCC
+  width: 90%
+  text-align: left
+  margin-bottom: 10px
+.btn-opcao.q-btn__content
+  min-width: 100%
+.btn-opcao.q-btn__content.block
+  flex-grow: 3
 </style>

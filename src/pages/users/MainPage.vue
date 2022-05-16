@@ -1,25 +1,33 @@
 <template>
-  <q-page class="q-pa-md constrain">
-    <q-tabs
-      v-model="tab"
-      inline-label
-      mobile-arrows
-      active-color="primary"
-      outline
-      indicator-color="transparent"
-    >
-      <q-tab
-        v-for="(category, index) in categorys"
-        :key="index"
-        :name="category.name"
-        :label="category.name"
-        @click="getTopicByCategory(category.id)"
-      />
-      <div>
-        <q-spinner v-if="loadingCategory" color="primary" size="3em" />
-      </div>
-    </q-tabs>
-    <q-separator v-if="!loadingTopic" />
+  <q-page class="q-pa-md constrain-2">
+    <q-card flat>
+      <q-card-section class="q-pa-sm">
+        <q-tabs
+          class="text-grey-6"
+          v-model="tab"
+          inline-label
+          active-color="white"
+          active-bg-color="primary"
+          dense
+          no-caps
+          indicator-color="transparent"
+        >
+          <div v-for="(category, index) in categorys" :key="index">
+            <q-tab
+              class="custom-border q-mx-xs"
+              :name="category.name"
+              :label="category.name"
+              @click="getTopicByCategory(category.id)"
+              v-if="category.premium === false || (category.premium && perfil)"
+            />
+          </div>
+
+          <div>
+            <q-spinner v-if="loadingCategory" color="primary" size="3em" />
+          </div>
+        </q-tabs>
+      </q-card-section>
+    </q-card>
 
     <div class="column justify-around" style="height: 100%">
       <q-tab-panels
@@ -37,68 +45,35 @@
           :key="index"
           :name="category.name"
         >
-          <q-card
-            v-for="(topic, index) in topics"
-            :key="index"
-            style="background-color: #f6f6f6"
-            flat
-            bordered
-            class="q-my-sm col-sm-12 col-xs-12 col-md-6 col-lg-4"
-          >
-            <q-item clickable v-ripple @click="go(topic.id)">
-              <q-item-section side>
-                <q-avatar :color="color_icon" text-color="white" :icon="icon" />
-              </q-item-section>
+          <template v-for="(topic, index) in topics" :key="index">
+            <q-card
+              style="background-color: #f6f6f6"
+              flat
+              bordered
+              v-if="topic.premium === false || (topic.premium && perfil)"
+              class="q-my-sm col-sm-12 col-xs-12 col-md-4 col-lg-3"
+            >
+              <q-item clickable v-ripple @click="go(topic.id)">
+                <q-item-section side>
+                  <q-avatar :color="color_icon" text-color="white" :icon="icon" />
+                </q-item-section>
 
-              <q-item-section>
-                {{ topic.name }}
-              </q-item-section>
-            </q-item>
-          </q-card>
+                <q-item-section>
+                  {{ topic.name }}
+                </q-item-section>
+              </q-item>
+            </q-card>
+          </template>
+
           <span v-if="!topics.length && !loadingTopic" class="text-center text-body1">
             Nenhum tópico para esta categória
           </span>
         </q-tab-panel>
       </q-tab-panels>
 
-      <q-space vertical> </q-space>
-      <q-toolbar-title v-if="!loadingTopic" class="text-caption q-pa-sm">
-        Outras versões Medicalbook
-      </q-toolbar-title>
-      <q-card
-        flat
-        bordered
-        v-if="!loadingTopic"
-        class="q-mb-md row justify-center items-start"
-      >
-        <q-banner rounded class="col-sm-12 col-xs-12 col-md-6 col-lg-4">
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'prime' }">
-              <img class="full-width" src="img/banner-premium.png" style="height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
-              <img src="img/Grátis@2x.png" style="width: 100%; height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-        <q-banner class="col-sm-12 col-xs-12 col-md-6 col-lg-4" rounded>
-          <template v-slot:avatar>
-            <q-btn flat :to="{ name: 'accesso-por-capitulo' }">
-              <img src="img/Grátis-2.png" style="width: 100%; height: 100%" />
-            </q-btn>
-          </template>
-
-          <template v-slot:action> </template>
-        </q-banner>
-      </q-card>
+      <div v-if="!loadingTopic">
+        <Banner />
+      </div>
     </div>
 
     <q-inner-loading
@@ -112,17 +87,22 @@
 </template>
 
 <script>
+import { post } from "@supabase/gotrue-js/dist/module/lib/fetch";
+import useAuthUser from "src/composebles/useAuthUser";
 import { showErrorNotification } from "src/functions/functionShowNotifications";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import Banner from "../../components/Banner.vue";
+
 // import TopicButtom from '../../components/TopicButtom.vue';
 /* eslint-disable no-alert */
 import useApi from "../../composebles/useApi";
-
 export default defineComponent({
   name: "MainPage",
+  components: { Banner },
   setup() {
-    const { list, getByField } = useApi();
+    const { list, getByField, update } = useApi();
+    const { user } = useAuthUser();
 
     const router = useRouter();
 
@@ -160,7 +140,7 @@ export default defineComponent({
         categorys.value.sort();
         loadingCategory.value = false;
         // // eslint-disable-next-line prefer-destructuring
-        tab.value = categorys.value[0].name;
+        tab.value = categorys.value.find((c) => c.premium === false).name;
 
         await getTopicByCategory(categorys.value[0].id);
       } catch (error) {
@@ -182,14 +162,35 @@ export default defineComponent({
       chave: null,
       valo: null,
     });
+    const perfil = ref();
+
     const foi = async () => {
-      console.log(topicAcessado.value);
+      try {
+        const pegarPerfil = await getByField("perfil", "user_id", user.value.id)
+        const prazoPremium = await getByField('prazo_premium', 'user_id', user.value.id);
+        if (prazoPremium.length > 0) {
+          if ((!(prazoPremium[0].expirou) && ((new Date()) - (prazoPremium[0].created_at)) > prazoPremium[0].dias)) {
+          prazoPremium[0].expirou = true;
+          prazoPremium[0].dias = 0;
+          pegarPerfil[0].premium = false;
+          await update('perfil', pegarPerfil[0]);
+          await update('prazo_premium', prazoPremium[0]);
+        }   
+        }     
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        perfil.value = pegarPerfil[0].premium;
+      }
+      
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+      foi();
       listTopics();
     });
     return {
+      perfil,
       go,
       getTopicByCategory,
       todos,
@@ -214,6 +215,11 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.custom-border
+  border-style: solid
+  border-width: 1px
+  border-radius: 4px
+  border-color: $primary
 .category
   width: 90vw
 .category .q-tabs__arrows

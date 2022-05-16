@@ -37,6 +37,21 @@
                   val => val !== null && val !== '' || 'Campo não pode estar vazio'
                 ]"
               />
+
+              <q-input
+                label="Telefone"
+                dense
+                rounded
+                outlined
+                mask="(##) #########"
+                v-model="formData.phone"
+                autofocus
+                lazy-rules
+                :rules="[
+                  val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                ]"
+              />
+
               <q-input
                 dense
                 v-model="formData.cpf"
@@ -113,6 +128,7 @@ export default defineComponent({
       cpf: '',
       nationality: '',
       profile_type_id: 1,
+      phone: null
     });
     const options = ref([]);
     const tipo = ref([

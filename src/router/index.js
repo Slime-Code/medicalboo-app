@@ -29,21 +29,21 @@ export default route((/* { store, ssrContext } */) => {
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE),
   });
 
-  // eslint-disable-next-line consistent-return
   Router.beforeEach((to) => {
+
+    const { user } = useAuthUser();
+    if (
+      to.hash.includes('type=recovery') &&
+      to.name !== 'reset-password'
+    ) {
+      const accessToken = to.hash.split('&')[0];
+      const token = accessToken.replace('#access_token=', '');
+      return { name: 'reset-password', query: { token } };
+    }
 
 
     if (to.fullPath === '/admin') {
       return {name: 'login', query:{access: 'admin'}}
-    }
-    const { user } = useAuthUser();
-    if (
-      to.hash.includes('type=recovery')
-         && to.name !== 'reset-password'
-    ) {
-      const accessToken = to.hash.split('&')[0];
-      const token = accessToken.replace('#acess_token=', '');
-      return { name: 'reset-password', query: { token } };
     }
 
     const isLoggedIn = !!user.value;
@@ -59,3 +59,4 @@ export default route((/* { store, ssrContext } */) => {
 
   return Router;
 });
+

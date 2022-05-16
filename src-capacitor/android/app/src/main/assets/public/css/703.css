@@ -1,0 +1,26 @@
+.category[data-v-ab2dab44] {
+  width: 90vw;
+}
+.category .q-tabs__arrows[data-v-ab2dab44] {
+  color: #f4f4f4;
+  background: #f4f4f4;
+}
+.category .q-tab[data-v-ab2dab44] {
+  color: #c6cfe1;
+  margin: 0 10px;
+  border: 2px solid #c6cfe1;
+  border-radius: 4px;
+}
+.category .q-tab--active[data-v-ab2dab44] {
+  background: #0053ab;
+  color: white;
+  border: none;
+  text-decoration: none;
+  color: black;
+  border: 0.5px solid #f2f2f2;
+}
+.q-link[data-v-ab2dab44]:hover {
+  border: 0.5px solid #e0e0e0;
+}
+
+/*# sourceMappingURL=703.css.map*/

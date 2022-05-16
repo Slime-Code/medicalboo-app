@@ -1,11 +1,8 @@
 <template>
-  <q-page
-    padding
-    class="row justify-center q-gutter-sm"
-  >
+  <q-page padding class="row justify-center q-gutter-sm">
     <div class="col-6 col-xs-12 col-md-6 col-lg-6 col-xl-6">
       <q-input
-      class="q-mt-md"
+        class="q-mt-md"
         outlined
         rounded
         bottom-slots
@@ -14,15 +11,6 @@
         dense
         @update:model-value="searchNote()"
       >
-        <template v-slot:append>
-          <q-icon
-            v-if="text !== ''"
-            name="close"
-            @click="text = ''"
-            class="cursor-pointer"
-          />
-          <q-icon name="search" />
-        </template>
       </q-input>
       <div class="q-row">
         <div v-for="(i, index) in notas" :key="index">
@@ -72,17 +60,17 @@
           </div>
         </div>
       </div>
-      <q-page-sticky position="bottom-left" :offset="[320, 18]">
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn
           @click="addDataBase"
           fab
           color="green"
           icon="add"
           class="flax absolute-down"
-        />
+        />   <q-inner-loading :showing="loading" color="primary" />
       </q-page-sticky>
       <br />
-      <q-inner-loading :showing="loading" color="primary" />
+   
     </div>
   </q-page>
 </template>
@@ -135,13 +123,11 @@ export default defineComponent({
           user_id: user.value.id,
         });
 
-   $q.notify({
+        $q.notify({
           type: "positive",
           message: "Nota criada com sucesso!!",
         });
         notas.value.push(note[0]);
-
-     
       } catch (error) {
         alert(error.message);
       }
@@ -189,19 +175,17 @@ export default defineComponent({
 
     const getNoteByUser = async () => {
       try {
-         loading.value=true
-          notas.value = await getByField("notas", 'user_id', user.value.id);
+        loading.value = true;
+        notas.value = await getByField("notas", "user_id", user.value.id);
+        lastNotes.value = [...notas.value]
       } catch (error) {
-        alert(error.message)
+        alert(error.message);
       } finally {
-      loading.value=false
-
+        loading.value = false;
       }
-    }
+    };
     onMounted(() => {
-      
-      getNoteByUser()
-
+      getNoteByUser();
     });
 
     return {

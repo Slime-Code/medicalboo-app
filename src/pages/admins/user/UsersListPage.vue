@@ -16,6 +16,7 @@
       </div>
       <div class="q-mt-md">
         <q-table
+          :filter="filter"
           color="primary"
           :dense="$q.screen.lt.sm"
           flat
@@ -28,6 +29,13 @@
           row-key="title"
           separator="cell"
         >
+          <template v-slot:top-right>
+            <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+          </template>
           <template v-slot:body="props">
             <q-tr :props="props" v-if="props.row.perfil !== 3">
               <q-td key="title" :props="props">
@@ -59,8 +67,9 @@
                 <p v-if="props.row.perfil == 1">Estudante</p>
                 <p v-else-if="props.row.perfil == 2">Proficional</p>
               </q-td>
-              <q-td key="options" class="text-right" :props="props">
-                <q-btn flat square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+              <q-td key="options" class="text-center" :props="props">
+                <q-btn flat color="red" square icon="delete" @click="confirmDelete(props.row.id)" dense/>
+                <q-btn label="cupom" color="primary" flat square icon="money" @click="newDialog(props.row.id)" dense/>
               </q-td>
             </q-tr>
           </template>
@@ -252,6 +261,26 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="dialogCupom" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6 row item-start">
+                <q-icon name="money" style="margin-right: 10px"/> Gerar cupom
+                <q-space/>
+                <q-btn icon="close" flat round dense v-close-popup />
+              </div>
+              <q-separator />
+            </q-card-section><br>
+            <q-form @submit="gerarCupom">
+              <q-card-actions align="left" class="text-primary">
+                <q-input filled v-model="formData.percentagem" label="Percentagem" style="max-width: 150px; width: 150px;" suffix="% "/>
+                <q-btn  label="Salvar Valor" size="19px" no-caps no-wrap unelevated style="background-color: #FFC300; margin-left: 10px; max-width: 150px; width: 150px" text-color="black"  type="submit" v-ripple v-close-popup />
+              </q-card-actions><br>
+            </q-form>
+          </q-card>
+
+        </q-dialog>
+
     <q-inner-loading
       :showing="loading"
       label="Atualizando..."
@@ -270,6 +299,7 @@ import {
 import {
   defineComponent, onMounted, reactive, ref,
 } from 'vue';
+import cc from 'coupon-code';
 import { useQuasar } from 'quasar';
 import useApi from '../../../composebles/useApi';
 
@@ -348,7 +378,7 @@ const columns = [
   },
 
   {
-    name: 'options', align: 'right', label: 'Ação', field: 'options', sortable: true,
+    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
   },
 
 ];
@@ -359,17 +389,18 @@ export default defineComponent({
     const loading = ref(true);
     const $q = useQuasar();
 
-    const {
-      list, post, update, remove,
-    } = useApi();
+    const { list, post, update, remove, getByField } = useApi();
 
     const rows = ref([]);
 
     const topics = ref([]);
 
     const formData = reactive({
-      name: '',
+      cod_cupom: '',
+      percentagem: 0,
+      user_id: null,
       id: null,
+      created_at: null
     });
 
     const formUser = reactive({
@@ -492,16 +523,25 @@ export default defineComponent({
 
     };
 
-    const dialogUser = ref(false);
-    const newDialog = (data) => {
+    const dialogCupom = ref(false);
+    const newDialog = async (data) => {
       if (data) {
-        Object.keys(data).forEach((key) => {
-          formData[key] = data[key];
-        });
+        const auxUserId = await getByField('perfil', 'id', data)
+        const user_id = await getByField('cupom', 'user_id', auxUserId[0].user_id)
+        if (user_id.length > 0) {
+          $q.notify({
+            type: "negative",
+            message: `O usuário ${auxUserId[0].name}, já possui um cupom!!`,
+          });
+        } else {
+          formData.user_id = auxUserId[0].user_id;
+          dialogCupom.value = true;
+        }
       } else {
-        formData.name = '';
+        formData.cod_cupom = '';
+        formData.percentagem = 0;
+        formData.user_id = null;
       }
-      dialogUser.value = true;
     };
 
     function confirmDelete(id) {
@@ -522,22 +562,49 @@ export default defineComponent({
         });
     }
 
+    const gerarCupom = async () => {
+      try {
+        formData.cod_cupom = cc.generate();
+        formData.created_at = new Date();
+        delete formData.id;
+        $q.dialog({
+          title: 'Gerar Cupom?',
+          message: 'Tens a certeza que queres gerar esse cupom?',
+          persistent: true,
+          cancel: 'Cancelar',
+        }).onOk(() => {
+          post('cupom', formData);
+          $q.notify({
+            type: "positive",
+            message: "Cupom criado com sucesso!!",
+          });
+        }).onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+      } catch (error) {
+        alert('verifique se está conectado a internet!!')
+      }
+      
+    }
+
     return {
       options,
       tipo,
+      gerarCupom,
       confirmDelete,
       newDialog,
       formData,
       formUser,
       loading,
       deleteItem,
-      dialogUser,
+      dialogCupom,
       saveItem,
       onItemClick,
       columns,
       rows,
       listAll,
       topics,
+      filter: ref(''),
       varDialogPassword: ref(false),
     };
   },
