@@ -159,11 +159,69 @@ export default defineComponent({
     const deleteItem = async (id) => {
       try {
         loading.value = true;
+<<<<<<< HEAD
+        idTopic.value = await getByField('topic', 'categoria_id', id);
+        alert(idTopic.value);
+        idTopic.forEach(async (e) => {
+          const approachId = await getByField('approach', 'topic_id', e.id);
+          approachId.forEach(async (elem) => {
+            const exameId = await getByField('exameComplementar', 'approach_id', elem.id);
+            for await (let exame of exameId.value) {
+              await remove('exameComplementar', exame.id);
+            }
+            /*
+            exameId.forEach(async (ment) => {
+              await remove('exameComplementar', ment.id);
+            });
+            */
+            const definicaoId = await getByField('definicao', 'approach_id', elem.id);
+            for await (let definicao of definicaoId.value) {
+              await remove('definicao', definicao.id);
+            }
+            /*
+            definicaoId.forEach(async (ment) => {
+              await remove('definicao', ment.id);
+            });
+            */
+            const contenteId = await getByField('approach_contents', 'id_approach', elem.id);
+            for await (let contente of contenteId.value) {
+              await remove('approach_contents', contente.id);
+            }
+            /*
+            contenteId.forEach(async (ment) => {
+              await remove('approach_contents', ment.id);
+            });
+            */
+            const favritoId = await getByField('favorite_approach_user', 'approach_id', elem.id);
+            for await (let favrito of favritoId.value) {
+              await remove('favorite_approach_user', favrito.id);
+            }
+            /*
+            favritoId.forEach(async (ment) => {
+              await remove('favorite_approach_user', ment.id);
+            });
+            */
+=======
+>>>>>>> 61e96e970f4ba66d62b78c69f522f02514984844
 
         const allIdsTOpic = await getByField("topic", "categoria_id", id);
 
+<<<<<<< HEAD
+          const idAcessTopicUser = await getByField('access_topic_user', 'topic_id', e.id);
+          alert(idAcessTopicUser);
+          for await (let AcessTopicUser of idAcessTopicUser.value) {
+            alert('foiiiii');
+            await remove('access_topic_user', AcessTopicUser.id);
+          }
+          /*
+          idAcessTopicUser.forEach(async (el) => {
+            await remove('access_topic_user', el.id);
+          });
+          */
+=======
         for await (const t of allIdsTOpic) {
           await removeWhere("access_topic_user", "topic_id", t.id);
+>>>>>>> 61e96e970f4ba66d62b78c69f522f02514984844
 
           const app = await getByField("approach", "topic_id", t.id);
 
@@ -174,7 +232,17 @@ export default defineComponent({
           await removeWhere("approach", "topic_id", t.id);
         }
 
+<<<<<<< HEAD
+        /*
+        idTopic.value.forEach(async (element) => {
+          // await remove('topic', e.id);
+          await remove('topic', element.id);
+          alert(`eliminar${JSON.stringify(element)}`);
+        });
+        */
+=======
         await removeWhere("topic", "categoria_id", Number(id));
+>>>>>>> 61e96e970f4ba66d62b78c69f522f02514984844
 
         await remove("categoria", id);
       } catch (error) {

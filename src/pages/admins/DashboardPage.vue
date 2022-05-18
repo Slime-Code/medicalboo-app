@@ -60,19 +60,10 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { defineComponent, onMounted, ref } from 'vue';
-import useApi from '../../composebles/useApi';
-import CardDashboard from '../../components/CardDashboard.vue';
-import CardDashboard1 from '../../components/CardDashboard1.vue';
-import CardDashboard2 from '../../components/CardDashboard2.vue';
-import CardDashboard3 from '../../components/CardDashboard3.vue';
-=======
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import useApi from "../../composebles/useApi";
 import CardDashboard from "../../components/CardDashboard.vue";
 import VueApexCharts from "vue3-apexcharts";
->>>>>>> 61e96e970f4ba66d62b78c69f522f02514984844
 
 export default defineComponent({
   name: "DashboardPage",
@@ -109,47 +100,9 @@ export default defineComponent({
     // eslint-disable-next-line prefer-template
     // const data = now.getFullYear + '-' + now.getMonth + '-' + now.getDay;
 
-<<<<<<< HEAD
-    const { list, getByField } = useApi();
-
-    const listDados = async () => {
-      const contes = await list('perfil');
-      const categorias = await list('categoria');
-
-      // Artigos Caadastrados em 14 Categorias..................................................
-      categorias.forEach(async (el) => {
-        const topicos = await getByField('topic', 'categoria_id', el.id);
-        topicos.forEach(async (element) => {
-          const approaches = await getByField('approach', 'topic_id', element.id);
-          cont.value += approaches.length;
-        });
-      });
-
-      contCategoria.value = categorias.length;
-
-      // Total De Usuários Premiums e Normais.....................................................
-
-      contes.forEach((element) => {
-        if (element.premium) {
-          userPremium.value += 1;
-        } else {
-          userNormal.value += 1;
-        }
-        // eslint-disable-next-line eqeqeq
-        if (element.created_at == now) {
-          usuariosHoje.value += 1;
-        }
-      });
-      usuarios.value = userNormal.value + userPremium.value;
-      percentagemPremium.value = (100 * userPremium.value) / usuarios.value;
-      percentagemCadastradosHoje.value = (100 * usuariosHoje.value) / usuarios.value;
-    };
-
-=======
     const { list, getByField, getNotByField } = useApi();
     const loading = ref(true);
   
->>>>>>> 61e96e970f4ba66d62b78c69f522f02514984844
     onMounted(() => {
       listDados();
     });
