@@ -215,6 +215,7 @@ export default defineComponent({
         loading.value = false;
       } catch (error) {
         loading.value = false;
+        await remove("topic", id);
         alert(JSON.stringify(error));
       }
     };
