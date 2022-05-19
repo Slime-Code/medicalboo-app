@@ -416,9 +416,7 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        alert(JSON.stringify(formUser))
         if (!formUser.id) {
-          alert(formUser.id)
           const aux = formUser;
           delete aux.id;
           const use = await register(aux);
@@ -426,12 +424,10 @@ export default defineComponent({
           formUser.user_id = use.id;
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert('fuiiiiiiii')
           await post("perfil", formUser);
         } else {
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert('atualizar')
           await update("perfil", formUser);
         }
         listAll();

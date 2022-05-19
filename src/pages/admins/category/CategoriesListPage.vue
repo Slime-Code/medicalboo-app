@@ -189,11 +189,14 @@ export default defineComponent({
       try {
         loading.value = true;
         if (!formData.id) {
-          delete formData.id;
+          const aux = formData;
+          delete aux.id;
 
-          await post("categoria", formData);
+          await post("categoria", aux);
         } else {
           await update("categoria", formData);
+          formData.id = null;
+          formData.premium = false;
         }
         listAll();
       } catch (error) {
