@@ -65,7 +65,7 @@
           color="green-5"
           rounded
           label="Quero Ser Premium"
-          @click="seteDiasGrates"
+          href="https://buy.stripe.com/test_00g8At4EX8wi2iIbII"
         />
 
         <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />

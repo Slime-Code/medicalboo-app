@@ -178,6 +178,36 @@ export default defineComponent({
       try {
         loading.value = true;
         const approachId = await getByField("approach", "topic_id", id);
+
+        for await (let elem of approachId) {
+          const exameId = await getByField("exameComplementar", "approach_id", elem.id);
+          exameId.forEach(async (ment) => {
+            await remove("exameComplementar", ment.id);
+          });
+          const definicaoId = await getByField("definicao", "approach_id", elem.id);
+          definicaoId.forEach(async (ment) => {
+            await remove("definicao", ment.id);
+          });
+          const contenteId = await getByField(
+            "approach_contents",
+            "id_approach",
+            elem.id
+          );
+          contenteId.forEach(async (ment) => {
+            await remove("approach_contents", ment.id);
+          });
+          const favritoId = await getByField(
+            "favorite_approach_user",
+            "approach_id",
+            elem.id
+          );
+          favritoId.forEach(async (ment) => {
+            await remove("favorite_approach_user", ment.id);
+          });
+
+          await remove("approach", elem.id);
+        }
+        /*
         approachId.forEach(async (elem) => {
           const exameId = await getByField("exameComplementar", "approach_id", elem.id);
           exameId.forEach(async (ment) => {
@@ -206,6 +236,8 @@ export default defineComponent({
 
           await remove("approach", elem.id);
         });
+        */
+       
         const idAcessTopicUser = await getByField("access_topic_user", "topic_id", id);
         idAcessTopicUser.forEach(async (element) => {
           await remove("access_topic_user", element.id);
