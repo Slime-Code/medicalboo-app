@@ -8,8 +8,9 @@
 /* harmony export */   "Z": () => (/* binding */ useApi)
 /* harmony export */ });
 /* harmony import */ var boot_supabase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2421);
-/* eslint-disable linebreak-style */
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4259);
  // import useAuthUser from './useAuthUser';
+
 
 function useApi() {
   const {
@@ -39,6 +40,15 @@ function useApi() {
       data,
       error
     } = await supabase.from(table).select('*').eq(field, value);
+    if (error) throw error;
+    return data;
+  };
+
+  const getNotByField = async (table, field, value) => {
+    const {
+      data,
+      error
+    } = await supabase.from(table).select('*').neq(field, value);
     if (error) throw error;
     return data;
   };
@@ -101,8 +111,75 @@ function useApi() {
     return data;
   };
 
+  const uplodImg = async (file, storage) => {
+    const fileName = (0,uuid__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)();
+    const {
+      error
+    } = await supabase.storage.from(storage).upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+    if (error) throw error;
+    const url = await getUrl(fileName, storage);
+    return url;
+  };
+
+  const getUrl = async (fileName, storage) => {
+    const {
+      publicURL,
+      error
+    } = await supabase.storage.from(storage).getPublicUrl(fileName);
+    if (error) throw error;
+    return publicURL;
+  };
+
+  const setPremim = async value => {
+    return new Promise(async (reject, resolve) => {
+      try {
+        const perfil = await getByField("perfil", "user_id", user.value.id);
+        perfil[0].premium = value;
+        await update("perfil", perfil[0]);
+        resolve("done");
+      } catch (error) {
+        reject;
+      }
+    });
+  };
+
+  const setPremimPlan = async (free_period, days, formData, user) => {
+    try {
+      const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+
+      if (user_grates.length === 0) {
+        formData.user_id = user.value.id;
+        formData.created_at = new Date();
+        formData.free_period = free_period;
+        formData.dias = days;
+        formData.expirou = false;
+        await post("prazo_premium", formData);
+        await setPremim(true);
+        $q.notify({
+          type: "positive",
+          message: `Está como usuário premium!!`
+        });
+        router.push({
+          name: "home"
+        });
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
+    setPremimPlan,
+    uplodImg,
+    setPremim,
+    getUrl,
     getByField,
+    getNotByField,
     list,
     getById,
     post,
@@ -115,215 +192,7 @@ function useApi() {
 
 /***/ }),
 
-/***/ 6804:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "Z": () => (/* binding */ ApproachButtom)
-});
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.iterator.js
-var web_dom_collections_iterator = __webpack_require__(71);
-// EXTERNAL MODULE: ./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
-var runtime_core_esm_bundler = __webpack_require__(3673);
-// EXTERNAL MODULE: ./node_modules/@vue/shared/dist/shared.esm-bundler.js
-var shared_esm_bundler = __webpack_require__(2323);
-;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/components/ApproachButtom.vue?vue&type=template&id=ac079208&scoped=true
-
-
-
-const _withScopeId = n => ((0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-ac079208"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n);
-
-const _hoisted_1 = {
-  class: "q-link cursor-pointer q-ma-xs"
-};
-const _hoisted_2 = {
-  class: "row"
-};
-const _hoisted_3 = {
-  class: "col-grow-1 q-pa-xs"
-};
-const _hoisted_4 = {
-  class: "column"
-};
-
-const _hoisted_5 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
-  class: "col-grow-1"
-}, [/*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
-  class: "q-approach-bar"
-})], -1));
-
-function render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_q_rating = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-rating");
-
-  const _component_q_banner = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-banner");
-
-  return (0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createElementBlock */.iD)("a", _hoisted_1, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_banner, {
-    rounded: "",
-    class: "bg-white text-grey-6 q-approach"
-  }, {
-    default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_2, [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
-      onClick: _cache[0] || (_cache[0] = (...args) => _ctx.go && _ctx.go(...args)),
-      class: "col q-py-xs"
-    }, (0,shared_esm_bundler/* toDisplayString */.zw)(_ctx.title.title), 1), (0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_3, [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_4, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_rating, {
-      onClick: _ctx.addFavorit,
-      max: "1",
-      modelValue: _ctx.ratingModel,
-      "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => _ctx.ratingModel = $event),
-      name: "quality",
-      size: "2em",
-      color: "yellow",
-      icon: "star_border",
-      "icon-selected": "star",
-      "no-dimming": ""
-    }, null, 8, ["onClick", "modelValue"])])]), _hoisted_5])]),
-    _: 1
-  })]);
-}
-;// CONCATENATED MODULE: ./src/components/ApproachButtom.vue?vue&type=template&id=ac079208&scoped=true
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.json.stringify.js
-var es_json_stringify = __webpack_require__(2100);
-// EXTERNAL MODULE: ./src/functions/functionShowNotifications.js
-var functionShowNotifications = __webpack_require__(4605);
-// EXTERNAL MODULE: ./node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
-var reactivity_esm_bundler = __webpack_require__(1959);
-// EXTERNAL MODULE: ./node_modules/vue-router/dist/vue-router.esm-bundler.js
-var vue_router_esm_bundler = __webpack_require__(9582);
-// EXTERNAL MODULE: ./src/composebles/useApi.js
-var useApi = __webpack_require__(811);
-// EXTERNAL MODULE: ./src/composebles/useAuthUser.js
-var useAuthUser = __webpack_require__(4958);
-;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/components/ApproachButtom.vue?vue&type=script&lang=js
-
-
-
-
-
-
-/* harmony default export */ const ApproachButtomvue_type_script_lang_js = ((0,runtime_core_esm_bundler/* defineComponent */.aZ)({
-  name: 'ApproachButtom',
-  props: {
-    title: {
-      type: Object,
-      required: 'Sem titulo'
-    },
-    icon: {
-      type: String,
-      default: 'img:img/feto.png'
-    },
-    color: {
-      type: String,
-      default: ''
-    },
-    accessCap: {
-      type: Boolean,
-      default: true
-    }
-  },
-
-  setup(props) {
-    const {
-      user
-    } = (0,useAuthUser/* default */.Z)();
-    const router = (0,vue_router_esm_bundler/* useRouter */.tv)();
-    const loading = (0,reactivity_esm_bundler/* ref */.iH)(true);
-    const {
-      post,
-      remove,
-      getByField
-    } = (0,useApi/* default */.Z)();
-    const formData = {
-      user_id: '',
-      approach_id: ''
-    };
-
-    const go = async (evt, index) => {
-      router.push(`/approach-detail/${props.title.id}`);
-    }; // ---------- Inicializar O estado De Favoritos -------------
-
-
-    const ratingModel = (0,reactivity_esm_bundler/* ref */.iH)(0);
-
-    const initFavorit = async () => {
-      try {
-        const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
-
-        if (idFavorit.length > 0) {
-          ratingModel.value = 1;
-        } else {
-          ratingModel.value = 0;
-        } // alert(JSON.stringify(idFavorit));
-
-      } catch (error) {
-        (0,functionShowNotifications/* showErrorNotification */.s)(`falha na Operação Pelo Seguinte Erro: ${JSON.stringify(error)}`);
-      } /// loading.value = false;
-
-    }; // ---------- Fim Inicializar O estado De Favoritos -------------
-
-
-    const addFavorit = async () => {
-      try {
-        if (ratingModel.value !== 1) {
-          const idFavorit = await getByField('favorite_approach_user', 'approach_id', props.title.id);
-          await remove('favorite_approach_user', idFavorit[0].id);
-        } else {
-          formData.user_id = user.value.id;
-          formData.approach_id = props.title.id;
-          loading.value = true;
-          await post('favorite_approach_user', formData);
-          loading.value = false;
-          (0,functionShowNotifications/* showSuccessNotification */.L)(' Adicionado aos favoritos com sucesso !!!');
-        }
-      } catch (error) {
-        (0,functionShowNotifications/* showErrorNotification */.s)(JSON.stringify(error));
-      }
-    };
-
-    (0,runtime_core_esm_bundler/* onMounted */.bv)(async () => {
-      await initFavorit();
-    });
-    return {
-      addFavorit,
-      go,
-      ratingModel
-    };
-  }
-
-}));
-;// CONCATENATED MODULE: ./src/components/ApproachButtom.vue?vue&type=script&lang=js
- 
-// EXTERNAL MODULE: ./node_modules/vue-loader/dist/exportHelper.js
-var exportHelper = __webpack_require__(4260);
-// EXTERNAL MODULE: ./node_modules/quasar/src/components/banner/QBanner.js
-var QBanner = __webpack_require__(5607);
-// EXTERNAL MODULE: ./node_modules/quasar/src/components/rating/QRating.js
-var QRating = __webpack_require__(8833);
-// EXTERNAL MODULE: ./node_modules/@quasar/app/lib/webpack/runtime.auto-import.js
-var runtime_auto_import = __webpack_require__(7518);
-var runtime_auto_import_default = /*#__PURE__*/__webpack_require__.n(runtime_auto_import);
-;// CONCATENATED MODULE: ./src/components/ApproachButtom.vue
-
-
-
-
-;
-
-
-const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(ApproachButtomvue_type_script_lang_js, [['render',render],['__scopeId',"data-v-ac079208"]])
-
-/* harmony default export */ const ApproachButtom = (__exports__);
-;
-
-
-runtime_auto_import_default()(ApproachButtomvue_type_script_lang_js, 'components', {QBanner: QBanner/* default */.Z,QRating: QRating/* default */.Z});
-
-
-/***/ }),
-
-/***/ 2668:
+/***/ 668:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -331,168 +200,391 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ FavoritePage)
+  "default": () => (/* binding */ OccupationAreasListPage)
 });
 
 // EXTERNAL MODULE: ./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js
 var runtime_core_esm_bundler = __webpack_require__(3673);
 // EXTERNAL MODULE: ./node_modules/@vue/shared/dist/shared.esm-bundler.js
 var shared_esm_bundler = __webpack_require__(2323);
-;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/pages/users/FavoritePage.vue?vue&type=template&id=27ed24f5&scoped=true
+;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/pages/admins/occupation-area/OccupationAreasListPage.vue?vue&type=template&id=75235afc&scoped=true
 
 
-const _withScopeId = n => ((0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-27ed24f5"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n);
+const _withScopeId = n => ((0,runtime_core_esm_bundler/* pushScopeId */.dD)("data-v-75235afc"), n = n(), (0,runtime_core_esm_bundler/* popScopeId */.Cn)(), n);
 
-const _hoisted_1 = {
-  class: "column"
-};
+const _hoisted_1 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
+  class: "text-h5 q-pa-sm"
+}, "Áreas de oucupação", -1));
+
 const _hoisted_2 = {
-  class: "col"
+  class: "row q-pa-md q-gutter-sm"
+};
+const _hoisted_3 = {
+  class: "flex q-pt-xl flex-center"
 };
 
-const _hoisted_3 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
-  class: "text-h5"
-}, "Meus conteúdos favoritos", -1));
-
-const _hoisted_4 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("br", null, null, -1));
-
-const _hoisted_5 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("br", null, null, -1));
+const _hoisted_4 = /*#__PURE__*/_withScopeId(() => /*#__PURE__*/(0,runtime_core_esm_bundler/* createElementVNode */._)("div", {
+  class: "text-h6"
+}, "Nova area de ocupação", -1));
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_ApproachButtom = (0,runtime_core_esm_bundler/* resolveComponent */.up)("ApproachButtom");
+  const _component_q_input = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-input");
 
-  const _component_q_list = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-list");
+  const _component_q_space = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-space");
 
-  const _component_q_spinner = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-spinner");
+  const _component_q_btn = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-btn");
+
+  const _component_q_card = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-card");
+
+  const _component_q_td = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-td");
+
+  const _component_q_tr = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-tr");
+
+  const _component_q_table = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-table");
 
   const _component_q_page = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-page");
 
-  return (0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createBlock */.j4)(_component_q_page, {
-    padding: ""
+  const _component_q_card_section = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-card-section");
+
+  const _component_q_card_actions = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-card-actions");
+
+  const _component_q_form = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-form");
+
+  const _component_q_dialog = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-dialog");
+
+  const _component_q_inner_loading = (0,runtime_core_esm_bundler/* resolveComponent */.up)("q-inner-loading");
+
+  const _directive_ripple = (0,runtime_core_esm_bundler/* resolveDirective */.Q2)("ripple");
+
+  const _directive_close_popup = (0,runtime_core_esm_bundler/* resolveDirective */.Q2)("close-popup");
+
+  return (0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createElementBlock */.iD)(runtime_core_esm_bundler/* Fragment */.HY, null, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_page, {
+    class: "q-pa-md"
   }, {
-    default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_1, [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_2, [_hoisted_3, (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_list, {
-      class: (0,shared_esm_bundler/* normalizeClass */.C_)(["row justify-center q-pl-sm q-gutter-sm q-mt-lg", {
-        'no-wrap': _ctx.$q.screen.width > 599
-      }])
+    default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [_hoisted_1, (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_card, {
+      class: "q-mb-sm",
+      flat: "",
+      bordered: ""
     }, {
-      default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [((0,runtime_core_esm_bundler/* openBlock */.wg)(true), (0,runtime_core_esm_bundler/* createElementBlock */.iD)(runtime_core_esm_bundler/* Fragment */.HY, null, (0,runtime_core_esm_bundler/* renderList */.Ko)(_ctx.top, (option, index) => {
-        return (0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createBlock */.j4)(_component_ApproachButtom, {
-          class: "col-xs-12 col-sm-12 col-md-6 col-xl-3 col-lg-6",
-          title: option,
-          key: index
-        }, null, 8, ["title"]);
-      }), 128))]),
+      default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_2, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_input, {
+        class: "col-7 col-sm-7 col-md-7 col-xs-12 col-lg-7 col-xl-7",
+        modelValue: _ctx.filter,
+        "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => _ctx.filter = $event),
+        placeholder: "Pesquisar abordagem",
+        dense: "",
+        outlined: ""
+      }, null, 8, ["modelValue"]), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_space), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+        class: "col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2",
+        color: "primary",
+        label: "Novo tipo",
+        onClick: _cache[1] || (_cache[1] = $event => _ctx.newDialog()),
+        "no-caps": "",
+        rounded: ""
+      }), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+        class: "col-2 col-sm-2 col-md-2 col-xs-12 col-lg-2 col-xl-2",
+        color: "primary",
+        label: "Atualizar",
+        onClick: _cache[2] || (_cache[2] = $event => _ctx.listAll()),
+        "no-caps": "",
+        rounded: ""
+      })])]),
       _: 1
-    }, 8, ["class"])]), _hoisted_4, _hoisted_5, _ctx.loading ? ((0,runtime_core_esm_bundler/* openBlock */.wg)(), (0,runtime_core_esm_bundler/* createBlock */.j4)(_component_q_spinner, {
-      key: 0,
-      class: "absolute-center",
-      size: "xl",
-      color: "primary"
-    })) : (0,runtime_core_esm_bundler/* createCommentVNode */.kq)("", true)])]),
+    }), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_table, {
+      dense: _ctx.$q.screen.lt.md,
+      flat: "",
+      square: "",
+      bordered: "",
+      title: "Lista de ocupações",
+      rows: _ctx.categories,
+      columns: _ctx.columns,
+      "visible-columns": ['title', 'definition'],
+      filter: _ctx.filter,
+      separator: "cell",
+      "row-key": "title"
+    }, {
+      body: (0,runtime_core_esm_bundler/* withCtx */.w5)(props => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_tr, {
+        props: props
+      }, {
+        default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_td, {
+          key: "name",
+          props: props,
+          class: "text-center"
+        }, {
+          default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createTextVNode */.Uk)((0,shared_esm_bundler/* toDisplayString */.zw)(props.row.occupation_area), 1)]),
+          _: 2
+        }, 1032, ["props"]), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_td, {
+          key: "actions",
+          class: "text-center",
+          props: props
+        }, {
+          default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+            flat: "",
+            square: "",
+            icon: "edit",
+            onClick: $event => _ctx.newDialog(props.row),
+            dense: ""
+          }, null, 8, ["onClick"]), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+            flat: "",
+            square: "",
+            icon: "delete",
+            onClick: $event => _ctx.confirmDelete(props.row.id),
+            class: "q-ml-sm",
+            dense: ""
+          }, null, 8, ["onClick"])]),
+          _: 2
+        }, 1032, ["props"])]),
+        _: 2
+      }, 1032, ["props"])]),
+      _: 1
+    }, 8, ["dense", "rows", "columns", "filter"])]),
     _: 1
-  });
+  }), (0,runtime_core_esm_bundler/* createElementVNode */._)("div", _hoisted_3, [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_dialog, {
+    modelValue: _ctx.dialogCategory,
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => _ctx.dialogCategory = $event),
+    persistent: ""
+  }, {
+    default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_card, {
+      style: {
+        "min-width": "350px"
+      }
+    }, {
+      default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_card_section, null, {
+        default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [_hoisted_4]),
+        _: 1
+      }), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_form, {
+        onSubmit: _ctx.saveItem
+      }, {
+        default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_card_section, {
+          class: "q-pt-none"
+        }, {
+          default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_input, {
+            dense: "",
+            modelValue: _ctx.formData.occupation_area,
+            "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => _ctx.formData.occupation_area = $event),
+            modelModifiers: {
+              trim: true
+            },
+            autofocus: ""
+          }, null, 8, ["modelValue"])]),
+          _: 1
+        }), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_card_actions, {
+          align: "right",
+          class: "text-primary"
+        }, {
+          default: (0,runtime_core_esm_bundler/* withCtx */.w5)(() => [(0,runtime_core_esm_bundler/* withDirectives */.wy)((0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+            label: "Cancelar",
+            color: "primary",
+            "no-caps": ""
+          }, null, 512), [[_directive_ripple], [_directive_close_popup]]), (0,runtime_core_esm_bundler/* withDirectives */.wy)((0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_btn, {
+            label: "Salvar",
+            color: "primary",
+            type: "submit",
+            "no-caps": ""
+          }, null, 512), [[_directive_ripple], [_directive_close_popup]])]),
+          _: 1
+        })]),
+        _: 1
+      }, 8, ["onSubmit"])]),
+      _: 1
+    })]),
+    _: 1
+  }, 8, ["modelValue"]), (0,runtime_core_esm_bundler/* createVNode */.Wm)(_component_q_inner_loading, {
+    showing: _ctx.loading,
+    label: "Atualizando...",
+    "label-class": "text-primary",
+    color: "primary",
+    "label-style": "font-size: 1.1em"
+  }, null, 8, ["showing"])])], 64);
 }
-;// CONCATENATED MODULE: ./src/pages/users/FavoritePage.vue?vue&type=template&id=27ed24f5&scoped=true
+;// CONCATENATED MODULE: ./src/pages/admins/occupation-area/OccupationAreasListPage.vue?vue&type=template&id=75235afc&scoped=true
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.json.stringify.js
 var es_json_stringify = __webpack_require__(2100);
-// EXTERNAL MODULE: ./src/functions/functionShowNotifications.js
-var functionShowNotifications = __webpack_require__(4605);
+// EXTERNAL MODULE: ./node_modules/quasar/src/composables/use-quasar.js
+var use_quasar = __webpack_require__(8825);
 // EXTERNAL MODULE: ./node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js
 var reactivity_esm_bundler = __webpack_require__(1959);
-// EXTERNAL MODULE: ./src/components/ApproachButtom.vue + 4 modules
-var ApproachButtom = __webpack_require__(6804);
 // EXTERNAL MODULE: ./src/composebles/useApi.js
 var useApi = __webpack_require__(811);
-// EXTERNAL MODULE: ./src/composebles/useAuthUser.js
-var useAuthUser = __webpack_require__(4958);
-;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/pages/users/FavoritePage.vue?vue&type=script&lang=js
+;// CONCATENATED MODULE: ./node_modules/@quasar/app/lib/webpack/loader.js.transform-quasar-imports.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-2.use[0]!./node_modules/@quasar/app/lib/webpack/loader.vue.auto-import-quasar.js??ruleSet[0].use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[1]!./src/pages/admins/occupation-area/OccupationAreasListPage.vue?vue&type=script&lang=js
+
+const columns = [{
+  name: 'name',
+  required: true,
+  label: 'Titulo',
+  align: 'center',
+  field: row => row.name,
+  format: val => `${val}`,
+  sortable: true
+}, {
+  name: 'actions',
+  required: true,
+  label: 'Acoes',
+  align: 'center',
+  field: row => row.name,
+  format: val => `${val}`,
+  sortable: true
+}];
+const rows = [];
+;
 
 
-/* eslint-disable no-await-in-loop */
-
-/* eslint-disable no-plusplus */
-
-
-
-
-
-/* harmony default export */ const FavoritePagevue_type_script_lang_js = ((0,runtime_core_esm_bundler/* defineComponent */.aZ)({
-  name: "ProfilePage",
-  components: {
-    ApproachButtom: ApproachButtom/* default */.Z
-  },
+/* harmony default export */ const OccupationAreasListPagevue_type_script_lang_js = ((0,runtime_core_esm_bundler/* defineComponent */.aZ)({
+  name: 'OccupationAreaListPage',
+  components: {},
 
   setup() {
-    const {
-      user
-    } = (0,useAuthUser/* default */.Z)();
     const loading = (0,reactivity_esm_bundler/* ref */.iH)(true);
+    const $q = (0,use_quasar/* default */.Z)();
     const {
-      list
+      list,
+      post,
+      update,
+      remove
     } = (0,useApi/* default */.Z)();
-    const {
-      getById
-    } = (0,useApi/* default */.Z)();
-    const topic = (0,reactivity_esm_bundler/* ref */.iH)([]);
-    const top = (0,reactivity_esm_bundler/* ref */.iH)([]);
-    const text = (0,reactivity_esm_bundler/* ref */.iH)([]);
+    const topics = (0,reactivity_esm_bundler/* ref */.iH)([]);
+    const categories = (0,reactivity_esm_bundler/* ref */.iH)([]);
+    const formData = (0,reactivity_esm_bundler/* reactive */.qj)({
+      occupation_area: "",
+      id: null
+    });
 
-    const listTopics = async () => {
+    const listAll = async () => {
       try {
         loading.value = true;
-        const aux = await list("favorite_approach_user");
-        text.value = aux.map(elem => elem.user_id);
-        topic.value = aux.map(elem => elem.approach_id);
-        const i = (0,reactivity_esm_bundler/* ref */.iH)(0);
-
-        for (let index = 0; index < topic.value.length; index++) {
-          if (user.value.id !== text.value[i.value]) {
-            topic.value.splice(index, 1);
-            --index;
-          }
-
-          i.value++;
-        }
-
-        topic.value.forEach(async element => {
-          top.value.push(await getById("approach", element));
-        });
-      } catch (error) {
-        (0,functionShowNotifications/* showErrorNotification */.s)(JSON.stringify(error.message));
-      } finally {
+        categories.value = await list('occupation_area');
         loading.value = false;
+      } catch (error) {
+        alert(JSON.stringify(error));
       }
     };
 
-    return {
-      top,
-      loading,
-      listTopics,
-      text: (0,reactivity_esm_bundler/* ref */.iH)(""),
-      slide: (0,reactivity_esm_bundler/* ref */.iH)("style")
+    const deleteItem = async id => {
+      try {
+        loading.value = true;
+        await remove('occupation_area', id);
+        listAll();
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
     };
-  },
 
-  mounted() {
-    this.listTopics();
-  }
+    const saveItem = async () => {
+      try {
+        loading.value = true;
+
+        if (!formData.id) {
+          delete formData.id;
+          await post('occupation_area', formData);
+        } else {
+          await update('occupation_area', formData);
+          formData.id = null;
+        }
+
+        listAll();
+        loading.value = false;
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    (0,runtime_core_esm_bundler/* onMounted */.bv)(() => {
+      listAll();
+    });
+
+    const onItemClick = async () => {};
+
+    const dialogCategory = (0,reactivity_esm_bundler/* ref */.iH)(false);
+
+    const newDialog = data => {
+      if (data) {
+        Object.keys(data).forEach(key => {
+          formData[key] = data[key];
+        });
+      } else {
+        formData.occupation_area = "";
+      }
+
+      dialogCategory.value = true;
+    };
+
+    function confirmDelete(id) {
+      $q.dialog({
+        title: 'Eliminar registro',
+        message: 'Gostaria de apagar este registro?',
+        persistent: true,
+        cancel: "Cancelar"
+      }).onOk(() => {
+        deleteItem(id);
+      }).onOk(() => {// console.log('>>>> second OK catcher')
+      }).onCancel(() => {// console.log('>>>> Cancel')
+      }).onDismiss(() => {// console.log('I am triggered on both OK and Cancel')
+      });
+    }
+
+    const filter = (0,reactivity_esm_bundler/* ref */.iH)('');
+    return {
+      filter,
+      confirmDelete,
+      newDialog,
+      formData,
+      loading,
+      deleteItem,
+      dialogCategory,
+      categories,
+      saveItem,
+      onItemClick,
+      columns,
+      rows,
+      listAll,
+      topics,
+      varDialogPassword: (0,reactivity_esm_bundler/* ref */.iH)(false)
+    };
+  } //  <q-btn class="gt-xs" size="12px" flat dense round icon="visibility" />
+
 
 }));
-;// CONCATENATED MODULE: ./src/pages/users/FavoritePage.vue?vue&type=script&lang=js
+;// CONCATENATED MODULE: ./src/pages/admins/occupation-area/OccupationAreasListPage.vue?vue&type=script&lang=js
  
 // EXTERNAL MODULE: ./node_modules/vue-loader/dist/exportHelper.js
 var exportHelper = __webpack_require__(4260);
 // EXTERNAL MODULE: ./node_modules/quasar/src/components/page/QPage.js
 var QPage = __webpack_require__(4379);
-// EXTERNAL MODULE: ./node_modules/quasar/src/components/item/QList.js
-var QList = __webpack_require__(7011);
-// EXTERNAL MODULE: ./node_modules/quasar/src/components/spinner/QSpinner.js
-var QSpinner = __webpack_require__(6833);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/card/QCard.js
+var QCard = __webpack_require__(151);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/input/QInput.js + 2 modules
+var QInput = __webpack_require__(4842);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/space/QSpace.js
+var QSpace = __webpack_require__(2025);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/btn/QBtn.js
+var QBtn = __webpack_require__(2165);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/table/QTable.js + 12 modules
+var QTable = __webpack_require__(8468);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/table/QTr.js
+var QTr = __webpack_require__(8186);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/table/QTd.js
+var QTd = __webpack_require__(3884);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/dialog/QDialog.js
+var QDialog = __webpack_require__(6778);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/card/QCardSection.js
+var QCardSection = __webpack_require__(5589);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/form/QForm.js
+var QForm = __webpack_require__(5269);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/card/QCardActions.js
+var QCardActions = __webpack_require__(9367);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/inner-loading/QInnerLoading.js
+var QInnerLoading = __webpack_require__(6941);
+// EXTERNAL MODULE: ./node_modules/quasar/src/components/header/QHeader.js
+var QHeader = __webpack_require__(3812);
+// EXTERNAL MODULE: ./node_modules/quasar/src/directives/Ripple.js + 1 modules
+var Ripple = __webpack_require__(6489);
+// EXTERNAL MODULE: ./node_modules/quasar/src/directives/ClosePopup.js
+var ClosePopup = __webpack_require__(677);
 // EXTERNAL MODULE: ./node_modules/@quasar/app/lib/webpack/runtime.auto-import.js
 var runtime_auto_import = __webpack_require__(7518);
 var runtime_auto_import_default = /*#__PURE__*/__webpack_require__.n(runtime_auto_import);
-;// CONCATENATED MODULE: ./src/pages/users/FavoritePage.vue
+;// CONCATENATED MODULE: ./src/pages/admins/occupation-area/OccupationAreasListPage.vue
 
 
 
@@ -500,14 +592,26 @@ var runtime_auto_import_default = /*#__PURE__*/__webpack_require__.n(runtime_aut
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(FavoritePagevue_type_script_lang_js, [['render',render],['__scopeId',"data-v-27ed24f5"]])
+const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(OccupationAreasListPagevue_type_script_lang_js, [['render',render],['__scopeId',"data-v-75235afc"]])
 
-/* harmony default export */ const FavoritePage = (__exports__);
+/* harmony default export */ const OccupationAreasListPage = (__exports__);
 ;
 
 
 
-runtime_auto_import_default()(FavoritePagevue_type_script_lang_js, 'components', {QPage: QPage/* default */.Z,QList: QList/* default */.Z,QSpinner: QSpinner/* default */.Z});
+
+
+
+
+
+
+
+
+
+
+
+
+runtime_auto_import_default()(OccupationAreasListPagevue_type_script_lang_js, 'components', {QPage: QPage/* default */.Z,QCard: QCard/* default */.Z,QInput: QInput/* default */.Z,QSpace: QSpace/* default */.Z,QBtn: QBtn/* default */.Z,QTable: QTable/* default */.Z,QTr: QTr/* default */.Z,QTd: QTd/* default */.Z,QDialog: QDialog/* default */.Z,QCardSection: QCardSection/* default */.Z,QForm: QForm/* default */.Z,QCardActions: QCardActions/* default */.Z,QInnerLoading: QInnerLoading/* default */.Z,QHeader: QHeader/* default */.Z});runtime_auto_import_default()(OccupationAreasListPagevue_type_script_lang_js, 'directives', {Ripple: Ripple/* default */.Z,ClosePopup: ClosePopup/* default */.Z});
 
 
 /***/ })

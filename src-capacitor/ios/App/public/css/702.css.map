@@ -1,0 +1,1 @@
+{"version":3,"file":"css/702.css","mappings":"AACA;EACE;AAAF;AACA;EACE;EACA;AAEF,C","sources":["webpack://medicalbookapp/./src/pages/users/ApproachDetailPage.vue"],"sourcesContent":["\n.explore\n  width: 90vw\n.pre\n  white-space: pre-wrap\n  word-break: break-all\n"],"names":[],"sourceRoot":""}

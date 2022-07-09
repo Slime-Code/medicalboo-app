@@ -1,0 +1,51 @@
+.q-tabs[data-v-212c9dd7] {
+  color: #B2BBBB;
+  height: 80px;
+}
+.q-tab[data-v-212c9dd7] {
+  margin: 0;
+  padding: 0;
+}
+.q-tab--active[data-v-212c9dd7] {
+  color: #1A4B9A;
+}
+.q-tab__content[data-v-212c9dd7] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+.q-tab__content .q-tab__label[data-v-212c9dd7] {
+  font-size: 0.6em;
+}
+.q-header[data-v-212c9dd7] {
+  width: 100vw;
+  height: 229px;
+  z-index: 1;
+  background: url(../img/BG-1.90a3b7b8.png) 0% 5% no-repeat padding-box;
+  background-color: #0053ab;
+  opacity: 1;
+}
+.q-page-container[data-v-212c9dd7] {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  top: 152px;
+  border-radius: 20px 0 0 0;
+  z-index: 100;
+  overflow: hidden;
+}
+.pic[data-v-212c9dd7] {
+  position: absolute;
+  top: 35px;
+  left: 30px;
+}
+.q-btn[data-v-212c9dd7] {
+  min-width: 80%;
+  border: 0.5px solid #49d166;
+  padding: 5px 30px;
+  font-weight: normal;
+}
+.q-btn .q-btn__content[data-v-212c9dd7] {
+  padding: 10px;
+}
+
+/*# sourceMappingURL=109.css.map*/
