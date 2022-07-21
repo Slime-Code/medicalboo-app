@@ -80,10 +80,9 @@ const routes = [
   },
 
   {
-    path: '/admin',
+    path: '/',
     component: () => import('src/layouts/AdminLayout.vue'),
     children: [
-      { path: '', name: 'inicio', component: () => import('src/pages/admins/DashboardPage.vue') },
       { path: 'painel', name: 'painel', component: () => import('src/pages/admins/DashboardPage.vue') },
       { path: '/admin/topicscopy', name: 'topicscopytopicscopy', component: () => import('src/pages/admins/topic/GaleriaPage.vue') },
       { path: '/admin/approaches', name: 'approaches', component: () => import('src/pages/admins/approach/ApproachesListPage.vue') },
@@ -97,7 +96,7 @@ const routes = [
       { path: '/perfil', name: 'perfil', component: () => import('src/pages/admins/PerfilPage.vue') },
     ],
     meta: {
-      requaresAuth: true,
+      requaresAuth: false,
     },
   },
 

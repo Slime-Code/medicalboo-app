@@ -8,7 +8,13 @@
           <q-card-section v-if="currentApproach" class="row">
             {{ currentApproach.title }}
             <q-space></q-space>
-            <q-btn flat round icon="close" dense @click="currentApproach = null" />
+            <q-btn
+              flat
+              round
+              icon="close"
+              dense
+              @click="currentApproach = null"
+            />
             <q-btn
               flat
               :loading="loadingContent"
@@ -45,6 +51,13 @@
                       />
                     </div>
                   </q-item-section>
+                  <div class="row items-center">
+                    <q-checkbox
+                      v-model="content.premium"
+                      class="col-4"
+                      label="Conteúdo Premium"
+                    />
+                  </div>
                 </template>
                 <q-card>
                   <q-card-section>
@@ -90,7 +103,16 @@
                             label: $q.lang.editor.formatting,
                             icon: $q.iconSet.editor.formatting,
                             list: 'no-icons',
-                            options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code'],
+                            options: [
+                              'p',
+                              'h1',
+                              'h2',
+                              'h3',
+                              'h4',
+                              'h5',
+                              'h6',
+                              'code',
+                            ],
                           },
                           {
                             label: $q.lang.editor.fontSize,
@@ -201,7 +223,13 @@
       :loading="loadingTable"
       :rows="rows"
       :columns="columns"
-      :visible-columns="['title', 'options', 'topic', 'type_approach', 'criado']"
+      :visible-columns="[
+        'title',
+        'options',
+        'topic',
+        'type_approach',
+        'criado',
+      ]"
       row-key="title"
       separator="cell"
       :filter="filter"
@@ -221,7 +249,9 @@
           <q-td class="text-left" key="criado" :props="props">
             Yuri Rego aos:
             {{
-              new Date(props.row.created_at).toLocaleString("en-GB", { timeZone: "UTC" })
+              new Date(props.row.created_at).toLocaleString("en-GB", {
+                timeZone: "UTC",
+              })
             }}
           </q-td>
           <q-td key="options" class="text-left" :props="props">
@@ -243,7 +273,14 @@
               </q-tooltip>
             </q-btn>
 
-            <q-btn flat round size="sm" icon="edit" @click="newDialog(props.row)" dense />
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="edit"
+              @click="newDialog(props.row)"
+              dense
+            />
             <q-btn
               flat
               round
@@ -332,7 +369,14 @@
               v-close-popup
             />
 
-            <q-btn label="Salvar" color="primary" dense type="submit" v-ripple no-caps />
+            <q-btn
+              label="Salvar"
+              color="primary"
+              dense
+              type="submit"
+              v-ripple
+              no-caps
+            />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -588,6 +632,7 @@ export default defineComponent({
         const data = {
           title: content.title,
           content: content.content,
+          premium: content.premium,
           id: content.id,
           id_approach: currentApproach.value.id,
         };

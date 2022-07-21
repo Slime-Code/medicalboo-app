@@ -102,7 +102,7 @@ export default defineComponent({
 
     const { list, getByField, getNotByField } = useApi();
     const loading = ref(true);
-  
+
     onMounted(() => {
       listDados();
     });
@@ -236,23 +236,31 @@ export default defineComponent({
         ],
       },
     });
-    
-      const listDados = async () => {
 
-      
-
-      const notAdmin = (await getNotByField("perfil", "profile_type_id", 3)).length;
+    const listDados = async () => {
+      const notAdmin = (await getNotByField("perfil", "profile_type_id", 3))
+        .length;
 
       // pieAdmin.series[1] = notAdmin
-      pieAdmin.series[1] = notAdmin
-      pieAdmin.series[0] = (await getByField("perfil", "profile_type_id", 3)).length
-      cards.users.qtd = notAdmin
+      pieAdmin.series[1] = notAdmin;
+      pieAdmin.series[0] = (
+        await getByField("perfil", "profile_type_id", 3)
+      ).length;
+      cards.users.qtd = notAdmin;
 
-      pieUsers.series[1] = (await getNotByField("perfil", "premium", true)).length;
-      pieUsers.series[0] = (await getNotByField("perfil", "premium", false)).length;
+      pieUsers.series[1] = (
+        await getNotByField("perfil", "premium", true)
+      ).length;
+      pieUsers.series[0] = (
+        await getNotByField("perfil", "premium", false)
+      ).length;
 
-      pieContents.series[1] = (await getNotByField("approach", "premium", true)).length;
-      pieContents.series[0] = (await getNotByField("approach", "premium", false)).length;
+      pieContents.series[1] = (
+        await getNotByField("approach", "premium", true)
+      ).length;
+      pieContents.series[0] = (
+        await getNotByField("approach", "premium", false)
+      ).length;
       const currentDate = new Date(Date.now());
 
       const date = `${currentDate.getFullYear()}/${
@@ -261,18 +269,19 @@ export default defineComponent({
         currentDate.getDay() > 9 ? "" : "0"
       }${currentDate.getDay().toString(16)}`;
 
-      cards.usersToday.qtd = (await getByField("perfil", "created_at", date)).length;
+      cards.usersToday.qtd = (
+        await getByField("perfil", "created_at", date)
+      ).length;
       cards.approach.qtd = (await list("approach")).length;
 
       loading.value = false;
 
       for (let mounth = 1; mounth <= 12; mounth++) {
-          const count = (await getByField("perfil", "month", mounth)).length
-          areaChart.series[0].data[mounth-1] = count
+        const count = (await getByField("perfil", "month", mounth)).length;
+        areaChart.series[0].data[mounth - 1] = count;
       }
     };
 
-    
     return {
       loading,
       cards,

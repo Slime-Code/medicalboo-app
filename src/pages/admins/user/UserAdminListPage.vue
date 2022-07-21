@@ -5,69 +5,85 @@
         <div>
           <h5 class="col-12 title" style="margin: 20px 0">Usuários Admin</h5>
           <div style="width: 100px" class="row q-gutter-sm">
-            <q-btn icon="add" color="primary" class="col" @click="newDialog()" />
-            <q-btn icon="update" color="primary" class="col" @click="listAll()"> </q-btn>
+            <q-btn
+              icon="add"
+              color="primary"
+              class="col"
+              @click="newDialog()"
+            />
+            <q-btn icon="update" color="primary" class="col" @click="listAll()">
+            </q-btn>
           </div>
         </div>
         <div class="q-mt-md">
-          <q-table
-            color="primary"
-            :dense="$q.screen.lt.sm"
-            flat
-            square
-            bordered
-            title="Lista de Usuários"
-            :rows="rows"
-            :columns="columns"
-            :visible-columns="[
-              'title',
-              'data',
-              'cpf',
-              'nacionalidade',
-              'perfil',
-              'email',
-              'telefone',
-              'options',
-            ]"
-            row-key="title"
-            separator="cell"
-          >
-            <template v-slot:body="props">
-              <q-tr :props="props">
-                <q-td key="title" :props="props">
-                  {{ props.row.name }}
-                </q-td>
-                <q-td key="data" :props="props">
-                  {{ props.row.data }}
-                </q-td>
-                <q-td key="cpf" :props="props">
-                  {{ props.row.cpf }}
-                </q-td>
-                <q-td key="nacionalidade" :props="props">
-                  {{ props.row.nacionalidade }}
-                </q-td>
-                <q-td key="perfil" :props="props">
-                  <p>Admin</p>
-                </q-td>
-                <q-td key="email" :props="props">
-                  {{ props.row.email }}
-                </q-td>
-                <q-td key="telefone" :props="props">
-                  {{ props.row.phone }}
-                </q-td>
-                <q-td key="options" class="text-right" :props="props">
-                  <q-btn flat square icon="edit" @click="newDialog(props.row)" dense />
-                  <q-btn
-                    flat
-                    square
-                    icon="delete"
-                    @click="confirmDelete(props.row.id)"
-                    dense
-                  />
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
+          <q-responsive :ratio="1" class="col">
+            <q-table
+              color="primary"
+              :dense="$q.screen.lt.sm"
+              flat
+              square
+              bordered
+              title="Lista de Usuários"
+              :rows="rows"
+              :columns="columns"
+              :visible-columns="[
+                'title',
+                'data',
+                'cpf',
+                'nacionalidade',
+                'perfil',
+                'email',
+                'telefone',
+                'options',
+              ]"
+              hide-bottom="true"
+              row-key="title"
+              separator="cell"
+              class="table-responsive link-cursor"
+            >
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="title" :props="props">
+                    {{ props.row.name }}
+                  </q-td>
+                  <q-td key="data" :props="props">
+                    {{ props.row.data }}
+                  </q-td>
+                  <q-td key="cpf" :props="props">
+                    {{ props.row.cpf }}
+                  </q-td>
+                  <q-td key="nacionalidade" :props="props">
+                    {{ props.row.nacionalidade }}
+                  </q-td>
+                  <q-td key="perfil" :props="props">
+                    <p>Admin</p>
+                  </q-td>
+                  <q-td key="email" :props="props">
+                    {{ props.row.email }}
+                  </q-td>
+                  <q-td key="telefone" :props="props">
+                    {{ props.row.phone }}
+                  </q-td>
+                  <q-td key="options" class="text-right" :props="props">
+                    <q-btn
+                      flat
+                      square
+                      icon="edit"
+                      @click="newDialog(props.row)"
+                      dense
+                    />
+                    <q-btn
+                      flat
+                      square
+                      icon="delete"
+                      @click="confirmDelete(props.row.id)"
+                      dense
+                    />
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </q-responsive>
         </div>
       </div>
     </div>
@@ -92,7 +108,9 @@
                   label="Nome completo"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -105,7 +123,9 @@
                   stack-label
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -115,9 +135,11 @@
                   outlined
                   label="CPF"
                   lazy-rules
-                  mask="###########"
+                  mask="###.###.###-##"
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                     (val) => TestaCPF(val) || 'CPF inválido',
                   ]"
                 />
@@ -141,7 +163,9 @@
                   label="Email"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -153,9 +177,12 @@
                   label="Confirme o email"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
                     (val) =>
-                      val.trim() === formUser.email.trim() || 'Email não correspondente',
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
+                    (val) =>
+                      val.trim() === formUser.email.trim() ||
+                      'Email não correspondente',
                   ]"
                 />
                 <q-input
@@ -167,7 +194,9 @@
                   label="Senha"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -179,7 +208,9 @@
                   label="Confirme a senha"
                   lazy-rules
                   :rules="[
-                    (val) => (val !== null && val !== '') || 'Campo não pode estar vazio',
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                     (val) =>
                       val.trim() === formUser.password.trim() ||
                       'Senha não correspondente',
@@ -191,11 +222,9 @@
                   v-model="formUser.phone"
                   outlined
                   label="Telefone"
-                  mask="(##) #########"
+                  mask="(##) # ####-####"
                   lazy-rules
-                  :rules="[
-                    (val) => !!val || 'Campo não pode estar vazio',
-                  ]"
+                  :rules="[(val) => !!val || 'Campo não pode estar vazio']"
                 />
 
                 <q-separator />
@@ -416,9 +445,9 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        alert(JSON.stringify(formUser))
+        alert(JSON.stringify(formUser));
         if (!formUser.id) {
-          alert(formUser.id)
+          alert(formUser.id);
           const aux = formUser;
           delete aux.id;
           const use = await register(aux);
@@ -426,12 +455,12 @@ export default defineComponent({
           formUser.user_id = use.id;
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert('fuiiiiiiii')
+          alert("fuiiiiiiii");
           await post("perfil", formUser);
         } else {
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert('atualizar')
+          alert("atualizar");
           await update("perfil", formUser);
         }
         listAll();
@@ -441,7 +470,7 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         dialogUser.value = false;
-        alert(error.message)
+        alert(error.message);
         showErrorNotification(
           `houve uma falha ao carregar os dados para o banco: ${error}`
         );
@@ -454,7 +483,9 @@ export default defineComponent({
         options.value = aux.map((elem) => elem.name);
         loading.value = false;
       } catch (error) {
-        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${error}`);
+        showErrorNotification(
+          `houve uma falha ao carregar os dados do banco: ${error}`
+        );
       }
     };
 
@@ -468,7 +499,9 @@ export default defineComponent({
         loading.value = false;
       } catch (error) {
         showErrorNotification(
-          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`
+          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(
+            error
+          )}`
         );
       }
     };
@@ -536,25 +569,25 @@ export default defineComponent({
     });
 
     function TestaCPF(strCPF) {
-      var Soma;
-      var Resto;
-      Soma = 0;
-      if (strCPF == "00000000000") return false;
+      // var Soma;
+      // var Resto;
+      // Soma = 0;
+      if (strCPF === "000.000.000-00") return false;
 
-      for (let i = 1; i <= 9; i++)
-        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-      Resto = (Soma * 10) % 11;
+      // for (let i = 1; i <= 9; i++)
+      //   Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+      // Resto = (Soma * 10) % 11;
 
-      if (Resto == 10 || Resto == 11) Resto = 0;
-      if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+      // if (Resto == 10 || Resto == 11) Resto = 0;
+      // if (Resto != parseInt(strCPF.substring(9, 10))) return false;
 
-      Soma = 0;
-      for (let i = 1; i <= 10; i++)
-        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-      Resto = (Soma * 10) % 11;
+      // Soma = 0;
+      // for (let i = 1; i <= 10; i++)
+      //   Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+      // Resto = (Soma * 10) % 11;
 
-      if (Resto == 10 || Resto == 11) Resto = 0;
-      if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+      // if (Resto == 10 || Resto == 11) Resto = 0;
+      // if (Resto != parseInt(strCPF.substring(10, 11))) return false;
       return true;
     }
 

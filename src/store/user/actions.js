@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Loading, LocalStorage } from 'quasar';
 import {
   showErrorNotification,

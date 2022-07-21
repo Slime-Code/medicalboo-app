@@ -1,82 +1,110 @@
 <template>
   <div class="flex q-pt-xl flex-center">
-  <div class="column" style="min-width: 90%">
-    <div class="col q-ma-xs">
-      <div>
-        <h5 class="col-12 title" style="margin: 20px 0;">Usuários</h5>
-        <div style="width: 100px;" class="row q-gutter-sm">
-          <q-btn
-          icon="update"
-          color="primary"
-          class="col"
-          @click="listAll()"
-          >
-          </q-btn>
+    <div class="column" style="min-width: 90%">
+      <div class="col q-ma-xs">
+        <div>
+          <h5 class="col-12 title" style="margin: 20px 0">Usuários</h5>
+          <div style="width: 100px" class="row q-gutter-sm">
+            <q-btn icon="update" color="primary" class="col" @click="listAll()">
+            </q-btn>
+          </div>
+        </div>
+        <div class="q-mt-md">
+          <q-responsive :ratio="1" class="col">
+            <q-table
+              :filter="filter"
+              color="primary"
+              :dense="$q.screen.lt.sm"
+              flat
+              square
+              bordered
+              title="Lista de Usuários"
+              :rows="rows"
+              :columns="columns"
+              :visible-columns="[
+                'title',
+                'data',
+                'cpf',
+                'nacionalidade',
+                'ano-de-graduacao',
+                'area-de-ocupacao',
+                'data-cadastro',
+                'premium',
+                'perfil',
+                'options',
+              ]"
+              row-key="title"
+              separator="cell"
+            >
+              <template v-slot:top-right>
+                <q-input
+                  borderless
+                  dense
+                  debounce="300"
+                  v-model="filter"
+                  placeholder="Search"
+                >
+                  <template v-slot:append>
+                    <q-icon name="search" />
+                  </template>
+                </q-input>
+              </template>
+              <template v-slot:body="props">
+                <q-tr :props="props" v-if="props.row.perfil !== 3">
+                  <q-td key="title" :props="props">
+                    {{ props.row.name }}
+                  </q-td>
+                  <q-td key="data" :props="props">
+                    {{ props.row.data }}
+                  </q-td>
+                  <q-td key="cpf" :props="props">
+                    {{ props.row.cpf }}
+                  </q-td>
+                  <q-td key="nacionalidade" :props="props">
+                    {{ props.row.nacionalidade }}
+                  </q-td>
+                  <q-td key="ano-de-graduacao" :props="props">
+                    {{ props.row.ano_de_graduacao }}
+                  </q-td>
+                  <q-td key="area-de-ocupacao" :props="props">
+                    {{ props.row.area_de_ocupacao }}
+                  </q-td>
+                  <q-td key="data-cadastro" :props="props">
+                    {{ props.row.created_at }}
+                  </q-td>
+                  <q-td key="premium" :props="props">
+                    <p v-if="props.row.premium">SIM</p>
+                    <p v-else>NÃO</p>
+                  </q-td>
+                  <q-td key="perfil" :props="props">
+                    <p v-if="props.row.perfil == 1">Estudante</p>
+                    <p v-else-if="props.row.perfil == 2">Proficional</p>
+                  </q-td>
+                  <q-td key="options" class="text-center" :props="props">
+                    <q-btn
+                      flat
+                      color="red"
+                      square
+                      icon="delete"
+                      @click="confirmDelete(props.row.id)"
+                      dense
+                    />
+                    <q-btn
+                      label="cupom"
+                      color="primary"
+                      flat
+                      square
+                      icon="money"
+                      @click="newDialog(props.row.id)"
+                      dense
+                    />
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </q-responsive>
         </div>
       </div>
-      <div class="q-mt-md">
-        <q-table
-          :filter="filter"
-          color="primary"
-          :dense="$q.screen.lt.sm"
-          flat
-          square
-          bordered
-          title="Lista de Usuários"
-          :rows="rows"
-          :columns="columns"
-          :visible-columns="['title', 'data', 'cpf', 'nacionalidade', 'ano-de-graduacao', 'area-de-ocupacao', 'data-cadastro', 'premium', 'perfil', 'options']"
-          row-key="title"
-          separator="cell"
-        >
-          <template v-slot:top-right>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </template>
-          <template v-slot:body="props">
-            <q-tr :props="props" v-if="props.row.perfil !== 3">
-              <q-td key="title" :props="props">
-                {{ props.row.name }}
-              </q-td>
-              <q-td key="data" :props="props">
-                  {{ props.row.data }}
-              </q-td>
-              <q-td key="cpf" :props="props">
-                  {{ props.row.cpf }}
-              </q-td>
-              <q-td key="nacionalidade" :props="props">
-                  {{ props.row.nacionalidade }}
-              </q-td>
-              <q-td key="ano-de-graduacao" :props="props">
-                  {{ props.row.ano_de_graduacao }}
-              </q-td>
-              <q-td key="area-de-ocupacao" :props="props">
-                  {{ props.row.area_de_ocupacao }}
-              </q-td>
-              <q-td key="data-cadastro" :props="props">
-                  {{ props.row.created_at }}
-              </q-td>
-              <q-td key="premium" :props="props">
-                  <p v-if="props.row.premium">SIM</p>
-                  <p v-else>NÃO</p>
-              </q-td>
-              <q-td key="perfil" :props="props">
-                <p v-if="props.row.perfil == 1">Estudante</p>
-                <p v-else-if="props.row.perfil == 2">Proficional</p>
-              </q-td>
-              <q-td key="options" class="text-center" :props="props">
-                <q-btn flat color="red" square icon="delete" @click="confirmDelete(props.row.id)" dense/>
-                <q-btn label="cupom" color="primary" flat square icon="money" @click="newDialog(props.row.id)" dense/>
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
-
-      </div>
-    </div>
     </div>
 
     <q-dialog v-model="dialogUser" persistent>
@@ -101,7 +129,9 @@
                   label="Nome completo"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -116,7 +146,9 @@
                   stack-label
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -130,7 +162,9 @@
                   label="CPF"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <div>
@@ -167,7 +201,9 @@
                   label="Email"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -181,8 +217,12 @@
                   label="Confirme o email"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
-                    val => val.trim() === rows.email.trim() || 'Email não correspondente'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
+                    (val) =>
+                      val.trim() === rows.email.trim() ||
+                      'Email não correspondente',
                   ]"
                 />
                 <q-input
@@ -196,7 +236,9 @@
                   label="Senha"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
                   ]"
                 />
                 <q-input
@@ -210,27 +252,31 @@
                   label="Confirme a senha"
                   lazy-rules
                   :rules="[
-                    val => val !== null && val !== '' || 'Campo não pode estar vazio',
-                    val => val.trim() === rows.password.trim() || 'Senha não correspondente'
+                    (val) =>
+                      (val !== null && val !== '') ||
+                      'Campo não pode estar vazio',
+                    (val) =>
+                      val.trim() === rows.password.trim() ||
+                      'Senha não correspondente',
                   ]"
                 />
 
                 <q-separator />
 
                 <q-select
-                style="min-width: 30%; max-width: 50%"
-                dense
-                rounded
-                outlined
-                :loading='loading'
-                v-model="rows.occupation_area"
-                :options="options2"
-                label="Área de actuação"
-                class="col"
+                  style="min-width: 30%; max-width: 50%"
+                  dense
+                  rounded
+                  outlined
+                  :loading="loading"
+                  v-model="rows.occupation_area"
+                  :options="options2"
+                  label="Área de actuação"
+                  class="col"
                 />
                 <q-select
                   style="min-width: 50%; max-width: 50%"
-                  :loading='loading'
+                  :loading="loading"
                   dense
                   rounded
                   outlined
@@ -238,7 +284,8 @@
                   :options="options1"
                   label="Ano de formatura"
                   class="col"
-                /> <br>
+                />
+                <br />
 
                 <q-card-actions align="right">
                   <q-btn
@@ -251,9 +298,15 @@
                     v-close-popup
                   />
 
-                  <q-btn label="Salvar" color="primary" dense type="submit" v-ripple no-caps />
+                  <q-btn
+                    label="Salvar"
+                    color="primary"
+                    dense
+                    type="submit"
+                    v-ripple
+                    no-caps
+                  />
                 </q-card-actions>
-
               </div>
             </div>
           </q-card-section>
@@ -262,24 +315,45 @@
     </q-dialog>
 
     <q-dialog v-model="dialogCupom" persistent>
-          <q-card style="min-width: 350px">
-            <q-card-section>
-              <div class="text-h6 row item-start">
-                <q-icon name="money" style="margin-right: 10px"/> Gerar cupom
-                <q-space/>
-                <q-btn icon="close" flat round dense v-close-popup />
-              </div>
-              <q-separator />
-            </q-card-section><br>
-            <q-form @submit="gerarCupom">
-              <q-card-actions align="left" class="text-primary">
-                <q-input filled v-model="formData.percentagem" label="Percentagem" style="max-width: 150px; width: 150px;" suffix="% "/>
-                <q-btn  label="Salvar Valor" size="19px" no-caps no-wrap unelevated style="background-color: #FFC300; margin-left: 10px; max-width: 150px; width: 150px" text-color="black"  type="submit" v-ripple v-close-popup />
-              </q-card-actions><br>
-            </q-form>
-          </q-card>
-
-        </q-dialog>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6 row item-start">
+            <q-icon name="money" style="margin-right: 10px" /> Gerar cupom
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </div>
+          <q-separator /> </q-card-section
+        ><br />
+        <q-form @submit="gerarCupom">
+          <q-card-actions align="left" class="text-primary">
+            <q-input
+              filled
+              v-model="formData.percentagem"
+              label="Percentagem"
+              style="max-width: 150px; width: 150px"
+              suffix="% "
+            />
+            <q-btn
+              label="Salvar Valor"
+              size="19px"
+              no-caps
+              no-wrap
+              unelevated
+              style="
+                background-color: #ffc300;
+                margin-left: 10px;
+                max-width: 150px;
+                width: 150px;
+              "
+              text-color="black"
+              type="submit"
+              v-ripple
+              v-close-popup
+            /> </q-card-actions
+          ><br />
+        </q-form>
+      </q-card>
+    </q-dialog>
 
     <q-inner-loading
       :showing="loading"
@@ -295,21 +369,19 @@
 import {
   showErrorNotification,
   // showSuccessNotification,
-} from 'src/functions/functionShowNotifications';
-import {
-  defineComponent, onMounted, reactive, ref,
-} from 'vue';
-import cc from 'coupon-code';
-import { useQuasar } from 'quasar';
-import useApi from '../../../composebles/useApi';
+} from "src/functions/functionShowNotifications";
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import cc from "coupon-code";
+import { useQuasar } from "quasar";
+import useApi from "../../../composebles/useApi";
 
 const columns = [
   {
-    name: 'title',
+    name: "title",
     required: true,
-    label: 'Nome',
-    align: 'left',
-    field: 'title',
+    label: "Nome",
+    align: "left",
+    field: "title",
     sortable: true,
   },
 
@@ -378,13 +450,15 @@ const columns = [
   },
 
   {
-    name: 'options', align: 'center', label: 'Ação', field: 'options', sortable: true,
+    name: "options",
+    align: "center",
+    label: "Ação",
+    field: "options",
+    sortable: true,
   },
-
 ];
 
 export default defineComponent({
-
   setup() {
     const loading = ref(true);
     const $q = useQuasar();
@@ -396,25 +470,25 @@ export default defineComponent({
     const topics = ref([]);
 
     const formData = reactive({
-      cod_cupom: '',
+      cod_cupom: "",
       percentagem: 0,
       user_id: null,
       id: null,
-      created_at: null
+      created_at: null,
     });
 
     const formUser = reactive({
-      name: '',
-      birthday: '',
-      cpf: '',
-      nationality: '',
+      name: "",
+      birthday: "",
+      cpf: "",
+      nationality: "",
       profile_type_id: 1,
-      email: '',
-      password: '',
-      confirm_email: '',
-      confirm_password: '',
-      occupation_area: '',
-      graduation_year: '',
+      email: "",
+      password: "",
+      confirm_email: "",
+      confirm_password: "",
+      occupation_area: "",
+      graduation_year: "",
     });
 
     const options = ref([]);
@@ -424,24 +498,24 @@ export default defineComponent({
 
     const tipo = ref([
       {
-        label: 'Estudante',
+        label: "Estudante",
         value: 1,
       },
       {
-        label: 'Profissional',
+        label: "Profissional",
         value: 2,
       },
     ]);
 
     const users = ref([]);
     const getAllUsers = async () => {
-      users.value = await list('users');
+      users.value = await list("users");
     };
 
     const listAll = async () => {
       try {
         loading.value = true;
-        const aux = await list('perfil');
+        const aux = await list("perfil");
         rows.value = aux.map((item) => ({
           id: item.id,
           name: item.name,
@@ -464,7 +538,7 @@ export default defineComponent({
     const deleteItem = async (id) => {
       try {
         loading.value = true;
-        await remove('perfil', id);
+        await remove("perfil", id);
         listAll();
         loading.value = false;
       } catch (error) {
@@ -478,9 +552,9 @@ export default defineComponent({
         if (!formData.id) {
           delete formData.id;
 
-          await post('perfil', formData);
+          await post("perfil", formData);
         } else {
-          await update('perfil', formData);
+          await update("perfil", formData);
         }
         listAll();
         loading.value = false;
@@ -491,7 +565,7 @@ export default defineComponent({
 
     const listTopicsAproachs = async () => {
       try {
-        const aux = await list('nationality');
+        const aux = await list("nationality");
         options.value = aux.map((elem) => elem.name);
         loading.value = false;
       } catch (error) {
@@ -502,13 +576,17 @@ export default defineComponent({
     const listOcupationAreaGraduation = async () => {
       try {
         loading.value = true;
-        const aux1 = await list('occupation_area');
+        const aux1 = await list("occupation_area");
         options2.value = aux1.map((elem) => elem.occupation_area);
-        const aux = await list('graduation_year');
+        const aux = await list("graduation_year");
         options1.value = aux.map((elem) => elem.graduation_year);
         loading.value = false;
       } catch (error) {
-        showErrorNotification(`houve uma falha ao carregar os dados do banco: ${JSON.stringify(error)}`);
+        showErrorNotification(
+          `houve uma falha ao carregar os dados do banco: ${JSON.stringify(
+            error
+          )}`
+        );
       }
     };
 
@@ -519,15 +597,17 @@ export default defineComponent({
       getAllUsers();
     });
 
-    const onItemClick = async () => {
-
-    };
+    const onItemClick = async () => {};
 
     const dialogCupom = ref(false);
     const newDialog = async (data) => {
       if (data) {
-        const auxUserId = await getByField('perfil', 'id', data)
-        const user_id = await getByField('cupom', 'user_id', auxUserId[0].user_id)
+        const auxUserId = await getByField("perfil", "id", data);
+        const user_id = await getByField(
+          "cupom",
+          "user_id",
+          auxUserId[0].user_id
+        );
         if (user_id.length > 0) {
           $q.notify({
             type: "negative",
@@ -538,7 +618,7 @@ export default defineComponent({
           dialogCupom.value = true;
         }
       } else {
-        formData.cod_cupom = '';
+        formData.cod_cupom = "";
         formData.percentagem = 0;
         formData.user_id = null;
       }
@@ -546,19 +626,22 @@ export default defineComponent({
 
     function confirmDelete(id) {
       $q.dialog({
-        title: 'Eliminar registro',
-        message: 'Gostaria de apagar este registro?',
+        title: "Eliminar registro",
+        message: "Gostaria de apagar este registro?",
         persistent: true,
-        cancel: 'Cancelar',
-      }).onOk(() => {
-        deleteItem(id);
-      }).onOk(() => {
-        // console.log('>>>> second OK catcher')
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
+        cancel: "Cancelar",
       })
+        .onOk(() => {
+          deleteItem(id);
+        })
+        .onOk(() => {
+          // console.log('>>>> second OK catcher')
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
         .onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
+          // console.log('I am triggered on both OK and Cancel')
         });
     }
 
@@ -568,24 +651,25 @@ export default defineComponent({
         formData.created_at = new Date();
         delete formData.id;
         $q.dialog({
-          title: 'Gerar Cupom?',
-          message: 'Tens a certeza que queres gerar esse cupom?',
+          title: "Gerar Cupom?",
+          message: "Tens a certeza que queres gerar esse cupom?",
           persistent: true,
-          cancel: 'Cancelar',
-        }).onOk(() => {
-          post('cupom', formData);
-          $q.notify({
-            type: "positive",
-            message: "Cupom criado com sucesso!!",
+          cancel: "Cancelar",
+        })
+          .onOk(() => {
+            post("cupom", formData);
+            $q.notify({
+              type: "positive",
+              message: "Cupom criado com sucesso!!",
+            });
+          })
+          .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
           });
-        }).onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
-        });
       } catch (error) {
-        alert('verifique se está conectado a internet!!')
+        alert("verifique se está conectado a internet!!");
       }
-      
-    }
+    };
 
     return {
       options,
@@ -604,13 +688,11 @@ export default defineComponent({
       rows,
       listAll,
       topics,
-      filter: ref(''),
+      filter: ref(""),
       varDialogPassword: ref(false),
     };
   },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>
