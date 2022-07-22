@@ -6,13 +6,26 @@
         :class="{ 'absolute-center': $q.screen.width > 599 }"
       >
         <div class="col">
-          <q-icon name="check_circle" class="text-white" size="300px" color="green" />
+          <q-icon
+            name="check_circle"
+            class="text-white"
+            size="300px"
+            color="green"
+          />
         </div>
         <div class="q-my-lg text-body1 text-center">
-          O seu cadastro foi concluído com sucesso, foi enviado um email de confirmaçāo, por favor acesse o seu email para acessar o
+          O seu cadastro foi concluído com sucesso, foi enviado um email de
+          confirmaçāo, por favor acesse o seu email para acessar o
           <span class="text-bold q-pa-md text-primary">MedicalBook</span> :)
         </div>
-        <q-btn class="col" href="https://mail.google.com/mail/u/0/?tab=km#inbox" label="Ok" rounded color="green" type="submit" />
+        <q-btn
+          class="col"
+          href="/"
+          label="Ok"
+          rounded
+          color="green"
+          type="submit"
+        />
       </div>
     </q-page>
   </q-layout>
@@ -29,12 +42,14 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
-
     const { user } = useAuthUser();
 
     const nextStep = async () => {
       try {
-        router.replace({ name: "email-confirmation", query: { email: user.email } });
+        router.replace({
+          name: "email-confirmation",
+          query: { email: user.email },
+        });
       } catch (error) {
         alert(error.message);
       }
