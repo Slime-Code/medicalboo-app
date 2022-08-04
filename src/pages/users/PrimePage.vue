@@ -46,8 +46,8 @@
     <div class="column flex items-center">
       <p class="text-h6">Clareza Quando Você Mais Precisa</p>
       <p class="text-body2 text-center">
-        Fornecemos as evidências fundamentada na experiência clínica dos médicos mais
-        notáveis do mundo
+        Fornecemos as evidências fundamentada na experiência clínica dos médicos
+        mais notáveis do mundo
       </p>
       <div class="col column flex q-gutter-sm">
         <q-btn
@@ -68,7 +68,12 @@
           href="https://buy.stripe.com/test_00g8At4EX8wi2iIbII"
         />
 
-        <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
+        <q-spinner
+          class="absolute-center"
+          v-if="loading"
+          size="xl"
+          color="primary"
+        />
         <q-btn
           class="col"
           color="grey-5"
@@ -95,7 +100,7 @@ export default {
     const formData = {
       user_id: null,
       created_at: null,
-      dias: 7,
+      dias: 30,
       expirou: true,
     };
 
@@ -115,14 +120,22 @@ export default {
 
     onMounted(async () => {
       data.value = await list("img");
-      const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+      const user_grates = await getByField(
+        "prazo_premium",
+        "user_id",
+        user.value.id
+      );
       if (user_grates.length > 0) just.value = true;
     });
 
     const seteDiasGrates = async () => {
       try {
         loading.value = true;
-        const user_grates = await getByField("prazo_premium", "user_id", user.value.id);
+        const user_grates = await getByField(
+          "prazo_premium",
+          "user_id",
+          user.value.id
+        );
         if (user_grates.length === 0) {
           const perfil = await getByField("perfil", "user_id", user.value.id);
           formData.user_id = user.value.id;
