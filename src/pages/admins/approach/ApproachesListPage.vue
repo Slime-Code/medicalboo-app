@@ -53,8 +53,8 @@
                   </q-item-section>
                   <div class="row items-center">
                     <q-checkbox
-                      v-model="content.premium"
-                      class="col-4"
+                      v-model="contentPremium"
+                      indeterminate-value="maybe"
                       label="Conteúdo Premium"
                     />
                   </div>
@@ -446,6 +446,8 @@ export default defineComponent({
     const loadingForm = ref(false);
     const loadingTable = ref(false);
 
+
+
     const {
       list,
       joinTables,
@@ -626,13 +628,14 @@ export default defineComponent({
 
     const currentApproach = ref();
     const loadingContent = ref(false);
+    const contentPremium = ref();
 
     const saveContent = async () => {
       contents.value.forEach(async (content) => {
         const data = {
           title: content.title,
           content: content.content,
-          premium: content.premium,
+          premium: contentPremium.value,
           id: content.id,
           id_approach: currentApproach.value.id,
         };
@@ -692,6 +695,7 @@ export default defineComponent({
     };
 
     return {
+      contentPremium,
       copyTo,
       getContents,
       loadingContent,
