@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="q-mt-md">
-          <q-responsive :ratio="1" class="col">
+          <q-responsive :ratio="1" class="col" style="height: 550px">
             <q-table
               color="primary"
               :dense="$q.screen.lt.sm"
@@ -39,7 +39,6 @@
               hide-bottom="true"
               row-key="title"
               separator="cell"
-              class="table-responsive link-cursor"
             >
               <template v-slot:body="props">
                 <q-tr :props="props">
@@ -445,22 +444,22 @@ export default defineComponent({
     const saveItem = async () => {
       try {
         loading.value = true;
-        alert(JSON.stringify(formUser));
+        // alert(JSON.stringify(formUser))
         if (!formUser.id) {
-          alert(formUser.id);
+          // alert(formUser.id)
           const aux = formUser;
           delete aux.id;
           const use = await register(aux);
-          showSuccessNotification("Dados Cadastrados Com Sucesso!");
+          showSuccessNotification("Usuário cadastrado com sucesso!");
           formUser.user_id = use.id;
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert("fuiiiiiiii");
+          // alert('fuiiiiiiii')
           await post("perfil", formUser);
         } else {
           delete formUser.confirm_email;
           delete formUser.confirm_password;
-          alert("atualizar");
+          alert('atualizar')
           await update("perfil", formUser);
         }
         listAll();
@@ -470,7 +469,7 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
         dialogUser.value = false;
-        alert(error.message);
+        alert(error.message)
         showErrorNotification(
           `houve uma falha ao carregar os dados para o banco: ${error}`
         );

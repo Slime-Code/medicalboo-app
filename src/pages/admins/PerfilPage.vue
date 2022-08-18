@@ -15,7 +15,7 @@
                 />
             </div>
         </div>
-        
+
         <form @submit.prevent="updatePerfile">
             <q-card-section class="q-pt-none">
             <div class="q-mb-md">
@@ -196,6 +196,7 @@ export default defineComponent({
         }
         await update('perfil', formData.value);
         loading.value = false;
+        window.location.reload
         showSuccessNotification('Atualizado com sucesso!!');
       } catch (error) {
         loading.value = false;

@@ -53,7 +53,7 @@
                   </q-item-section>
                   <div class="row items-center">
                     <q-checkbox
-                      v-model="contentPremium"
+                      v-model="contents[index].premium"
                       indeterminate-value="maybe"
                       label="Conteúdo Premium"
                     />
@@ -247,7 +247,6 @@
           </q-td>
 
           <q-td class="text-left" key="criado" :props="props">
-            Yuri Rego aos:
             {{
               new Date(props.row.created_at).toLocaleString("en-GB", {
                 timeZone: "UTC",
@@ -425,8 +424,8 @@ const columns = [
   {
     name: "criado",
     align: "left",
-    label: "Criado Por",
-    field: "criado Por",
+    label: "Criado em",
+    field: "criado em",
     sortable: true,
   },
 
@@ -446,7 +445,7 @@ export default defineComponent({
     const loadingForm = ref(false);
     const loadingTable = ref(false);
 
-
+    const img = ref({});
 
     const {
       list,
@@ -529,6 +528,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      getImg();
       getAproaches();
       getLists();
     });
@@ -635,7 +635,7 @@ export default defineComponent({
         const data = {
           title: content.title,
           content: content.content,
-          premium: contentPremium.value,
+          premium: content.premium || false,
           id: content.id,
           id_approach: currentApproach.value.id,
         };
@@ -670,6 +670,12 @@ export default defineComponent({
       contents.value.splice(index, 1);
     };
 
+    const getImg = async () => {
+      const auxImg = await getByField("perfil", "user_id", user.value.id);
+      img.value = auxImg[0];
+      loading.value = false;
+    };
+
     const getContents = async (approach) => {
       currentApproach.value = approach;
       loadingForm.value = true;
@@ -695,7 +701,7 @@ export default defineComponent({
     };
 
     return {
-      contentPremium,
+      // contentPremium,
       copyTo,
       getContents,
       loadingContent,
@@ -718,6 +724,7 @@ export default defineComponent({
       columns,
       rows,
       getAproaches,
+      img
     };
   },
 });

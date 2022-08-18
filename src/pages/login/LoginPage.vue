@@ -50,7 +50,7 @@
             label="criar conta gratuita"
             link="/register"
           />
-          <q-btn :to="{ name: 'resetPassword' }" label="Recoperar Senha" class="full-width q-my-md text-primary text-center text-h9" flat/>
+          <q-btn :to="{ name: 'resetPassword' }" label="Recuperar Senha" class="full-width q-my-md text-primary text-center text-h9" flat/>
           <br />
           <q-spinner class="absolute-center" v-if="loading" size="xl" color="primary" />
         </q-form>

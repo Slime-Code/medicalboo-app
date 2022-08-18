@@ -75,21 +75,21 @@ export default defineComponent({
   setup() {
     const cards = reactive({
       users: {
-        title: "Todos Usuários cadastrados",
+        title: "Usuário Cadastrados",
         percent: 0,
         icon: "fa fa-users",
         qtd: 0,
         color: "primary",
       },
       usersToday: {
-        title: "Usuários cadastrados hoje",
+        title: "Usuários Cadastrados; Hoje",
         percent: 0,
         qtd: 0,
         icon: "today",
         color: "green",
       },
       approach: {
-        title: "Total de abordagem",
+        title: "Abordagens Registradas",
         percent: 0,
         icon: "book",
         qtd: 0,
@@ -128,7 +128,7 @@ export default defineComponent({
           curve: "smooth",
         },
         title: {
-          text: "Número de usuários ao longo do ano",
+          text: "Registro de Usuários no Decorrer do Ano",
           align: "left",
         },
         labels: [],
@@ -163,7 +163,7 @@ export default defineComponent({
           type: "donut",
         },
         title: {
-          text: "Usuarios Premium",
+          text: "Usuários Premium",
           align: "left",
         },
         labels: ["Premium", "Não Premium"],
@@ -190,7 +190,7 @@ export default defineComponent({
           type: "donut",
         },
         title: {
-          text: "Outros usuários",
+          text: "Outros Usuários",
           align: "left",
         },
         labels: ["Admin", "Não Admin"],
@@ -217,7 +217,7 @@ export default defineComponent({
           type: "donut",
         },
         title: {
-          text: "Tipo de conteúdo",
+          text: "Tipo de Conteúdo",
           align: "left",
         },
         labels: ["Premium", "Não Premium"],

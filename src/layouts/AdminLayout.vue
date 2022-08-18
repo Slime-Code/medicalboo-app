@@ -52,11 +52,9 @@
 
       <q-footer class="bg-white text-grey-8">
         <q-toolbar bordered class="q-pa-md">
-          <q-toolbar-title class="text-body1">
+          <q-toolbar-title class="text-body1 text-center">
             <p>
-              <strong> copyright 2022-2023 </strong>
-              <strong style="color: #007bce"> MedicalBook</strong>. Todos os
-              direitos reservados.
+              Medical Book© - v0.2.0 (Admin) | 2022, todos os direitos reservados.
             </p>
           </q-toolbar-title>
         </q-toolbar>
@@ -79,7 +77,7 @@
             <q-item clickable>
               <q-item-section>
                 <q-item-label header>
-                  <strong>{{ user.user_metadata.name }}</strong
+                  <strong>{{ img.name }}</strong
                   ><br />
                   <span>Administrador</span>
                 </q-item-label>

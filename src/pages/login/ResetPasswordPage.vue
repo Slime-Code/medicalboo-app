@@ -9,7 +9,7 @@
         }"
       >
 
-        <div class="full-width text-h7 text-center"><strong>Recomendamus-lhe uma senha forte <strong class="text-primary">MedicalBook</strong>, informe o seu E-mail.</strong></div>
+        <div class="full-width text-h7 text-center"><strong>Recomendamos uma senha forte para o acesso ao <strong class="text-primary">MedicalBook</strong>, informe o seu E-mail para que possamos enviar um autorização de alteração de senha:</strong></div>
         <br><br>
 
         <q-form @submit.prevent="handleRestEmail" class="full-width q-mt-lg constrain-4">

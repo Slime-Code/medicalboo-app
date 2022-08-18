@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="q-mt-md">
-          <q-responsive :ratio="1" class="col">
+          <q-responsive :ratio="1" class="col" style="height: 550px">
             <q-table
               :filter="filter"
               color="primary"
