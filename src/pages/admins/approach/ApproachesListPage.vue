@@ -420,7 +420,6 @@ const columns = [
     field: "type_approach",
     sortable: true,
   },
-
   {
     name: "criado",
     align: "left",

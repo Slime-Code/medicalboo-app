@@ -45,7 +45,7 @@
       </q-toolbar>
       <q-toolbar v-if="$router.currentRoute.value.fullPath === '/home'" class="detail">
         <q-toolbar-title class="text-caption">
-          Olá {{ user.user_metadata.name }}, bom te ver por aqui
+          Olá {{ img.name }}, bom te ver por aqui
         </q-toolbar-title>
       </q-toolbar>
       <q-toolbar v-else class="detail">

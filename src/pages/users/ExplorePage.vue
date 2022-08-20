@@ -20,8 +20,8 @@
       flat
       bordered
       :filter="filter"
-      no-data-label="Nenhuma abordagem encontrada"
-      no-results-label="Nenhuma Resultado encontrada"
+      no-data-label="Nenhum abordagem encontrado"
+      no-results-label="Nenhum Resultado encontrado"
       row-key="id"
       hide-header
       hide-bottom
@@ -54,6 +54,9 @@ import useApi from "../../composebles/useApi";
 export default {
   setup() {
     const rows = ref([]);
+    const rows2 = ref([]);
+    const rows3 = ref([]);
+    const rows4 = ref([]);
     const { list } = useApi();
 
     const router = useRouter();
@@ -67,8 +70,18 @@ export default {
     const listTopics = async () => {
       try {
         loading.value = true;
-        const aux = await list("approach");
+        const aux = await list("approach")
+        const aux2 = await list("categoria")
+        const aux3 = await list('topic')
+        const aux4 = await list('approach_contents')
+        console.log(aux)
+        console.log(aux2)
+        console.log(aux3)
+        console.log(aux4)
         rows.value = aux;
+        rows2.value = aux2;
+        rows3.value = aux3;
+        rows4.value = aux4;
         // rows.value.sort();
         loading.value = false;
       } catch (error) {

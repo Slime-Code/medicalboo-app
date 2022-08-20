@@ -392,7 +392,7 @@ export default defineComponent({
             case "telegram":
               link = `https://telegram.me/share/?url=${register}`;
             case "whatsapp":
-              link = `https://telegram.me/share/?url=${register}`;
+              link = `https://api.whatsapp.com/send?phone=5511962214128&text=Você recebeu um convite para o medical book, registre-se agora mesmo! ${register}`;
               break;
             default:
               break;
@@ -409,9 +409,9 @@ export default defineComponent({
     }
 
     function goToWhats() {
-      const title = "5541999960483";
+      const title = "+55 11 96221-4128";
       window.open(
-        `https://api.whatsapp.com/send?phone=${aboutApp.value.title}&text=&source=&data=&app_absent=`
+        `https://api.whatsapp.com/send?phone=1124672502&text=&source=&data=&app_absent=`
       );
     }
 

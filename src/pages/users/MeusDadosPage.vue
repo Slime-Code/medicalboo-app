@@ -15,7 +15,7 @@
                 />
             </div>
         </div>
-        
+
         <form @submit.prevent="updatePerfile">
             <q-card-section class="q-pt-none">
             <div class="q-mb-md">
@@ -88,6 +88,7 @@
                 lazy-rules
                 :rules="complentary_examsRules"
                 ref="complentary_exams"
+                mask="(##) # ####-####"
                 />
             </div>
 
@@ -101,6 +102,7 @@
                 lazy-rules
                 :rules="complentary_examsRules"
                 ref="complentary_exams"
+                mask="###.###.###-##"
                 />
             </div>
 
